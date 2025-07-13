@@ -13,23 +13,29 @@ namespace NhakhoaMyNgoc.ViewModels
         public InvoiceViewModel()
         {
             _db = new DataContext();
+
+            // load tất cả dịch vụ
+            Services = new ObservableCollection<Service>(_db.Services.ToList());
         }
 
         [ObservableProperty]
         private Invoice selectedInvoice = new();
 
         [ObservableProperty]
-        private ObservableCollection<Invoice> invoiceItems = new();
+        private ObservableCollection<InvoiceItem> invoiceItems = new();
+
+        [ObservableProperty]
+        private ObservableCollection<Service> services;
 
         partial void OnSelectedInvoiceChanged(Invoice value)
         {
             if (value is null) return;
 
-            var result = _db.Invoices
-                            .Where(i => i.CustomerId == value.Id)
+            var result = _db.InvoiceItems
+                            .Where(i => i.InvoiceId == value.Id)
                             .ToList();
 
-            InvoiceItems = new ObservableCollection<Invoice>(result);
+            InvoiceItems = new ObservableCollection<InvoiceItem>(result);
         }
     }
 }

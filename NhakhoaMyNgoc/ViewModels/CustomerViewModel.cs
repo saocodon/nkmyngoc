@@ -59,6 +59,7 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             SelectedCustomer.Deleted = 1;
             _db.SaveChanges();
+
             // xóa trong RAM
             Customers.Remove(SelectedCustomer);
             SelectedCustomer = new();
