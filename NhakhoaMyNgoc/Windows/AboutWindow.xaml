@@ -1,0 +1,32 @@
+﻿<Window x:Class="NhakhoaMyNgoc.Windows.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NhakhoaMyNgoc.Windows"
+        xmlns:vm="clr-namespace:NhakhoaMyNgoc.ViewModels"
+        mc:Ignorable="d"
+        Title="Về phần mềm" Height="250" Width="450"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Grid>
+        <DockPanel LastChildFill="True">
+            <StackPanel DockPanel.Dock="Bottom">
+                <TextBlock FontWeight="Bold" Text="Phát triển bởi Bùi Phan Khánh Duy" />
+                <TextBlock Text="Sinh viên năm 2 khoa Khoa học và Kỹ thuật Máy tính" />
+                <TextBlock Text="Trường ĐH Bách khoa - ĐHQG-HCM" />
+                <TextBlock Text="Hỗ trợ: duy.buiphankhanh@gmail.com" />
+            </StackPanel>
+            <Image Source="/Images/LOGO.png" Width="100" DockPanel.Dock="Left"></Image>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="NHA KHOA MỸ NGỌC" FontSize="20" FontWeight="Bold" />
+                <TextBlock Text="{Binding AppVM.AppVersion}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>
