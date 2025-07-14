@@ -29,6 +29,7 @@
         </x:Array>
         <cvt:SexToBoolConverter x:Key="SexToBoolConverter" />
         <cvt:RevisitToBoolConverter x:Key="RevisitToBoolConverter" />
+        <cvt:ServiceIdToNameConverter x:Key="ServiceIdToNameConverter" />
     </Window.Resources>
     
     <Grid>
@@ -139,38 +140,41 @@
                                         <DatePicker Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"
                                                     SelectedDate="{Binding InvoiceVM.SelectedInvoice.Date}"/>
 
-                                        <!--
-                                        <CheckBox Content="Tái khám:" Grid.Row="1">
-                                            <CheckBox.IsChecked>
-                                                <MultiBinding Converter="{StaticResource RevisitToBoolConverter}" Mode="TwoWay">
-                                                    <Binding Path="InvoiceVM.SelectedInvoice.Revisit" />
-                                                    <Binding Path="InvoiceVM.SelectedInvoice.Date" />
-                                                </MultiBinding>
-                                            </CheckBox.IsChecked>
-                                        </CheckBox> -->
-                                        <TextBlock Grid.Row="1" Text="{Binding InvoiceVM.SelectedInvoice.Date}" />
+                                        <CheckBox Content="Tái khám:" Grid.Row="1" IsChecked="{Binding InvoiceVM.IsRevisitValid, Mode=OneWay}" />
                                         <DatePicker Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
                                                     SelectedDate="{Binding InvoiceVM.SelectedInvoice.Revisit}"/>
 
                                         <TextBlock Text="Nội dung điều trị:" Grid.Row="2" Grid.Column="0"/>
                                         <DataGrid Grid.Row="2" Grid.Column="1" Height="200" HorizontalAlignment="Stretch"
-                                                  ItemsSource="{Binding InvoiceVM.InvoiceItems}" AutoGenerateColumns="False">
+                                                  ItemsSource="{Binding InvoiceVM.InvoiceItems}" AutoGenerateColumns="False"
+                                                  SelectedItem="{Binding InvoiceItemVM.SelectedInvoiceItem, Mode=TwoWay}"
+                                                  CanUserAddRows="True">
                                             <DataGrid.Columns>
                                                 <!-- Combobox dịch vụ -->
                                                 <DataGridTemplateColumn Header="Dịch vụ">
                                                     <!-- Khi không chỉnh sửa thì sẽ là TextBlock -->
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>
-                                                            <TextBlock Text="{Binding Service.Name}" />
+                                                            <!-- bind hẳn vào trong model Service -->
+                                                            <!-- datacontext là InvoiceItem -->
+                                                            <!-- Service.Name là do navigation property (NP) -->
+                                                            <!-- sử dụng Service.Name của InvoiceVM (đã load sẵn Services) chứ không sử dụng Service.Name NP -->
+                                                            <!-- khi load lên thì EF sẽ load sẵn Service (NP) -->
+                                                            <!-- cái này chỉ sử dụng khi load -->
+                                                            <TextBlock Text="{Binding ServiceId, Converter={StaticResource ServiceIdToNameConverter}}" />
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellTemplate>
                                                     <!-- Khi chỉnh sửa sẽ hóa thành ComboBox -->
                                                     <DataGridTemplateColumn.CellEditingTemplate>
                                                         <DataTemplate>
+                                                            <!-- Bind đến InvoiceItem.ServiceID -->
+                                                            <!-- lấy datacontext lớn nhất (Window) -->
+                                                            <!-- không được bind vào NP vì new InvoiceItem() không tự tạo new Service() -> EF sẽ nghĩ đây là dịch vụ mới! -->
+                                                            <!-- Combobox datacontext vẫn là InvoiceItem, nên bind Service.Id -->
                                                             <ComboBox
-                                                                ItemsSource="{Binding DataContext.InvoiceVM.Services, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                                SelectedValue="{Binding ServiceID, Mode=TwoWay}"
-                                                                SelectedValuePath="ServiceID"
+                                                                ItemsSource="{Binding DataContext.InvoiceVM.Services, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                SelectedValue="{Binding ServiceId, Mode=TwoWay}"
+                                                                SelectedValuePath="Id"
                                                                 DisplayMemberPath="Name" />
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellEditingTemplate>
@@ -197,18 +201,23 @@
                                          Text="{Binding InvoiceVM.SelectedInvoice.Note}"
                                         />
 
-                                        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Right" Margin="0,5,5,0">
-                                            <Button Content="In"/>
-                                            <Button Content="Lưu"/>
-                                            <Button Content="Thêm"/>
-                                        </StackPanel>
+                                        <DockPanel Grid.Row="5" Grid.Column="1">
+                                            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left">
+                                                <Button Content="In"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
+                                                <Button Content="Thêm" Command="{Binding InvoiceVM.StartAddNewCommand}" CommandParameter="{Binding CustomerVM.SelectedCustomer}"/>
+                                                <Button Content="Lưu" Command="{Binding InvoiceVM.SaveInvoiceCommand}"/>
+                                                <Button Content="Xoá" Command="{Binding InvoiceVM.DeleteInvoiceCommand}"/>
+                                            </StackPanel>
+                                        </DockPanel>
                                     </Grid>
                             </GroupBox>
                             </StackPanel>
                         </Grid>
                         <TabControl>
                             <TabItem Header="Hoá đơn">
-                                <DataGrid ItemsSource="{Binding CustomerVM.Invoices}" AutoGenerateColumns="False"
+                                <DataGrid ItemsSource="{Binding InvoiceVM.Invoices}" AutoGenerateColumns="False"
                                           SelectedItem="{Binding InvoiceVM.SelectedInvoice}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Mã HĐ" Binding="{Binding Id}"/>
@@ -344,7 +353,7 @@
                         </Grid>
                         <TabControl>
                             <TabItem Header="Đơn nhập xuất">
-                                <DataGrid ItemsSource="{Binding CustomerVM.Invoices}" AutoGenerateColumns="False"
+                                <DataGrid ItemsSource="{Binding InvoiceVM.Invoices}" AutoGenerateColumns="False"
                       SelectedItem="{Binding InvoiceVM.SelectedInvoice}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Mã HĐ" Binding="{Binding Id}"/>

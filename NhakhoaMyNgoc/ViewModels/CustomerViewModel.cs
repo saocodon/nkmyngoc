@@ -12,10 +12,12 @@ namespace NhakhoaMyNgoc.ViewModels
     public partial class CustomerViewModel : ObservableObject
     {
         private readonly DataContext _db;
+        private readonly InvoiceViewModel invoiceVM;
 
-        public CustomerViewModel()
+        public CustomerViewModel(InvoiceViewModel ivm)
         {
             _db = new DataContext();
+            invoiceVM = ivm;
         }
 
         #region Global
@@ -24,9 +26,6 @@ namespace NhakhoaMyNgoc.ViewModels
 
         [ObservableProperty]
         private Customer selectedCustomer = new();
-
-        [ObservableProperty]
-        private ObservableCollection<Invoice> invoices = new();
         #endregion
 
         #region Add & edit
@@ -119,12 +118,7 @@ namespace NhakhoaMyNgoc.ViewModels
         partial void OnSelectedCustomerChanged(Customer value)
         {
             if (value is null) return;
-
-            // tìm hoá đơn
-            var result = (from i in _db.Invoices
-                          where i.CustomerId == value.Id
-                          select i).ToList();
-            Invoices = new ObservableCollection<Invoice>(result);
+            invoiceVM.FindCustomersInvoices(value);
         }
     }
 }

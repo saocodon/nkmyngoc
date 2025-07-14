@@ -7,6 +7,8 @@ public partial class Invoice
 {
     public int Id { get; set; }
 
+    public int Deleted { get; set; }
+
     public int CustomerId { get; set; }
 
     public DateTime Date { get; set; }
@@ -15,7 +17,7 @@ public partial class Invoice
 
     public int Remaining { get; set; }
 
-    public string? Revisit { get; set; }
+    public DateTime? Revisit { get; set; }
 
     public string? Note { get; set; }
 
