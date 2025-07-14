@@ -16,11 +16,11 @@ namespace NhakhoaMyNgoc
 {
     public partial class MainWindow : Window
     {
-        MainViewModel vm;
-        public MainWindow()
+        readonly MainViewModel vm;
+        public MainWindow(MainViewModel _vm)
         {
+            DataContext = vm = _vm;
             InitializeComponent();
-            vm = DataContext as MainViewModel;
 
             // nhảy UI theo CustomerVM.IsSearchMode
             vm.CustomerVM.PropertyChanged += CustomerVM_PropertyChanged;

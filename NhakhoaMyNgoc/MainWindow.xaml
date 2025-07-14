@@ -12,11 +12,6 @@
         Title="Nha khoa Mỹ Ngọc" Height="1100" Width="1600"
         WindowState="Maximized">
 
-    <Window.InputBindings>
-        <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding CustomerVM.SwitchToSearchModeCommand}" />
-        <KeyBinding Key="Return" Command="{Binding CustomerVM.FindCustomerCommand}" />
-    </Window.InputBindings>
-
     <Window.Resources>
         <x:Array x:Key="SexList" Type="model:SexItem">
             <model:SexItem Value="0" Display="Nam" />
