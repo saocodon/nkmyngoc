@@ -26,16 +26,6 @@ namespace NhakhoaMyNgoc.Converters
         }
 
         public object[] ConvertBack(object value, Type[] targetType, object parameter, CultureInfo culture)
-        {
-            // === PLACEHOLDER ===
-            var isChecked = (bool)value;
-            // mặc định (fallback)
-            DateTime? visit = DateTime.Now;
-
-            if (isChecked)
-                return new object[] { visit.Value.AddDays(1), visit };
-            else
-                return new object[] { null, visit };
-        }
+            => throw new NotImplementedException();
     }
 }

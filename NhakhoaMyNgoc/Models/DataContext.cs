@@ -36,8 +36,11 @@ public partial class DataContext : DbContext
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Address).UseCollation("NOCASE");
             entity.Property(e => e.Cid).HasColumnName("CID");
-            entity.Property(e => e.Name).HasDefaultValue("Chưa rõ");
+            entity.Property(e => e.Name)
+                .HasDefaultValue("Chưa rõ")
+                .UseCollation("NOCASE");
             entity.Property(e => e.Sex).HasDefaultValue(2);
         });
 

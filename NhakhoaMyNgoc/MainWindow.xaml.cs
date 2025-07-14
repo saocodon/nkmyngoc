@@ -1,4 +1,5 @@
-﻿using NhakhoaMyNgoc.Models;
+﻿using NhakhoaMyNgoc.Converters;
+using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.ViewModels;
 using System.Text;
 using System.Windows;
@@ -18,22 +19,28 @@ namespace NhakhoaMyNgoc
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainViewModel ViewModel { get; } = new();
+        public MainViewModel mainVM { get; } = new();
         public MainWindow()
         {
             InitializeComponent();
-            // vẫn phải set lại trong XAML
-            DataContext = ViewModel;
 
-            ViewModel.CustomerVM.PropertyChanged += (s, e) =>
+            // vẫn phải set lại trong XAML
+            DataContext = mainVM;
+
+            // nhảy UI theo CustomerVM.IsSearchMode
+            mainVM.CustomerVM.PropertyChanged += (s, e) =>
             {
                 if (e.PropertyName == nameof(CustomerViewModel.IsSearchMode))
                 {
-                    CustomerFormUI.DataContext = ViewModel.CustomerVM.IsSearchMode
-                        ? ViewModel.CustomerVM.SearchForm
-                        : ViewModel.CustomerVM.SelectedCustomer;
+                    CustomerFormUI.DataContext = mainVM.CustomerVM.IsSearchMode
+                        ? mainVM.CustomerVM.SearchForm
+                        : mainVM.CustomerVM.SelectedCustomer;
                 }
             };
+
+            // load bảng Services của Services ID -> Name converter
+            if (Resources["ServiceIdToNameConverter"] is ServiceIdToNameConverter cvt)
+                cvt.Services = mainVM.InvoiceVM.Services;
         }
     }
 }
