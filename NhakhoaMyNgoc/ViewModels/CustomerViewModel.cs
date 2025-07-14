@@ -113,6 +113,17 @@ namespace NhakhoaMyNgoc.ViewModels
         }
         #endregion
 
+        [RelayCommand]
+        void RestoreCustomer()
+        {
+            SelectedCustomer.Deleted = 0;
+            _db.SaveChanges();
+
+            // dành cho bảng TableEditor
+            Customers.Remove(SelectedCustomer);
+            SelectedCustomer = new();
+        }
+
         partial void OnSelectedCustomerChanged(Customer value)
         {
             Messenger.Publish("CustomerSelected", value);

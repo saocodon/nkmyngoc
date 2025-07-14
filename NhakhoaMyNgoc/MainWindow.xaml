@@ -35,6 +35,10 @@
                           Command="{Binding AppVM.OpenAboutCommand}" />
             </MenuItem>
             <MenuItem Header="Công cụ">
+                <MenuItem Header="Khách hàng đã xoá"
+                          Command="{Binding AppVM.OpenTableEditorCommand}"
+                          CommandParameter="CustomerRecycleBin"/>
+                <Separator />
                 <MenuItem Header="Cài đặt"
                           Command="{Binding AppVM.OpenSettingsCommand}" />
             </MenuItem>
@@ -219,36 +223,7 @@
                                 </DataGrid>
                             </TabItem>
                             <TabItem Header="Khách hàng">
-                                <DataGrid
-                                    ItemsSource="{Binding CustomerVM.Customers}"
-                                    SelectedItem="{Binding CustomerVM.SelectedCustomer, Mode=TwoWay}"
-                                    AutoGenerateColumns="False">
-
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="CCCD" Binding="{Binding Cid}"/>
-                                        <DataGridTextColumn Header="Tên" Binding="{Binding Name}"/>
-                                        <DataGridComboBoxColumn Header="Giới tính"
-                                                                ItemsSource="{StaticResource SexList}"
-                                                                SelectedValuePath="Value"
-                                                                DisplayMemberPath="Display"
-                                                                SelectedValueBinding="{Binding Sex, Mode=TwoWay}" />
-                                        <DataGridTemplateColumn Header="Ngày sinh">
-                                            <!-- Combobox giới tính -->
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Birthdate, StringFormat=dd/MM/yyyy}" VerticalAlignment="Center"/>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                            <DataGridTemplateColumn.CellEditingTemplate>
-                                                <DataTemplate>
-                                                    <DatePicker SelectedDate="{Binding Birthdate, Mode=TwoWay}" />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellEditingTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="SĐT" Binding="{Binding Phone}"></DataGridTextColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                <uc:CustomerDataGrid DataContext="{Binding CustomerVM}" />
                             </TabItem>
                         </TabControl>
                     </DockPanel>

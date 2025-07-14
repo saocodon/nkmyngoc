@@ -41,13 +41,13 @@ namespace NhakhoaMyNgoc.ViewModels
             inv.Date.AddYears(1) >= inv.Revisit;
 
         [ObservableProperty]
-        private ObservableCollection<InvoiceItem> invoiceItems = new();
+        private ObservableCollection<InvoiceItem> invoiceItems = [];
 
         [ObservableProperty]
         private ObservableCollection<Service> services;
 
         [ObservableProperty]
-        private ObservableCollection<Invoice> invoices = new();
+        private ObservableCollection<Invoice> invoices = [];
         #endregion
 
         /// <summary>
@@ -84,7 +84,14 @@ namespace NhakhoaMyNgoc.ViewModels
                 Invoices.Add(SelectedInvoice);
 
                 // thêm từng dịch vụ
-                Messenger.Publish("AddInvoiceItem", InvoiceItems);
+                foreach (var item in InvoiceItems)
+                {
+                    // đặt mã hoá đơn
+                    // vì chưa gọi AcceptChanges() nên phải +1
+                    item.InvoiceId = _db.Invoices.Count() + 1;
+
+                    _db.InvoiceItems.Add(item);
+                }
             }
             else // hoá đơn cũ
             {
@@ -109,7 +116,7 @@ namespace NhakhoaMyNgoc.ViewModels
         public void FindCustomersInvoices(Customer customer)
         {
             var result = (from i in _db.Invoices
-                          where i.CustomerId == customer.Id
+                          where i.CustomerId == customer.Id && i.Deleted == 0
                           select i).ToList();
             Invoices = new ObservableCollection<Invoice>(result);
         }
