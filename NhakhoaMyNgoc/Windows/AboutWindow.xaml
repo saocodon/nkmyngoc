@@ -10,10 +10,6 @@
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner">
 
-    <Window.DataContext>
-        <vm:MainViewModel />
-    </Window.DataContext>
-
     <Grid>
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Bottom">

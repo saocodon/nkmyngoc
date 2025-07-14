@@ -7,18 +7,11 @@ using System.Threading.Tasks;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
-    public class MainViewModel
+    public class MainViewModel(DataContext db)
     {
         public AppViewModel AppVM { get; } = new();
-        public CustomerViewModel CustomerVM { get; }
-        public InvoiceViewModel InvoiceVM { get; }
-        public InvoiceItemViewModel InvoiceItemVM { get; }
-
-        public MainViewModel(DataContext db)
-        {
-            InvoiceItemVM = new InvoiceItemViewModel(db);
-            InvoiceVM = new InvoiceViewModel(db, InvoiceItemVM);
-            CustomerVM = new CustomerViewModel(db);
-        }
+        public CustomerViewModel CustomerVM { get; } = new CustomerViewModel(db);
+        public InvoiceViewModel InvoiceVM { get; } = new InvoiceViewModel(db);
+        public InvoiceItemViewModel InvoiceItemVM { get; } = new InvoiceItemViewModel(db);
     }
 }

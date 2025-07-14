@@ -16,10 +16,6 @@
         <ImageBrush ImageSource="/Images/SPLASH.jpg" Stretch="UniformToFill" />
     </Window.Background>
 
-    <Window.DataContext>
-        <vm:MainViewModel />
-    </Window.DataContext>
-    
     <Grid>
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Bottom">

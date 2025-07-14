@@ -20,7 +20,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
         #region Global
         [ObservableProperty]
-        private ObservableCollection<Customer> customers = new();
+        private ObservableCollection<Customer> customers = [];
 
         [ObservableProperty]
         private Customer selectedCustomer = new();
@@ -73,7 +73,7 @@ namespace NhakhoaMyNgoc.ViewModels
         void SwitchToSearchMode() => IsSearchMode = true;
 
         // bỏ dấu trong tiếng Việt
-        string RemoveDiacritics(string? input)
+        static string RemoveDiacritics(string? input)
         {
             if (input == null) return string.Empty;
 
