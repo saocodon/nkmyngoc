@@ -9,9 +9,9 @@ namespace NhakhoaMyNgoc.ViewModels
 {
     public class MainViewModel(DataContext db)
     {
-        public AppViewModel AppVM { get; } = new();
-        public CustomerViewModel CustomerVM { get; } = new CustomerViewModel(db);
-        public InvoiceViewModel InvoiceVM { get; } = new InvoiceViewModel(db);
-        public InvoiceItemViewModel InvoiceItemVM { get; } = new InvoiceItemViewModel(db);
+        public AppViewModel AppVM { get; } = new(db);
+        public CustomerViewModel CustomerVM { get; } = new(db);
+        public InvoiceViewModel InvoiceVM { get; } = new(db);
+        public TableEditorViewModel<Customer> CustomerTEVM { get; } = new();
     }
 }
