@@ -10,18 +10,23 @@ namespace NhakhoaMyNgoc.ViewModels
     public partial class InvoiceViewModel : ObservableObject
     {
         private readonly DataContext _db;
-        private readonly InvoiceItemViewModel invoiceItemVM;
 
-        public InvoiceViewModel(InvoiceItemViewModel iivm)
+        public InvoiceViewModel(DataContext db)
         {
-            _db = new DataContext();
-            invoiceItemVM = iivm;
+            _db = db;
 
             // load tất cả dịch vụ
             Services = new ObservableCollection<Service>(_db.Services.ToList());
 
             // khởi tạo ít nhất 1 hàng trong bảng chi tiết
             InvoiceItems.Add(new InvoiceItem());
+
+            // đăng ký nhận khách hàng đang chọn
+            Messenger.Subscribe("CustomerSelected", data =>
+            {
+                if (data is Customer customer)
+                    FindCustomersInvoices(customer);
+            });
         }
 
         #region global
@@ -78,12 +83,8 @@ namespace NhakhoaMyNgoc.ViewModels
                 _db.Invoices.Add(SelectedInvoice);
                 Invoices.Add(SelectedInvoice);
 
-                // TODO: thêm các chi tiết hoá đơn nữa
-                // (code behind)
-                foreach (var item in InvoiceItems)
-                {
-
-                }
+                // thêm từng dịch vụ
+                Messenger.Publish("AddInvoiceItem", InvoiceItems);
             }
             else // hoá đơn cũ
             {

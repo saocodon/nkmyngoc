@@ -12,12 +12,10 @@ namespace NhakhoaMyNgoc.ViewModels
     public partial class CustomerViewModel : ObservableObject
     {
         private readonly DataContext _db;
-        private readonly InvoiceViewModel invoiceVM;
 
-        public CustomerViewModel(InvoiceViewModel ivm)
+        public CustomerViewModel(DataContext db)
         {
-            _db = new DataContext();
-            invoiceVM = ivm;
+            _db = db;
         }
 
         #region Global
@@ -117,8 +115,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
         partial void OnSelectedCustomerChanged(Customer value)
         {
-            if (value is null) return;
-            invoiceVM.FindCustomersInvoices(value);
+            Messenger.Publish("CustomerSelected", value);
         }
     }
 }
