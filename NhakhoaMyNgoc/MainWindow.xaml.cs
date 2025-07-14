@@ -14,33 +14,31 @@ using System.Windows.Shapes;
 
 namespace NhakhoaMyNgoc
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        public MainViewModel mainVM { get; } = new();
+        MainViewModel vm;
         public MainWindow()
         {
             InitializeComponent();
-
-            // vẫn phải set lại trong XAML
-            DataContext = mainVM;
+            vm = DataContext as MainViewModel;
 
             // nhảy UI theo CustomerVM.IsSearchMode
-            mainVM.CustomerVM.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == nameof(CustomerViewModel.IsSearchMode))
-                {
-                    CustomerFormUI.DataContext = mainVM.CustomerVM.IsSearchMode
-                        ? mainVM.CustomerVM.SearchForm
-                        : mainVM.CustomerVM.SelectedCustomer;
-                }
-            };
+            vm.CustomerVM.PropertyChanged += CustomerVM_PropertyChanged;
 
-            // load bảng Services của Services ID -> Name converter
+            // load bảng Services của ServicesIdToNameConverter
+            // lấy key trong Resources (XAML).
             if (Resources["ServiceIdToNameConverter"] is ServiceIdToNameConverter cvt)
-                cvt.Services = mainVM.InvoiceVM.Services;
+                cvt.Services = vm.InvoiceVM.Services;
+        }
+
+        private void CustomerVM_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(CustomerViewModel.IsSearchMode))
+            {
+                CustomerFormUI.DataContext = vm.CustomerVM.IsSearchMode
+                    ? vm.CustomerVM.SearchForm
+                    : vm.CustomerVM.SelectedCustomer;
+            }
         }
     }
 }

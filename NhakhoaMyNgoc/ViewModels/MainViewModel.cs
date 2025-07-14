@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NhakhoaMyNgoc.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,11 @@ namespace NhakhoaMyNgoc.ViewModels
         public InvoiceViewModel InvoiceVM { get; }
         public InvoiceItemViewModel InvoiceItemVM { get; }
 
-        public MainViewModel()
+        public MainViewModel(DataContext db)
         {
-            InvoiceItemVM = new InvoiceItemViewModel();
-            InvoiceVM = new InvoiceViewModel(InvoiceItemVM);
-            CustomerVM = new CustomerViewModel(InvoiceVM);
+            InvoiceItemVM = new InvoiceItemViewModel(db);
+            InvoiceVM = new InvoiceViewModel(db, InvoiceItemVM);
+            CustomerVM = new CustomerViewModel(db);
         }
     }
 }
