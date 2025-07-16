@@ -95,7 +95,7 @@
 
                                             <StackPanel Grid.Row="5" Grid.Column="0">
                                                 <TextBlock Text="Ảnh:"/>
-                                                <Button Content=" ... " HorizontalAlignment="Left"/>
+                                                <Button Content=" ... " HorizontalAlignment="Left" Command="{Binding CustomerVM.AddCustomerImageCommand}"/>
                                             </StackPanel>
                                             <ListView Grid.Row="5" Grid.Column="1" Height="150" HorizontalAlignment="Stretch"/>
                                             <DockPanel Grid.Row="6" Grid.Column="1">
