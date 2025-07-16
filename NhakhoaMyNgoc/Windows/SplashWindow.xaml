@@ -19,8 +19,8 @@
     <Grid>
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Bottom">
-                <TextBlock Text="Đang khởi tạo dữ liệu"/>
-                <ProgressBar Height="10" />
+                <TextBlock Text="Đang khởi tạo" x:Name="lblStatus" />
+                <ProgressBar Height="10" x:Name="prgbStatus" Maximum="2"/>
             </StackPanel>
             <Image Source="/Images/LOGO.png" Width="100" DockPanel.Dock="Left"></Image>
             <StackPanel VerticalAlignment="Center">

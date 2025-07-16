@@ -24,5 +24,21 @@ namespace NhakhoaMyNgoc.Windows
         {
             InitializeComponent();
         }
+
+        public void SetStatus(int code)
+        {
+            string message = code switch
+            {
+                1 => "Đang khởi tạo cài đặt nội bộ",
+                2 => "Đang kiểm tra tài nguyên hệ thống",
+                _ => string.Empty
+            };
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                lblStatus.Text = message;
+                prgbStatus.Value = code;
+            });
+        }
     }
 }

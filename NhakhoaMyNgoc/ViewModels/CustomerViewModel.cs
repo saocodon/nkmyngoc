@@ -2,10 +2,13 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Win32;
 using NhakhoaMyNgoc.Models;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using System.Text;
+using System.Windows;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
@@ -122,6 +125,26 @@ namespace NhakhoaMyNgoc.ViewModels
             // dành cho bảng TableEditor
             Customers.Remove(SelectedCustomer);
             SelectedCustomer = new();
+        }
+
+
+        [RelayCommand]
+        void AddCustomerImage()
+        {
+            OpenFileDialog imgOfd = new OpenFileDialog()
+            {
+                Multiselect = true,
+                Filter = "Ảnh|*.png;*.jpg;*.jpeg;*.bmp"
+            };
+            if (imgOfd.ShowDialog() == true)
+            {
+                foreach (var path in imgOfd.FileNames)
+                {
+                    // Copy file đã chọn vào thư mục có mã ID khách hàng
+                    // TODO: get config.
+                    // Lưu đường dẫn vào database
+                }
+            }
         }
 
         partial void OnSelectedCustomerChanged(Customer value)
