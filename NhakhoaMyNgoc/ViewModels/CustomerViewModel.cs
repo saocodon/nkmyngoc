@@ -50,6 +50,9 @@ namespace NhakhoaMyNgoc.ViewModels
                 _db.Customers.Update(SelectedCustomer);
                 _db.SaveChanges();
             }
+
+            // để lưu ảnh
+            Messenger.Publish("SaveCustomer", SelectedCustomer);
         }
 
         [RelayCommand]
@@ -143,7 +146,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
         partial void OnSelectedCustomerChanged(Customer value)
         {
-            Messenger.Publish("CustomerSelected", value);
+            Messenger.Publish("OnSelectedCustomerChanged", value);
         }
     }
 }

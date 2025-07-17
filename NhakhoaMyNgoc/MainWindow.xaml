@@ -104,7 +104,7 @@
                                                     <DataTemplate>
                                                         <StackPanel Orientation="Horizontal">
                                                             <Image Source="{Binding Image}" Width="64" Height="64" Stretch="Uniform"/>
-                                                            <TextBox Text="{Binding Note}" VerticalAlignment="Center" />
+                                                            <TextBox Text="{Binding Note, Mode=TwoWay}" VerticalAlignment="Center" />
                                                         </StackPanel>
                                                     </DataTemplate>
                                                 </ListView.ItemTemplate>

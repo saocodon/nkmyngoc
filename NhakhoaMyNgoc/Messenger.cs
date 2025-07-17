@@ -8,7 +8,7 @@ namespace NhakhoaMyNgoc
 {
     public static class Messenger
     {
-        private static readonly Dictionary<string, List<Action<object>>> _subscriptions = new();
+        private static readonly Dictionary<string, List<Action<object>>> _subscriptions = [];
 
         public static void Subscribe(string key, Action<object> callback)
         {
