@@ -34,9 +34,6 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void SaveCustomer()
         {
-            // Một field NOT NULL = NULL thì return ngay.
-            if (string.IsNullOrWhiteSpace(SelectedCustomer.Name)) return;
-
             if (SelectedCustomer.Id == 0) // khách mới
             {
                 _db.Customers.Add(SelectedCustomer);
@@ -116,18 +113,22 @@ namespace NhakhoaMyNgoc.ViewModels
 
             var result = query.ToList();
             Customers = new ObservableCollection<Customer>(result);
+            SelectedCustomer = Customers.FirstOrDefault() ?? new();
 
             IsSearchMode = false;
         }
         #endregion
 
+        /// <summary>
+        /// Hàm này chỉ có TableEditor được gọi.
+        /// </summary>
         [RelayCommand]
         void RestoreCustomer()
         {
             SelectedCustomer.Deleted = 0;
             _db.SaveChanges();
 
-            // dành cho bảng TableEditor
+            // cho TableEditor
             Customers.Remove(SelectedCustomer);
             SelectedCustomer = new();
         }

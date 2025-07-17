@@ -16,7 +16,7 @@ namespace NhakhoaMyNgoc.ViewModels
             _db = db;
 
             // load tất cả dịch vụ
-            Services = new ObservableCollection<Service>(_db.Services.ToList());
+            Services = new ObservableCollection<Service>([.. _db.Services]);
 
             // khởi tạo ít nhất 1 hàng trong bảng chi tiết
             InvoiceItems.Add(new InvoiceItem());
@@ -121,6 +121,7 @@ namespace NhakhoaMyNgoc.ViewModels
                           where i.CustomerId == customer.Id && i.Deleted == 0
                           select i).ToList();
             Invoices = new ObservableCollection<Invoice>(result);
+            SelectedInvoice = Invoices.FirstOrDefault() ?? new();
         }
     }
 }

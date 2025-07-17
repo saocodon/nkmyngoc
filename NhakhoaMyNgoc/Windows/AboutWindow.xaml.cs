@@ -1,6 +1,8 @@
-﻿using System;
+﻿using NhakhoaMyNgoc.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,9 +21,11 @@ namespace NhakhoaMyNgoc.Windows
     /// </summary>
     public partial class AboutWindow : Window
     {
+        public string AppVersion => $"v{Assembly.GetExecutingAssembly().GetName().Version!.ToString(2)}";
         public AboutWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
     }
 }
