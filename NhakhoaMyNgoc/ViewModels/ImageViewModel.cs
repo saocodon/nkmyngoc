@@ -34,9 +34,8 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             _db = db;
 
-            Messenger.Subscribe("CustomerSelected", data =>
+            Messenger.Subscribe("OnSelectedCustomerChanged", data =>
             {
-                Debug.WriteLine("ImageViewModel received");
                 if (data is object[] args &&
                     args.Length == 1 &&
                     args[0] is Customer customer)
@@ -50,6 +49,16 @@ namespace NhakhoaMyNgoc.ViewModels
                     args[0] is Customer customer &&
                     args[1] is string[] fileNames)
                     AddCustomerImage(customer, fileNames);
+            });
+
+            // Lưu note của ảnh
+            Messenger.Subscribe("SaveCustomer", data =>
+            {
+                // records.Length = Images.Count
+                for (int i = 0; i < Images.Count; i++)
+                    records[i].Note = Images[i].Note;
+
+                _db.SaveChanges();
             });
         }
 
@@ -70,11 +79,11 @@ namespace NhakhoaMyNgoc.ViewModels
                 File.Copy(path, destination);
 
                 // Lưu vào database
-                Image img = new Image()
+                Image img = new()
                 {
                     CustomerId = customer.Id,
                     Deleted = 0,
-                    Note = filename,
+                    Note = tempDesc,
                     Path = filename + extension
                 };
                 _db.Images.Add(img);

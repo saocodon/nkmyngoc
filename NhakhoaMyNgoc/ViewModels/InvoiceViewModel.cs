@@ -22,7 +22,7 @@ namespace NhakhoaMyNgoc.ViewModels
             InvoiceItems.Add(new InvoiceItem());
 
             // đăng ký nhận khách hàng đang chọn
-            Messenger.Subscribe("CustomerSelected", data =>
+            Messenger.Subscribe("OnSelectedCustomerChanged", data =>
             {
                 if (data is object[] obj &&
                     obj.Length == 1 &&
