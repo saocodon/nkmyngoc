@@ -97,7 +97,19 @@
                                                 <TextBlock Text="Ảnh:"/>
                                                 <Button Content=" ... " HorizontalAlignment="Left" Command="{Binding CustomerVM.AddCustomerImageCommand}"/>
                                             </StackPanel>
-                                            <ListView Grid.Row="5" Grid.Column="1" Height="150" HorizontalAlignment="Stretch"/>
+                                            
+                                            <!-- Listview ảnh -->
+                                            <ListView ItemsSource="{Binding ImageVM.Images}" Grid.Row="5" Grid.Column="1" Height="150" HorizontalAlignment="Stretch">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Image Source="{Binding Image}" Width="64" Height="64" Stretch="Uniform"/>
+                                                            <TextBox Text="{Binding Note}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                            
                                             <DockPanel Grid.Row="6" Grid.Column="1">
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                                     <Button Content="In lịch sử" />

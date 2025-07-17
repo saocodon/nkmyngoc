@@ -4,9 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Win32;
 using NhakhoaMyNgoc.Models;
+using NhakhoaMyNgoc.Utilities;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Windows;
 
@@ -40,14 +41,15 @@ namespace NhakhoaMyNgoc.ViewModels
             {
                 _db.Customers.Add(SelectedCustomer);
                 Customers.Add(SelectedCustomer);
+
+                _db.SaveChanges();
+                SelectedCustomer = new(); // reset sau khi lưu
             }
             else // khách cũ
             {
                 _db.Customers.Update(SelectedCustomer);
+                _db.SaveChanges();
             }
-
-            _db.SaveChanges();
-            SelectedCustomer = new(); // reset sau khi lưu
         }
 
         [RelayCommand]
@@ -127,24 +129,16 @@ namespace NhakhoaMyNgoc.ViewModels
             SelectedCustomer = new();
         }
 
-
         [RelayCommand]
-        void AddCustomerImage()
+        void AddCustomerImage(Customer customer)
         {
-            OpenFileDialog imgOfd = new OpenFileDialog()
+            OpenFileDialog imgOfd = new()
             {
                 Multiselect = true,
                 Filter = "Ảnh|*.png;*.jpg;*.jpeg;*.bmp"
             };
             if (imgOfd.ShowDialog() == true)
-            {
-                foreach (var path in imgOfd.FileNames)
-                {
-                    // Copy file đã chọn vào thư mục có mã ID khách hàng
-                    // TODO: get config.
-                    // Lưu đường dẫn vào database
-                }
-            }
+                Messenger.Publish("AddCustomerImage", SelectedCustomer, imgOfd.FileNames);
         }
 
         partial void OnSelectedCustomerChanged(Customer value)

@@ -8,15 +8,35 @@ namespace NhakhoaMyNgoc
 {
     public static class Messenger
     {
-        private static readonly Dictionary<string, Action<object>> _subscriptions = [];
+        private static readonly Dictionary<string, List<Action<object>>> _subscriptions = new();
 
-        public static void Subscribe(string key, Action<object> callback) => _subscriptions[key] = callback;
-
-        public static void Publish(string key, object data)
+        public static void Subscribe(string key, Action<object> callback)
         {
-            if (_subscriptions.TryGetValue(key, out var callback))
-                callback?.Invoke(data);
+            if (!_subscriptions.ContainsKey(key))
+                _subscriptions[key] = [];
+
+            _subscriptions[key].Add(callback);
+        }
+
+        public static void Unsubscribe(string key, Action<object> callback)
+        {
+            if (_subscriptions.TryGetValue(key, out var list))
+            {
+                list.Remove(callback);
+                if (list.Count == 0)
+                    _subscriptions.Remove(key);
+            }
+        }
+
+        public static void Publish(string key, params object[] data)
+        {
+            if (_subscriptions.TryGetValue(key, out var callbacks))
+            {
+                foreach (var callback in callbacks.ToList()) // tránh lỗi collection bị sửa trong khi duyệt
+                {
+                    callback?.Invoke(data);
+                }
+            }
         }
     }
-
 }
