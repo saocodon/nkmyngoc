@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NhakhoaMyNgoc.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -20,9 +21,11 @@ namespace NhakhoaMyNgoc.Windows
     /// </summary>
     public partial class SplashWindow : Window
     {
+        public string AppVersion => $"v{Assembly.GetExecutingAssembly().GetName().Version!.ToString(2)}";
         public SplashWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
         public void SetStatus(int code)
@@ -31,6 +34,7 @@ namespace NhakhoaMyNgoc.Windows
             {
                 1 => "Đang khởi tạo cài đặt nội bộ",
                 2 => "Đang kiểm tra tài nguyên hệ thống",
+                3 => "Sẵn sàng",
                 _ => string.Empty
             };
 

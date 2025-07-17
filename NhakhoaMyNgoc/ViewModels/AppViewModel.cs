@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
 using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.Windows;
 using System;
@@ -17,19 +18,16 @@ namespace NhakhoaMyNgoc.ViewModels
         private readonly DataContext _db;
 
         // bỏ phần revision trong version
-        public static string AppVersion =>
-            "v" + string.Join(".", Assembly.GetExecutingAssembly()
-                                    .GetName().Version!.ToString()
-                                    .Split('.').Take(3));
-
         public AppViewModel(DataContext db)
-            { _db = db; }
+        {
+            _db = db;
+        }
 
         [RelayCommand]
-        static void OpenAbout() => new AboutWindow().ShowDialog();
+        void OpenAbout() => new AboutWindow().ShowDialog();
 
         [RelayCommand]
-        static void OpenSettings() => new SettingsWindow().ShowDialog();
+        void OpenSettings() => new SettingsWindow().ShowDialog();
 
         [RelayCommand]
         void OpenTableEditor(string key)
@@ -42,6 +40,19 @@ namespace NhakhoaMyNgoc.ViewModels
                         { Customers = new(_db.Customers.Where(c => c.Deleted == 1)) },
                     Title = "Khách hàng đã xoá"
                 };
+                new TableEditor() { DataContext = vm }.ShowDialog();
+            }
+            if (key == "ImageRecycleBin")
+            {
+                TableEditorViewModel<Image> vm = new() { Title = "Ảnh đã xoá" };
+                ImageViewModel currentVM = new(_db)
+                {
+                    Records = new(_db.Images
+                                .Include(img => img.Customer) // lazy loading
+                                .Where(img => img.Deleted == 1)
+                                .ToList())
+                };
+                vm.CurrentVM = currentVM;
                 new TableEditor() { DataContext = vm }.ShowDialog();
             }
         }

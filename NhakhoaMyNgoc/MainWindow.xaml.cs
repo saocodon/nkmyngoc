@@ -1,6 +1,7 @@
 ﻿using NhakhoaMyNgoc.Converters;
 using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.ViewModels;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,6 +40,16 @@ namespace NhakhoaMyNgoc
                     ? vm.CustomerVM.SearchForm
                     : vm.CustomerVM.SelectedCustomer;
             }
+        }
+
+        private void DebugClick(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var dc = btn?.DataContext;
+
+            Debug.WriteLine("DataContext: " + dc?.GetType().Name);
+            if (dc is ImageItem item)
+                Debug.WriteLine("DeleteCommand: " + (item.DeleteCommand == null ? "null" : "OK"));
         }
     }
 }

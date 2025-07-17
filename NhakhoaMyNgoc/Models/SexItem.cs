@@ -9,7 +9,7 @@ namespace NhakhoaMyNgoc.Models
     public class SexItem
     {
         public int Value { get; set; }
-        public string Display { get; set; }
+        public string Display { get; set; } = string.Empty;
         public override string ToString() => Display;
     }
 }
