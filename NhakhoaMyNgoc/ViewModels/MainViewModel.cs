@@ -13,5 +13,6 @@ namespace NhakhoaMyNgoc.ViewModels
         public CustomerViewModel CustomerVM { get; } = new(db);
         public InvoiceViewModel InvoiceVM { get; } = new(db);
         public TableEditorViewModel<Customer> CustomerTEVM { get; } = new();
+        public ImageViewModel ImageVM { get; } = new(db);
     }
 }

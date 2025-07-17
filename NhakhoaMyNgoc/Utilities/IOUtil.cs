@@ -2,6 +2,7 @@
 using System.IO;
 using System.Management;
 using System.Reflection;
+using System.Windows.Media.Imaging;
 
 namespace NhakhoaMyNgoc.Utilities
 {
@@ -42,15 +43,6 @@ namespace NhakhoaMyNgoc.Utilities
             return null!;
         }
 
-        public static string FindRootDirectory(string index)
-        {
-            string fullPath = Path.Combine(FindDriveLetter().Name, index);
-            if (File.Exists(fullPath) || Directory.Exists(fullPath))
-                return fullPath;
-
-            return null!; // Không tìm thấy
-        }
-
         public static string GetVolumeSerial(string driveLetter)
         {
             driveLetter = driveLetter.TrimEnd('\\');
@@ -59,6 +51,19 @@ namespace NhakhoaMyNgoc.Utilities
                 return disk["VolumeSerialNumber"]?.ToString()!;
 
             return null!;
+        }
+
+        public static BitmapImage LoadImage(string path)
+        {
+            var bitmap = new BitmapImage();
+            using var stream = File.OpenRead(path);
+
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.StreamSource = stream;
+            bitmap.EndInit();
+            bitmap.Freeze(); // an toàn thread, không bị lock
+            return bitmap;
         }
     }
 }

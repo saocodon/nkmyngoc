@@ -29,6 +29,8 @@ namespace NhakhoaMyNgoc.Utilities
         public static int                              failed_login_streak;
         public static int                              remaining_time;
 
+        public static string                           full_path          = string.Empty;
+
         private static string token = string.Empty;
 
         public static async Task<bool> Load(bool local = false)
