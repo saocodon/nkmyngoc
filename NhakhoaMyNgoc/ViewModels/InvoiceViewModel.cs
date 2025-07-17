@@ -24,7 +24,9 @@ namespace NhakhoaMyNgoc.ViewModels
             // đăng ký nhận khách hàng đang chọn
             Messenger.Subscribe("CustomerSelected", data =>
             {
-                if (data is Customer customer)
+                if (data is object[] obj &&
+                    obj.Length == 1 &&
+                    obj[0] is Customer customer)
                     FindCustomersInvoices(customer);
             });
         }

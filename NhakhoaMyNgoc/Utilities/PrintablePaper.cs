@@ -9,7 +9,7 @@ namespace NhakhoaMyNgoc.Utilities
 {
     public abstract class PrintablePaper
     {
-        public static string RESOURCE_PATH => Path.Combine(IOUtil.FindRootDirectory("NhakhoaMyNgoc"), "Templates");
+        public static string RESOURCE_PATH => Path.Combine(Config.full_path, "Templates");
         public bool Landscape { get; set; }
         public PrintablePaper() => IOUtil.CopyDirectory(RESOURCE_PATH, Path.GetTempPath());
         public abstract string GetTemplateName();
