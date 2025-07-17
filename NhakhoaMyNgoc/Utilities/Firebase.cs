@@ -88,7 +88,7 @@ namespace NhakhoaMyNgoc.Utilities
                 {
                     var list = new List<string>();
                     foreach (var item in element.EnumerateArray())
-                        list.Add(item.GetString());
+                        list.Add(item.GetString()!);
                     return list;
                 }
                 // Add more types as needed

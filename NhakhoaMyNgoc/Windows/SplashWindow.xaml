@@ -25,7 +25,7 @@
             <Image Source="/Images/LOGO.png" Width="100" DockPanel.Dock="Left"></Image>
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="NHA KHOA MỸ NGỌC" FontSize="20" FontWeight="Bold" />
-                <TextBlock Text="{Binding AppVM.AppVersion}" />
+                <TextBlock Text="{Binding AppVersion}" />
             </StackPanel>
         </DockPanel>
     </Grid>
