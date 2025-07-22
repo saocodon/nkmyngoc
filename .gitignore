@@ -1,4 +1,5 @@
 .vs/
+*.Backup.tmp
 NhakhoaMyNgoc/bin/*
 NhakhoaMyNgoc/obj/*
 NhakhoaMyNgoc/NhakhoaMyNgoc.csproj.user
