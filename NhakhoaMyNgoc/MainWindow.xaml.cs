@@ -28,8 +28,11 @@ namespace NhakhoaMyNgoc
 
             // load bảng Services của ServicesIdToNameConverter
             // lấy key trong Resources (XAML).
-            if (Resources["ServiceIdToNameConverter"] is ServiceIdToNameConverter cvt)
-                cvt.Services = vm.InvoiceVM.Services;
+            if (Resources["ServiceIdToNameConverter"] is ServiceIdToNameConverter stn)
+                stn.Services = vm.InvoiceVM.Services;
+
+            if (Resources["ProductsToNameConverter"] is ProductsToNameConverter ptn)
+                ptn.Products = vm.IdnVM.Products;
         }
 
         private void CustomerVM_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

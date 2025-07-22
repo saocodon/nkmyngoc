@@ -17,6 +17,10 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<Customer> Customers { get; set; }
 
+    public virtual DbSet<Idn> Idns { get; set; }
+
+    public virtual DbSet<Idnitem> Idnitems { get; set; }
+
     public virtual DbSet<Image> Images { get; set; }
 
     public virtual DbSet<Invoice> Invoices { get; set; }
@@ -24,6 +28,8 @@ public partial class DataContext : DbContext
     public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }
 
     public virtual DbSet<Payment> Payments { get; set; }
+
+    public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<Service> Services { get; set; }
 
@@ -44,6 +50,39 @@ public partial class DataContext : DbContext
             entity.Property(e => e.Sex).HasDefaultValue(2);
         });
 
+        modelBuilder.Entity<Idn>(entity =>
+        {
+            entity.ToTable("IDN");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CertificateId)
+                .HasDefaultValue(-1)
+                .HasColumnName("CertificateID");
+            entity.Property(e => e.Correspondent).HasDefaultValue("Chưa rõ");
+            entity.Property(e => e.Date).HasDefaultValue(new DateTime(1970, 1, 1, 12, 0, 0, 0, DateTimeKind.Unspecified));
+            entity.Property(e => e.Input).HasDefaultValue(1);
+        });
+
+        modelBuilder.Entity<Idnitem>(entity =>
+        {
+            entity.ToTable("IDNItems");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Demand).HasDefaultValue(1);
+            entity.Property(e => e.IdnId).HasColumnName("IdnID");
+            entity.Property(e => e.ItemId).HasColumnName("ItemID");
+            entity.Property(e => e.Quantity).HasDefaultValue(1);
+            entity.Property(e => e.Total).HasComputedColumnSql();
+
+            entity.HasOne(d => d.Idn).WithMany(p => p.Idnitems)
+                .HasForeignKey(d => d.IdnId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Item).WithMany(p => p.Idnitems)
+                .HasForeignKey(d => d.ItemId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
         modelBuilder.Entity<Image>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("ID");
@@ -59,7 +98,7 @@ public partial class DataContext : DbContext
         {
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
-            entity.Property(e => e.Date).HasDefaultValue(new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+            entity.Property(e => e.Date).HasDefaultValue(new DateTime(1970, 1, 1, 12, 0, 0, 0, DateTimeKind.Unspecified));
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Invoices)
                 .HasForeignKey(d => d.CustomerId)
@@ -92,6 +131,12 @@ public partial class DataContext : DbContext
             entity.HasOne(d => d.Invoice).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.InvoiceId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<Product>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Name).HasDefaultValueSql("\"Chưa rõ\"");
         });
 
         modelBuilder.Entity<Service>(entity =>
