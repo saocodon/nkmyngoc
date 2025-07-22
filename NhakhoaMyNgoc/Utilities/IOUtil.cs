@@ -36,19 +36,19 @@ namespace NhakhoaMyNgoc.Utilities
         {
             foreach (var drive in DriveInfo.GetDrives())
             {
-                string serial = GetVolumeSerial(drive.Name);
+                string? serial = GetVolumeSerial(drive.Name);
                 if (serial == Config.volume_serial)
                     return drive;
             }
             return null!;
         }
 
-        public static string GetVolumeSerial(string driveLetter)
+        public static string? GetVolumeSerial(string driveLetter)
         {
             driveLetter = driveLetter.TrimEnd('\\');
             var searcher = new ManagementObjectSearcher($"SELECT VolumeSerialNumber FROM Win32_LogicalDisk WHERE DeviceID = '{driveLetter}'");
             foreach (var disk in searcher.Get())
-                return disk["VolumeSerialNumber"]?.ToString()!;
+                return disk["VolumeSerialNumber"]?.ToString();
 
             return null!;
         }

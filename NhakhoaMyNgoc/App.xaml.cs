@@ -23,9 +23,6 @@ namespace NhakhoaMyNgoc
 
             Task.Run(() =>
             {
-                var db = new DataContext();
-                var mainVM = new MainViewModel(db);
-
                 // tạo thư mục temp nếu chưa có
                 Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "NhakhoaMyNgoc"));
                 splash.SetStatus(1);
@@ -41,11 +38,11 @@ namespace NhakhoaMyNgoc
                         {
                             if (MessageBox.Show("Không tìm thấy cài đặt đã lưu. Hãy cố gắng kết nối mạng rồi thử lại.",
                                 "Không thể tiếp tục", MessageBoxButton.OK, MessageBoxImage.Error) == MessageBoxResult.OK)
-                                Application.Current.Shutdown();
+                                Current.Shutdown();
                         }
                     }
                     else
-                        Application.Current.Shutdown();
+                        Current.Shutdown();
                 }
                 // copy templates nếu cần
                 splash.SetStatus(2);
@@ -56,6 +53,9 @@ namespace NhakhoaMyNgoc
                 string fullPath = Path.Combine(drive.Name, Config.root_directory);
                 if (File.Exists(fullPath) || Directory.Exists(fullPath))
                     Config.full_path = fullPath;
+
+                var db = new DataContext();
+                var mainVM = new MainViewModel(db);
 
                 // mở MainWindow
                 splash.SetStatus(3);

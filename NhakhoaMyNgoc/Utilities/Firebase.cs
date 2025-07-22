@@ -76,7 +76,7 @@ namespace NhakhoaMyNgoc.Utilities
             response.EnsureSuccessStatusCode();
         }
 
-        public static object ConvertJsonElement(JsonElement element, Type targetType)
+        public static object? ConvertJsonElement(JsonElement element, Type targetType)
         {
             try
             {
