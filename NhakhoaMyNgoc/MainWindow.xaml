@@ -124,6 +124,7 @@
                                             
                                             <DockPanel Grid.Row="6" Grid.Column="1">
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                                    <!-- In lịch sử khách hàng -->
                                                     <Button Content="In lịch sử" Command="{Binding CustomerVM.PrintCommand}" />
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
@@ -221,7 +222,8 @@
 
                                         <DockPanel Grid.Row="5" Grid.Column="1">
                                             <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left">
-                                                <Button Content="In"/>
+                                                <!-- In hoá đơn -->
+                                                <Button Content="In" Command="{Binding InvoiceVM.PrintCommand}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
                                                 <!-- Thêm hoá đơn -->

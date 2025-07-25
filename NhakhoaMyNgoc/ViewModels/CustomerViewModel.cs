@@ -173,7 +173,6 @@ namespace NhakhoaMyNgoc.ViewModels
             };
 
             // Tìm lịch sử
-
             var invoices = _db.Invoices.Include(i => i.InvoiceItems)
                                        .ThenInclude(ii => ii.Service)
                                        .Where(i => i.CustomerId == customer.Id).ToList();
@@ -192,12 +191,8 @@ namespace NhakhoaMyNgoc.ViewModels
                 }
             }
 
-            var customerFilePath = Path.Combine(Path.GetTempPath(), $"Customer{customer.Id}.json");
-            var historyFilePath = Path.Combine(Path.GetTempPath(), $"History{customer.Id}.json");
-            var customerJson = JsonSerializer.Serialize(customer);
-            var historyJson = JsonSerializer.Serialize(history);
-            File.WriteAllText(customerFilePath, customerJson);
-            File.WriteAllText(historyFilePath, historyJson);
+            var customerFilePath = IOUtil.WriteJsonToTempFile(customer, $"Customer{customer.Id}.json");
+            var historyFilePath = IOUtil.WriteJsonToTempFile(history, $"History{customer.Id}.json");
 
             // TODO: cái này phải thay đổi khi đóng gói
             Process.Start(new ProcessStartInfo()
