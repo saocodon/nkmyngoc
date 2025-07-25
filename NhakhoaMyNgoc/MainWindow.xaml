@@ -112,7 +112,6 @@
                                                                     VerticalAlignment="Center"
                                                                     VerticalContentAlignment="Center"
                                                                     Command="{Binding DeleteCommand}"
-                                                                    Click="DebugClick"
                                                                     />
                                                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                                                 <Image Source="{Binding Image}" Width="64" Height="64" Stretch="Uniform"/>
@@ -125,7 +124,7 @@
                                             
                                             <DockPanel Grid.Row="6" Grid.Column="1">
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                                                    <Button Content="In lịch sử" />
+                                                    <Button Content="In lịch sử" Command="{Binding CustomerVM.PrintCommand}" />
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
                                                     <!-- Thêm khách hàng -->
@@ -167,7 +166,6 @@
                                         <TextBlock Text="Nội dung điều trị:" Grid.Row="2" Grid.Column="0"/>
                                         <DataGrid Grid.Row="2" Grid.Column="1" Height="200" HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding InvoiceVM.InvoiceItems}" AutoGenerateColumns="False"
-                                                  SelectedItem="{Binding InvoiceItemVM.SelectedInvoiceItem, Mode=TwoWay}"
                                                   CanUserAddRows="True">
                                             <DataGrid.Columns>
                                                 <!-- Combobox dịch vụ -->
@@ -226,8 +224,11 @@
                                                 <Button Content="In"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
+                                                <!-- Thêm hoá đơn -->
                                                 <Button Content="Thêm" Command="{Binding InvoiceVM.StartAddNewCommand}" CommandParameter="{Binding CustomerVM.SelectedCustomer}"/>
+                                                <!-- Sửa hoá đơn -->
                                                 <Button Content="Lưu" Command="{Binding InvoiceVM.SaveInvoiceCommand}"/>
+                                                <!-- Xoá hoá đơn -->
                                                 <Button Content="Xoá" Command="{Binding InvoiceVM.DeleteInvoiceCommand}"/>
                                             </StackPanel>
                                         </DockPanel>
@@ -265,8 +266,8 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
@@ -344,20 +345,23 @@
                                     </DataGrid>
 
                                     <TextBlock Text="Tổng cộng:" Grid.Row="6" Grid.Column="0" />
-                                    <TextBox Text="{Binding InvoiceVM.SelectedInvoice.Total}" Grid.Row="6" Grid.Column="1"
-                             IsReadOnly="True" MinWidth="200" HorizontalAlignment="Left" />
-
-                                    <TextBlock Text="Ghi chú:" Grid.Row="7" Grid.Column="0"/>
-                                    <TextBox AcceptsReturn="True"
-                                                 Grid.Row="7"
-                                                 Grid.Column="1"
-                                                 TextWrapping="Wrap"
-                                                 VerticalScrollBarVisibility="Auto"
-                                                 MinHeight="100"
-                                                 MaxHeight="100"
-                                                 HorizontalAlignment="Stretch"
-                                                 Text="{Binding InvoiceVM.SelectedInvoice.Note}"
-                                            />
+                                <TextBox Text="{Binding IdnVM.SelectedIdn.Total}" Grid.Row="6" Grid.Column="1"
+                                         IsReadOnly="True" MinWidth="200" HorizontalAlignment="Left" />
+                                <DockPanel Grid.Row="7" Grid.Column="1">
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                        <Button Content="In" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                        <!-- Thêm đơn nhập -->
+                                        <Button Content="Thêm" Command="{Binding CustomerVM.StartAddNewCommand}" />
+                                        <!-- Sửa đơn nhập -->
+                                        <Button Content="Lưu" Command="{Binding CustomerVM.SaveCustomerCommand}"/>
+                                        <!-- Xóa đơn nhập -->
+                                        <Button Content="Xóa" Command="{Binding CustomerVM.DeleteCustomerCommand}"/>
+                                        <!-- Tìm đơn nhập -->
+                                        <Button Content="Tìm" Command="{Binding CustomerVM.FindCustomerCommand}" />
+                                    </StackPanel>
+                                </DockPanel>
                             </Grid>
                         </Grid>
                         <TabControl>
@@ -385,49 +389,23 @@
                                 </StackPanel>
                             </TabItem>
                             <TabItem Header="Kho hàng">
-                                <DataGrid
-                                    ItemsSource="{Binding CustomerVM.Customers}"
-                                    SelectedItem="{Binding CustomerVM.SelectedCustomer, Mode=TwoWay}"
-                                    AutoGenerateColumns="False">
-                                    <DataGrid.InputBindings>
-                                        <!-- Thêm khách hàng -->
-                                        <KeyBinding Key="N" Modifiers="Ctrl"
-                                Command="{Binding DataContext.CustomerVM.StartAddNewCommand,
-                                          RelativeSource={RelativeSource AncestorType=Window}}" />
-                                        <!-- Sửa khách hàng -->
-                                        <KeyBinding Key="S" Modifiers="Ctrl"
-                                Command="{Binding DataContext.CustomerVM.SaveCustomerCommand,
-                                          RelativeSource={RelativeSource AncestorType=Window}}" />
-                                        <!-- Xoá khách hàng -->
-                                        <KeyBinding Key="Delete"
-                                Command="{Binding DataContext.CustomerVM.DeleteCustomerCommand,
-                                          RelativeSource={RelativeSource AncestorType=Window}}" />
-                                    </DataGrid.InputBindings>
-
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="CCCD" Binding="{Binding Cid}"/>
-                                        <DataGridTextColumn Header="Tên" Binding="{Binding Name}"/>
-                                        <DataGridComboBoxColumn Header="Giới tính"
-                                            ItemsSource="{StaticResource SexList}"
-                                            SelectedValuePath="Value"
-                                            DisplayMemberPath="Display"
-                                            SelectedValueBinding="{Binding Sex, Mode=TwoWay}" />
-                                        <DataGridTemplateColumn Header="Ngày sinh">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Birthdate, StringFormat=dd/MM/yyyy}" VerticalAlignment="Center"/>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                            <DataGridTemplateColumn.CellEditingTemplate>
-                                                <DataTemplate>
-                                                    <DatePicker SelectedDate="{Binding Birthdate, Mode=TwoWay}" />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellEditingTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}"></DataGridTextColumn>
-                                        <DataGridTextColumn Header="SĐT" Binding="{Binding Phone}"></DataGridTextColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                <DockPanel LastChildFill="True">
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+                                        <Button Content="Xoá" />
+                                    </StackPanel>
+                                    <DataGrid
+                                    ItemsSource="{Binding IdnVM.Products}"
+                                    AutoGenerateColumns="False"
+                                    IsReadOnly="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Mã VL" Binding="{Binding Id}" />
+                                            <DataGridTextColumn Header="Tên" Binding="{Binding Name}" />
+                                            <DataGridTextColumn Header="Đơn vị" Binding="{Binding Unit}" />
+                                            <DataGridTextColumn Header="SL" Binding="{Binding Quantity}" />
+                                            <DataGridTextColumn Header="Tổng cộng" Binding="{Binding Total}" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </DockPanel>
                             </TabItem>
                         </TabControl>
                     </DockPanel>

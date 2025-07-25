@@ -28,17 +28,17 @@ namespace NhakhoaMyNgoc.ViewModels
         private Idn selectedIdn = new();
 
         [ObservableProperty]
-        private ObservableCollection<Idnitem> idnItems = new();
+        private ObservableCollection<Idnitem> idnItems = [];
 
         [ObservableProperty]
-        private ObservableCollection<Product> products = new();
+        private ObservableCollection<Product> products = [];
 
         public IDNViewModel(DataContext db)
         {
             _db = db;
 
             // load sẵn kho vào đây.
-            Products = new(_db.Products.ToList());
+            Products = new([ .. _db.Products]);
         }
 
         [RelayCommand]

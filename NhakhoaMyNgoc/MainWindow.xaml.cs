@@ -30,7 +30,6 @@ namespace NhakhoaMyNgoc
             // lấy key trong Resources (XAML).
             if (Resources["ServiceIdToNameConverter"] is ServiceIdToNameConverter stn)
                 stn.Services = vm.InvoiceVM.Services;
-
             if (Resources["ProductsToNameConverter"] is ProductsToNameConverter ptn)
                 ptn.Products = vm.IdnVM.Products;
         }
@@ -43,16 +42,6 @@ namespace NhakhoaMyNgoc
                     ? vm.CustomerVM.SearchForm
                     : vm.CustomerVM.SelectedCustomer;
             }
-        }
-
-        private void DebugClick(object sender, RoutedEventArgs e)
-        {
-            var btn = sender as Button;
-            var dc = btn?.DataContext;
-
-            Debug.WriteLine("DataContext: " + dc?.GetType().Name);
-            if (dc is ImageItem item)
-                Debug.WriteLine("DeleteCommand: " + (item.DeleteCommand == null ? "null" : "OK"));
         }
     }
 }

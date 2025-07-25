@@ -48,7 +48,7 @@ namespace NhakhoaMyNgoc.ViewModels
                 ImageViewModel currentVM = new(_db)
                 {
                     Records = new(_db.Images
-                                .Include(img => img.Customer) // lazy loading
+                                .Include(img => img.Customer) // eager loading để tăng tốc độ
                                 .Where(img => img.Deleted == 1)
                                 .ToList())
                 };
