@@ -22,9 +22,9 @@ namespace NhakhoaMyNgoc.Utilities
         public static string                           volume_serial       = string.Empty;
         public static string                           root_directory      = string.Empty;
 
-        public static List<string>                     security_questions = new();
-        public static List<string>                     security_answers   = new();
-        public static List<string>                     security_salts     = new();
+        public static List<string>                     security_questions = [];
+        public static List<string>                     security_answers   = [];
+        public static List<string>                     security_salts     = [];
 
         public static int                              failed_login_streak;
         public static int                              remaining_time;
@@ -83,7 +83,7 @@ namespace NhakhoaMyNgoc.Utilities
         {
             if (token == null) return;
 
-            Dictionary<string, object> config = new Dictionary<string, object>();
+            Dictionary<string, object> config = [];
             Type type = typeof(Config);
 
             foreach (var field in type.GetFields(BindingFlags.Static | BindingFlags.Public))
@@ -91,7 +91,7 @@ namespace NhakhoaMyNgoc.Utilities
                 if (data_fetched.TryGetValue(field.Name, out var element))
                 {
                     object currentValue = field.GetValue(null)!;
-                    object fetchedValue = Firebase.ConvertJsonElement(element, field.FieldType);
+                    object fetchedValue = Firebase.ConvertJsonElement(element, field.FieldType) ?? new();
 
                     if (!object.Equals(currentValue, fetchedValue))
                         config[field.Name] = currentValue;

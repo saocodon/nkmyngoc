@@ -2,6 +2,7 @@
 using System.IO;
 using System.Management;
 using System.Reflection;
+using System.Text.Json;
 using System.Windows.Media.Imaging;
 
 namespace NhakhoaMyNgoc.Utilities
@@ -64,6 +65,13 @@ namespace NhakhoaMyNgoc.Utilities
             bitmap.EndInit();
             bitmap.Freeze(); // an toàn thread, không bị lock
             return bitmap;
+        }
+
+        public static string WriteJsonToTempFile<T>(T obj, string fileName)
+        {
+            var path = Path.Combine(Path.GetTempPath(), fileName);
+            File.WriteAllText(path, JsonSerializer.Serialize(obj));
+            return path;
         }
     }
 }
