@@ -10,6 +10,12 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Windows;
+using NhakhoaMyNgoc_Connector.DTOs;
+using NhakhoaMyNgoc_RDLC;
+using NhakhoaMyNgoc_Connector;
+using System.IO;
+using System.Text.Json;
+using NhakhoaMyNgoc.Converters;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
@@ -143,6 +149,62 @@ namespace NhakhoaMyNgoc.ViewModels
             };
             if (imgOfd.ShowDialog() == true)
                 Messenger.Publish("AddCustomerImage", SelectedCustomer, imgOfd.FileNames);
+        }
+
+        [RelayCommand]
+        void Print()
+        {
+            // Data Transfer Objects (DTO)
+            var customer = new CustomerDto
+            {
+                Id = SelectedCustomer.Id,
+                Deleted = SelectedCustomer.Deleted,
+                Cid = SelectedCustomer.Cid,
+                Name = SelectedCustomer.Name,
+                Birthdate = SelectedCustomer.Birthdate ?? DateTime.UnixEpoch,
+                Address = SelectedCustomer.Address,
+                Phone = SelectedCustomer.Phone,
+                Sex = SelectedCustomer.Sex switch
+                {
+                    0 => "Nam",
+                    1 => "Nữ",
+                    _ => "Khác",
+                }
+            };
+
+            // Tìm lịch sử
+
+            var invoices = _db.Invoices.Include(i => i.InvoiceItems)
+                                       .ThenInclude(ii => ii.Service)
+                                       .Where(i => i.CustomerId == customer.Id).ToList();
+            List<SummaryServiceDto> history = [];
+            foreach (var invoice in invoices)
+            {
+                foreach (var item in invoice.InvoiceItems)
+                {
+                    // line in timeline
+                    var line = new SummaryServiceDto()
+                    {
+                        Date = invoice.Date,
+                        ServiceName = item.Service.Name
+                    };
+                    history.Add(line);
+                }
+            }
+
+            var customerFilePath = Path.Combine(Path.GetTempPath(), $"Customer{customer.Id}.json");
+            var historyFilePath = Path.Combine(Path.GetTempPath(), $"History{customer.Id}.json");
+            var customerJson = JsonSerializer.Serialize(customer);
+            var historyJson = JsonSerializer.Serialize(history);
+            File.WriteAllText(customerFilePath, customerJson);
+            File.WriteAllText(historyFilePath, historyJson);
+
+            // TODO: cái này phải thay đổi khi đóng gói
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = @"..\..\..\..\NhakhoaMyNgoc_RDLC\bin\Debug\NhakhoaMyNgoc_RDLC.exe",
+                Arguments = $"--report customer-history --customer {customerFilePath} --history {historyFilePath}"
+            });
         }
 
         partial void OnSelectedCustomerChanged(Customer value)

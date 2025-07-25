@@ -3,3 +3,9 @@
 NhakhoaMyNgoc/bin/*
 NhakhoaMyNgoc/obj/*
 NhakhoaMyNgoc/NhakhoaMyNgoc.csproj.user
+NhakhoaMyNgoc_RDLC/bin/*
+NhakhoaMyNgoc_RDLC/obj/*
+NhakhoaMyNgoc_RDLC/SqlServerTypes/*
+packages/*
+NhakhoaMyNgoc_Connector/obj/*
+NhakhoaMyNgoc_Connector/bin/*
