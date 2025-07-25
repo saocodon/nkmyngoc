@@ -1,7 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using NhakhoaMyNgoc.Converters;
 using NhakhoaMyNgoc.Models;
+using NhakhoaMyNgoc.Utilities;
+using NhakhoaMyNgoc_Connector.DTOs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -10,6 +14,8 @@ namespace NhakhoaMyNgoc.ViewModels
     public partial class InvoiceViewModel : ObservableObject
     {
         private readonly DataContext _db;
+
+        private Customer SelectedCustomer = new();
 
         public InvoiceViewModel(DataContext db)
         {
@@ -27,7 +33,10 @@ namespace NhakhoaMyNgoc.ViewModels
                 if (data is object[] obj &&
                     obj.Length == 1 &&
                     obj[0] is Customer customer)
+                {
+                    SelectedCustomer = customer;
                     FindCustomersInvoices(customer);
+                }
             });
         }
 
@@ -113,6 +122,67 @@ namespace NhakhoaMyNgoc.ViewModels
 
             Invoices.Remove(SelectedInvoice);
             SelectedInvoice = new();
+        }
+
+        [RelayCommand]
+        void Print()
+        {
+            // Data Transfer Objects (DTO)
+            var customer = new CustomerDto
+            {
+                Id = SelectedCustomer.Id,
+                Deleted = SelectedCustomer.Deleted,
+                Cid = SelectedCustomer.Cid,
+                Name = SelectedCustomer.Name,
+                Birthdate = SelectedCustomer.Birthdate ?? DateTime.UnixEpoch,
+                Address = SelectedCustomer.Address,
+                Phone = SelectedCustomer.Phone,
+                Sex = SelectedCustomer.Sex switch
+                {
+                    0 => "Nam",
+                    1 => "Nữ",
+                    _ => "Khác",
+                }
+            };
+
+            var invoice = new InvoiceDto
+            {
+                Date = SelectedInvoice.Date,
+                Total = SelectedInvoice.Total,
+                Revisit = SelectedInvoice.Revisit ?? DateTime.UnixEpoch,
+                Note = SelectedInvoice.Note +
+                       (IsRevisitValid ? $" (Tái khám ngày {SelectedInvoice.Revisit:dd/MM/yyyy})" : "")
+            };
+
+            // Tìm lịch sử
+            var invoices = _db.Invoices.Include(i => i.InvoiceItems)
+                                       .ThenInclude(ii => ii.Service)
+                                       .Where(i => i.Id == SelectedInvoice.Id).ToList();
+            List<SummaryServiceDto> services = [];
+            foreach (var item in invoices[0].InvoiceItems)
+            {
+                // line in timeline
+                var line = new SummaryServiceDto()
+                {
+                    ServiceName = item.Service.Name,
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+                    Discount = item.Discount,
+                    Total = SelectedInvoice.Total
+                };
+                services.Add(line);
+            }
+
+            var customerFilePath = IOUtil.WriteJsonToTempFile(customer, $"Customer{customer.Id}.json");
+            var invoiceFilePath = IOUtil.WriteJsonToTempFile(invoice, $"Invoice{customer.Id}.json");
+            var servicesFilePath = IOUtil.WriteJsonToTempFile(services, $"Services{SelectedInvoice.Id}.json");
+
+            // TODO: cái này phải thay đổi khi đóng gói
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = @"..\..\..\..\NhakhoaMyNgoc_RDLC\bin\Debug\NhakhoaMyNgoc_RDLC.exe",
+                Arguments = $"--report invoice --customer {customerFilePath} --invoice {invoiceFilePath} --services {servicesFilePath}"
+            });
         }
 
         public void FindCustomersInvoices(Customer customer)
