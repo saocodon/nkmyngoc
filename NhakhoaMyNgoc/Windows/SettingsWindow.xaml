@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:NhakhoaMyNgoc.Windows"
         mc:Ignorable="d"
         Title="Cài đặt" Height="300" Width="625"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False">
 
     <Grid>
         <StackPanel>
