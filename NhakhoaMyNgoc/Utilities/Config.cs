@@ -23,8 +23,8 @@ namespace NhakhoaMyNgoc.Utilities
         public static string                           root_directory      = string.Empty;
 
         public static List<string>                     security_questions = [];
-        public static List<string>                     security_answers   = [];
-        public static List<string>                     security_salts     = [];
+        public static Dictionary<string, string>       security_answers   = [];
+        public static Dictionary<string, string>       security_salts     = [];
 
         public static int                              failed_login_streak;
         public static int                              remaining_time;
@@ -37,19 +37,15 @@ namespace NhakhoaMyNgoc.Utilities
         {
             if (local)
             {
-                string config = Path.Combine(Path.GetTempPath(), "NhakhoaMyNgoc", "config.json");
-                if (!File.Exists(config))
-                    return false;
-
-                string json = File.ReadAllText(Path.Combine(Path.GetTempPath(), "NhakhoaMyNgoc", "config.json"));
+                string tempPath = Path.Combine(Path.GetTempPath(), "NhakhoaMyNgoc", "config.json");
+                if (!File.Exists(tempPath)) return false;
+                string json = File.ReadAllText(tempPath);
                 data_fetched = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
             }
             else
             {
                 token = await Firebase.SignIn();
-                if (token == null)
-                    return false;
-
+                if (token == null) return false;
                 string json = await Firebase.Load(token);
                 data_fetched = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
             }
@@ -71,7 +67,7 @@ namespace NhakhoaMyNgoc.Utilities
                     }
                     else
                     {
-                        var converted = Firebase.ConvertJsonElement(element, field.FieldType);
+                        var converted = IOUtil.ConvertJsonElement(element, field.FieldType);
                         field.SetValue(null, converted);
                     }
                 }
@@ -91,7 +87,7 @@ namespace NhakhoaMyNgoc.Utilities
                 if (data_fetched.TryGetValue(field.Name, out var element))
                 {
                     object currentValue = field.GetValue(null)!;
-                    object fetchedValue = Firebase.ConvertJsonElement(element, field.FieldType) ?? new();
+                    object fetchedValue = IOUtil.ConvertJsonElement(element, field.FieldType) ?? new();
 
                     if (!object.Equals(currentValue, fetchedValue))
                         config[field.Name] = currentValue;

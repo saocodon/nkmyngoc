@@ -14,13 +14,6 @@ namespace NhakhoaMyNgoc.Utilities
 {
     public static class Firebase
     {
-        private static async Task<HttpResponseMessage> PatchAsync(this HttpClient client, string requestUri, HttpContent content)
-        {
-            var method = new HttpMethod("PATCH");
-            var request = new HttpRequestMessage(method, requestUri) { Content = content };
-            return await client.SendAsync(request);
-        }
-
         public static async Task<string> Load(string idToken)
         {
             var client = new HttpClient();
@@ -74,28 +67,6 @@ namespace NhakhoaMyNgoc.Utilities
                                                        await client.PatchAsync(url, content);
 
             response.EnsureSuccessStatusCode();
-        }
-
-        public static object? ConvertJsonElement(JsonElement element, Type targetType)
-        {
-            try
-            {
-                if (targetType == typeof(string)) return element.GetString();
-                if (targetType == typeof(int)) return element.GetInt32();
-                if (targetType == typeof(bool)) return element.GetBoolean();
-                if (targetType == typeof(double)) return element.GetDouble();
-                if (targetType == typeof(List<string>))
-                {
-                    var list = new List<string>();
-                    foreach (var item in element.EnumerateArray())
-                        list.Add(item.GetString()!);
-                    return list;
-                }
-                // Add more types as needed
-            }
-            catch { }
-
-            return null; // fallback
         }
     }
 }
