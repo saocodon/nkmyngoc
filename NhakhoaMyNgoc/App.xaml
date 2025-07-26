@@ -5,4 +5,11 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:uc="clr-namespace:NhakhoaMyNgoc.UserControls"
              xmlns:vm="clr-namespace:NhakhoaMyNgoc.ViewModels">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="CommonStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

@@ -10,7 +10,8 @@
         xmlns:model="clr-namespace:NhakhoaMyNgoc.Models"
         mc:Ignorable="d"
         Title="Nha khoa Mỹ Ngọc" Height="1100" Width="1600"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        Background="#5d6b99">
 
     <Window.Resources>
         <x:Array x:Key="SexList" Type="model:SexItem">
@@ -30,7 +31,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
+        <Menu Grid.Row="0" Background="#ccd5f0">
             <MenuItem Header="Trợ giúp">
                 <MenuItem Header="Hướng dẫn"/>
                 <MenuItem Header="Về phần mềm"
@@ -49,11 +50,11 @@
             </MenuItem>
         </Menu>
         <DockPanel LastChildFill="True" Grid.Row="1">
-            <StackPanel Orientation="Horizontal" Background="LightGray" DockPanel.Dock="Top" Height="75">
+            <StackPanel Orientation="Horizontal" Background="#e9eeff" DockPanel.Dock="Top" Height="75">
                 <Image Source="Images/LOGO.png" Height="75" />
-                <TextBlock Text="NHA KHOA MỸ NGỌC" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" />
+                <TextBlock Foreground="#4c57aa" Text="NHA KHOA MỸ NGỌC" FontSize="20" FontWeight="Bold" />
             </StackPanel>
-            <TabControl DockPanel.Dock="Left">
+            <TabControl DockPanel.Dock="Left" Background="#f7f9fe">
                 <TabItem Header="Hoá đơn">
                     <DockPanel LastChildFill="True">
                         <Grid DockPanel.Dock="Left" Width="740">
@@ -100,7 +101,7 @@
 
                                             <StackPanel Grid.Row="5" Grid.Column="0">
                                                 <TextBlock Text="Ảnh:"/>
-                                                <Button Content=" ... " HorizontalAlignment="Left" Command="{Binding CustomerVM.AddCustomerImageCommand}"/>
+                                                <Button Content=" ... " FontSize="14" HorizontalAlignment="Left" Command="{Binding CustomerVM.AddCustomerImageCommand}"/>
                                             </StackPanel>
                                             
                                             <!-- Listview ảnh -->
@@ -108,7 +109,7 @@
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate>
                                                         <DockPanel HorizontalAlignment="Stretch" LastChildFill="False">
-                                                            <Button Content="X" DockPanel.Dock="Right"
+                                                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" DockPanel.Dock="Right"
                                                                     VerticalAlignment="Center"
                                                                     VerticalContentAlignment="Center"
                                                                     Command="{Binding DeleteCommand}"
@@ -125,17 +126,17 @@
                                             <DockPanel Grid.Row="6" Grid.Column="1">
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                                     <!-- In lịch sử khách hàng -->
-                                                    <Button Content="In lịch sử" Command="{Binding CustomerVM.PrintCommand}" />
+                                                    <Button FontFamily="Segoe MDL2 Assets" Content="&#xE749;" Command="{Binding CustomerVM.PrintCommand}" />
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
                                                     <!-- Thêm khách hàng -->
-                                                    <Button Content="Thêm" Command="{Binding CustomerVM.StartAddNewCommand}" />
+                                                    <Button Foreground="#208c20" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" Command="{Binding CustomerVM.StartAddNewCommand}" />
                                                     <!-- Sửa khách hàng -->
-                                                    <Button Content="Lưu" Command="{Binding CustomerVM.SaveCustomerCommand}"/>
+                                                    <Button Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" Command="{Binding CustomerVM.SaveCustomerCommand}"/>
                                                     <!-- Xóa khách hàng -->
-                                                    <Button Content="Xóa" Command="{Binding CustomerVM.DeleteCustomerCommand}"/>
+                                                    <Button Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" Command="{Binding CustomerVM.DeleteCustomerCommand}"/>
                                                     <!-- Tìm khách hàng -->
-                                                    <Button Content="Tìm" Command="{Binding CustomerVM.FindCustomerCommand}" />
+                                                    <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding CustomerVM.FindCustomerCommand}" />
                                                 </StackPanel>
                                             </DockPanel>
                                         </Grid>
@@ -223,15 +224,15 @@
                                         <DockPanel Grid.Row="5" Grid.Column="1">
                                             <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left">
                                                 <!-- In hoá đơn -->
-                                                <Button Content="In" Command="{Binding InvoiceVM.PrintCommand}"/>
+                                                <Button FontFamily="Segoe MDL2 Assets" Content="&#xE749;" Command="{Binding InvoiceVM.PrintCommand}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
                                                 <!-- Thêm hoá đơn -->
-                                                <Button Content="Thêm" Command="{Binding InvoiceVM.StartAddNewCommand}" CommandParameter="{Binding CustomerVM.SelectedCustomer}"/>
+                                                <Button Foreground="#208c20" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" Command="{Binding InvoiceVM.StartAddNewCommand}" CommandParameter="{Binding CustomerVM.SelectedCustomer}"/>
                                                 <!-- Sửa hoá đơn -->
-                                                <Button Content="Lưu" Command="{Binding InvoiceVM.SaveInvoiceCommand}"/>
+                                                <Button Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" Command="{Binding InvoiceVM.SaveInvoiceCommand}"/>
                                                 <!-- Xoá hoá đơn -->
-                                                <Button Content="Xoá" Command="{Binding InvoiceVM.DeleteInvoiceCommand}"/>
+                                                <Button Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" Command="{Binding InvoiceVM.DeleteInvoiceCommand}"/>
                                             </StackPanel>
                                         </DockPanel>
                                     </Grid>
@@ -351,17 +352,17 @@
                                          IsReadOnly="True" MinWidth="200" HorizontalAlignment="Left" />
                                 <DockPanel Grid.Row="7" Grid.Column="1">
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                                        <Button Content="In" />
+                                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
                                         <!-- Thêm đơn nhập -->
-                                        <Button Content="Thêm" Command="{Binding CustomerVM.StartAddNewCommand}" />
+                                        <Button Foreground="#208c20" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" Command="{Binding CustomerVM.StartAddNewCommand}" />
                                         <!-- Sửa đơn nhập -->
-                                        <Button Content="Lưu" Command="{Binding CustomerVM.SaveCustomerCommand}"/>
+                                        <Button Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" Command="{Binding CustomerVM.SaveCustomerCommand}"/>
                                         <!-- Xóa đơn nhập -->
-                                        <Button Content="Xóa" Command="{Binding CustomerVM.DeleteCustomerCommand}"/>
+                                        <Button Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" Command="{Binding CustomerVM.DeleteCustomerCommand}"/>
                                         <!-- Tìm đơn nhập -->
-                                        <Button Content="Tìm" Command="{Binding CustomerVM.FindCustomerCommand}" />
+                                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding CustomerVM.FindCustomerCommand}" />
                                     </StackPanel>
                                 </DockPanel>
                             </Grid>
@@ -374,7 +375,7 @@
                                         <DatePicker SelectedDate="{Binding IdnVM.FromDate, Mode=TwoWay}" />
                                         <TextBlock Text=" đến " />
                                         <DatePicker SelectedDate="{Binding IdnVM.ToDate, Mode=TwoWay}" />
-                                        <Button Content="Tìm" Command="{Binding IdnVM.LoadIDNsCommand}" />
+                                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding IdnVM.LoadIDNsCommand}" />
                                     </StackPanel>
                                     <DataGrid ItemsSource="{Binding IdnVM.Idns}"
                           SelectedItem="{Binding IdnVM.SelectedIdn}" AutoGenerateColumns="False">
@@ -393,7 +394,7 @@
                             <TabItem Header="Kho hàng">
                                 <DockPanel LastChildFill="True">
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
-                                        <Button Content="Xoá" />
+                                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" />
                                     </StackPanel>
                                     <DataGrid
                                     ItemsSource="{Binding IdnVM.Products}"
@@ -413,7 +414,22 @@
                     </DockPanel>
                 </TabItem>
                 <TabItem Header="Quyết toán thu chi">
-                    
+                    <DockPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <TextBlock Text="Từ " />
+                            <DatePicker SelectedDate="{Binding IdnVM.FromDate, Mode=TwoWay}" />
+                            <TextBlock Text=" đến " />
+                            <DatePicker SelectedDate="{Binding IdnVM.ToDate, Mode=TwoWay}" />
+                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding IdnVM.LoadIDNsCommand}" />
+                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE749;" Command="{Binding IdnVM.LoadIDNsCommand}" />
+                        </StackPanel>
+                        <StatusBar DockPanel.Dock="Bottom" Background="#3b4f81" Foreground="White">
+                            <StatusBarItem Content="Tổng thu: 0" />
+                            <StatusBarItem Content="Tổng chi: 0" />
+                            <StatusBarItem Content="Còn lại: 0" />
+                        </StatusBar>
+                        <DataGrid />
+                    </DockPanel>
                 </TabItem>
             </TabControl>
         </DockPanel>

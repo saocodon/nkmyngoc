@@ -27,7 +27,12 @@ namespace NhakhoaMyNgoc.ViewModels
         void OpenAbout() => new AboutWindow().ShowDialog();
 
         [RelayCommand]
-        void OpenSettings() => new SettingsWindow().ShowDialog();
+        void OpenSettings()
+        {
+            var login = new LoginWindow();
+            if (login.ShowDialog() == true)
+                new SettingsWindow().ShowDialog();
+        }
 
         [RelayCommand]
         void OpenTableEditor(string key)
