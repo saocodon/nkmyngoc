@@ -111,15 +111,13 @@ namespace NhakhoaMyNgoc.Utilities
                         list.Add(item.GetString()!);
                     return list;
                 }
-                if (targetType == typeof(Dictionary<string, object>))
+                if (targetType == typeof(Dictionary<string, string>))
                 {
-                    if (element.ValueKind != JsonValueKind.Object) return null;
-                    var dict = new Dictionary<string, object>();
+                    var dict = new Dictionary<string, string>();
                     foreach (var prop in element.EnumerateObject())
-                        dict[prop.Name] = ConvertJsonElement(prop.Value, typeof(object))!;
+                        dict[prop.Name] = prop.Value.ToString();
                     return dict;
                 }
-                // Add more types as needed
             }
             catch { }
 
