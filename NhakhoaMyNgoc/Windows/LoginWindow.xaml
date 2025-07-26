@@ -25,10 +25,5 @@
             </StackPanel>
             <Button Content="OK" x:Name="btnOK" Click="ValidatePassword" />
         </StackPanel>
-
-        <Grid x:Name="Overlay"
-          Background="#80000000"
-          Visibility="Collapsed"
-          Panel.ZIndex="999"/>
     </Grid>
 </Window>
