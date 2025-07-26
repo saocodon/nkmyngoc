@@ -35,45 +35,42 @@ namespace NhakhoaMyNgoc.Utilities
 
         public static async Task<bool> Load(bool local = false)
         {
-            if (local)
+            try
             {
-                string tempPath = Path.Combine(Path.GetTempPath(), "NhakhoaMyNgoc", "config.json");
-                if (!File.Exists(tempPath)) return false;
-                string json = File.ReadAllText(tempPath);
-                data_fetched = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
-            }
-            else
-            {
-                token = await Firebase.SignIn();
-                if (token == null) return false;
-                string json = await Firebase.Load(token);
-                data_fetched = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
-            }
-
-            Type type = typeof(Config);
-            foreach (var field in type.GetFields(BindingFlags.Static | BindingFlags.Public))
-            {
-                if (data_fetched.TryGetValue(field.Name, out var element))
+                string json;
+                if (local)
                 {
-                    if (field.FieldType == typeof(string))
-                        field.SetValue(null, element.GetString());
-                    else if (field.FieldType == typeof(List<string>))
+                    string tempPath = Path.Combine(Path.GetTempPath(), "NhakhoaMyNgoc", "config.json");
+                    if (!File.Exists(tempPath)) return false;
+                    json = File.ReadAllText(tempPath);
+                }
+                else
+                {
+                    token = await Firebase.SignIn();
+                    if (token == null) return false;
+                    json = await Firebase.Load(token);
+                }
+
+                data_fetched = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
+
+                foreach (var field in typeof(Config).GetFields(BindingFlags.Static | BindingFlags.Public))
+                {
+                    if (data_fetched.TryGetValue(field.Name, out var element))
                     {
-                        if (element.ValueKind != JsonValueKind.Null)
-                        {
-                            var list = element.Deserialize<List<string>>();
-                            field.SetValue(null, list);
-                        }
-                    }
-                    else
-                    {
-                        var converted = IOUtil.ConvertJsonElement(element, field.FieldType);
-                        field.SetValue(null, converted);
+                        var value = IOUtil.ConvertJsonElement(element, field.FieldType);
+                        if (value != null)
+                            field.SetValue(null, value);
                     }
                 }
+
+                return true;
             }
-            return true;
+            catch
+            {
+                return false;
+            }
         }
+
 
         public static async Task Save()
         {
