@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NhakhoaMyNgoc.Windows"
         mc:Ignorable="d"
-        Title="Cài đặt" Height="325" Width="625"
+        Title="Cài đặt" Height="300" Width="625"
         WindowStartupLocation="CenterScreen">
+
     <Grid>
         <StackPanel>
             <GroupBox Header="Bảo mật">
@@ -23,21 +24,24 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Mật khẩu mới:"/>
-                    <PasswordBox Grid.Row="0" Grid.Column="1" MinWidth="200" HorizontalAlignment="Left"/>
+                    <PasswordBox Grid.Row="0" Grid.Column="1" MinWidth="200" HorizontalAlignment="Left"
+                                 x:Name="txtNewPassword" />
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Nhập lại mật khẩu mới:"/>
-                    <PasswordBox Grid.Row="1" Grid.Column="1" MinWidth="200" HorizontalAlignment="Left"/>
+                    <PasswordBox Grid.Row="1" Grid.Column="1" MinWidth="200" HorizontalAlignment="Left"
+                                 x:Name="txtReenterNewPassword" />
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Nơi lưu dữ liệu:"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                        <TextBox Grid.Row="1" Grid.Column="1" MinWidth="400" HorizontalAlignment="Left"/>
-                        <Button Content="..."/>
+                        <TextBox Grid.Row="1" Grid.Column="1" MinWidth="400" HorizontalAlignment="Left"
+                                 x:Name="txtRootPath" />
+                        <Button Content="..." x:Name="btnBrowseRootPath" Click="BrowseRoot" />
                     </StackPanel>
 
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Bộ nhớ:"/>
                     <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical">
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="0 MiB / 0 MiB"/>
-                        <ProgressBar Height="10"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="0 MiB / 0 MiB" x:Name="lblStorage" />
+                        <ProgressBar Height="10" x:Name="prgbStorage" />
                     </StackPanel>
                 </Grid>
             </GroupBox>
@@ -55,19 +59,23 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Câu hỏi 1:"></TextBlock>
-                    <ComboBox Grid.Row="0" Grid.Column="1" MinWidth="400" HorizontalAlignment="Left"></ComboBox>
+                    <ComboBox Grid.Row="0" Grid.Column="1" MinWidth="400" HorizontalAlignment="Left"
+                              x:Name="cboQuestion1"></ComboBox>
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Đáp án 1:"></TextBlock>
-                    <TextBox Grid.Row="1" Grid.Column="1" MinWidth="400" HorizontalAlignment="Left"></TextBox>
+                    <TextBox Grid.Row="1" Grid.Column="1" MinWidth="400" HorizontalAlignment="Left"
+                             x:Name="txtAnswer1"></TextBox>
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Câu hỏi 2:"></TextBlock>
-                    <ComboBox Grid.Row="2" Grid.Column="1" MinWidth="400" HorizontalAlignment="Left"></ComboBox>
+                    <ComboBox Grid.Row="2" Grid.Column="1" MinWidth="400" HorizontalAlignment="Left"
+                              x:Name="cboQuestion2"></ComboBox>
 
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="Đáp án 2:"></TextBlock>
-                    <TextBox Grid.Row="3" Grid.Column="1" MinWidth="400" HorizontalAlignment="Left"></TextBox>
+                    <TextBox Grid.Row="3" Grid.Column="1" MinWidth="400" HorizontalAlignment="Left"
+                             x:Name="txtAnswer2"></TextBox>
                 </Grid>
             </GroupBox>
-            <Button Content="Lưu"/>
+            <Button Content="Lưu" Click="SaveSettings" />
         </StackPanel>
     </Grid>
 </Window>
