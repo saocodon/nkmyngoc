@@ -59,6 +59,8 @@ namespace NhakhoaMyNgoc.ViewModels
 
         [ObservableProperty]
         private ObservableCollection<Invoice> invoices = [];
+
+        public static string Title => "Hoá đơn";
         #endregion
 
         /// <summary>
@@ -118,6 +120,19 @@ namespace NhakhoaMyNgoc.ViewModels
         void DeleteInvoice()
         {
             SelectedInvoice.Deleted = 1;
+            _db.SaveChanges();
+
+            Invoices.Remove(SelectedInvoice);
+            SelectedInvoice = new();
+        }
+
+        /// <summary>
+        /// Hàm này chỉ có TableEditor được gọi.
+        /// </summary>
+        [RelayCommand]
+        void Restore()
+        {
+            SelectedInvoice.Deleted = 0;
             _db.SaveChanges();
 
             Invoices.Remove(SelectedInvoice);

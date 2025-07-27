@@ -258,15 +258,7 @@
                         </Grid>
                         <TabControl>
                             <TabItem Header="Hoá đơn">
-                                <DataGrid ItemsSource="{Binding InvoiceVM.Invoices}" AutoGenerateColumns="False"
-                                          SelectedItem="{Binding InvoiceVM.SelectedInvoice}">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Mã HĐ" Binding="{Binding Id}" IsReadOnly="True" />
-                                        <DataGridTextColumn Header="Ngày khám" Binding="{Binding Date}"/>
-                                        <DataGridTextColumn Header="Thành tiền" Binding="{Binding Total}"/>
-                                        <DataGridTextColumn Header="Còn nợ" Binding="{Binding Remaining}"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                <uc:InvoiceDataGrid DataContext="{Binding InvoiceVM}" />
                             </TabItem>
                             <TabItem Header="Khách hàng">
                                 <uc:CustomerDataGrid DataContext="{Binding CustomerVM}" />
@@ -373,13 +365,11 @@
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
                                         <!-- Thêm đơn nhập -->
-                                        <Button Foreground="#208c20" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" Command="{Binding CustomerVM.StartAddNewCommand}" />
+                                        <Button Foreground="#208c20" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" />
                                         <!-- Sửa đơn nhập -->
-                                        <Button Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" Command="{Binding CustomerVM.SaveCustomerCommand}"/>
+                                        <Button Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" />
                                         <!-- Xóa đơn nhập -->
-                                        <Button Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" Command="{Binding CustomerVM.DeleteCustomerCommand}"/>
-                                        <!-- Tìm đơn nhập -->
-                                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding CustomerVM.FindCustomerCommand}" />
+                                        <Button Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" />
                                     </StackPanel>
                                 </DockPanel>
                             </Grid>
@@ -392,20 +382,10 @@
                                         <DatePicker SelectedDate="{Binding IdnVM.FromDate, Mode=TwoWay}" />
                                         <TextBlock Text=" đến " />
                                         <DatePicker SelectedDate="{Binding IdnVM.ToDate, Mode=TwoWay}" />
+                                        <!-- Tìm đơn nhập -->
                                         <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding IdnVM.LoadIDNsCommand}" />
                                     </StackPanel>
-                                    <DataGrid ItemsSource="{Binding IdnVM.Idns}"
-                          SelectedItem="{Binding IdnVM.SelectedIdn}" AutoGenerateColumns="False">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Mã đơn" Binding="{Binding Id}" IsReadOnly="True" />
-                                            <DataGridCheckBoxColumn Header="Nhập" Binding="{Binding Input}" />
-                                            <DataGridTextColumn Header="Ngày" Binding="{Binding Date}" />
-                                            <DataGridTextColumn Header="Số chứng từ" Binding="{Binding CertificateId}" />
-                                            <DataGridTextColumn Header="Người thực hiện" Binding="{Binding Correspondent}" />
-                                            <DataGridTextColumn Header="Lý do" Binding="{Binding Reason}" />
-                                            <DataGridTextColumn Header="Tổng cộng" Binding="{Binding Total}" />
-                                        </DataGrid.Columns>
-                                    </DataGrid>
+                                    <uc:IdnDataGrid />
                                 </StackPanel>
                             </TabItem>
                             <TabItem Header="Kho hàng">
