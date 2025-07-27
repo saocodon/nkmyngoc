@@ -21,6 +21,8 @@ namespace NhakhoaMyNgoc.ViewModels
     public partial class ImageItem : ObservableObject
     {
         public BitmapImage Image { get; set; } = new();
+        public int CustomerId { get; set; }
+        public string Path { get; set; } = string.Empty;
         public string Note { get; set; } = string.Empty;
 
         public ICommand? DeleteCommand { get; set; }
@@ -39,7 +41,10 @@ namespace NhakhoaMyNgoc.ViewModels
         [ObservableProperty]
         private Image selectedRecord = new();
 
-        public string Title => "Hình ảnh";
+        [ObservableProperty]
+        private ImageItem selectedImage = new();
+
+        public static string Title => "Hình ảnh";
 
         public ImageViewModel(DataContext db)
         {
@@ -73,12 +78,24 @@ namespace NhakhoaMyNgoc.ViewModels
             });
         }
 
+        [RelayCommand]
+        void OpenImage() => Process.Start(new ProcessStartInfo() {
+            FileName = Path.Combine(
+                         Config.full_path,
+                         "Images",
+                         SelectedImage.CustomerId.ToString(),
+                         SelectedImage.Path),
+            UseShellExecute = true
+        });
+
         void CreateListViewItem(Image record, BitmapImage image)
         {
             ImageItem? item = null;
             item = new ImageItem
             {
                 Image = image,
+                CustomerId = record.CustomerId,
+                Path = record.Path,
                 Note = record.Note ?? string.Empty,
                 DeleteCommand = new RelayCommand(() =>
                 {
@@ -148,7 +165,6 @@ namespace NhakhoaMyNgoc.ViewModels
             SelectedRecord.Deleted = 0;
             _db.SaveChanges();
 
-            // cho TableEditor
             Records.Remove(SelectedRecord);
             SelectedRecord = new();
         }
