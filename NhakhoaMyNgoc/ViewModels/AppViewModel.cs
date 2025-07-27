@@ -24,10 +24,10 @@ namespace NhakhoaMyNgoc.ViewModels
         }
 
         [RelayCommand]
-        void OpenAbout() => new AboutWindow().ShowDialog();
+        static void OpenAbout() => new AboutWindow().ShowDialog();
 
         [RelayCommand]
-        void OpenSettings()
+        static void OpenSettings()
         {
             var login = new LoginWindow();
             if (login.ShowDialog() == true)
@@ -37,29 +37,13 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void OpenTableEditor(string key)
         {
-            if (key == "CustomerRecycleBin")
-            {
-                var vm = new TableEditorViewModel<Customer>()
-                {
-                    CurrentVM = new CustomerViewModel(_db)
-                        { Customers = new(_db.Customers.Where(c => c.Deleted == 1)) },
-                    Title = "Khách hàng đã xoá"
-                };
-                new TableEditor() { DataContext = vm }.ShowDialog();
-            }
-            if (key == "ImageRecycleBin")
-            {
-                TableEditorViewModel<Image> vm = new() { Title = "Ảnh đã xoá" };
-                ImageViewModel currentVM = new(_db)
-                {
-                    Records = new(_db.Images
+            var vm = new TableEditorViewModel(_db);
+            vm.CustomerVM.Customers = new(_db.Customers.Where(c => c.Deleted == 1));
+            vm.ImageVM.Records = new([.. _db.Images
                                 .Include(img => img.Customer) // eager loading để tăng tốc độ
-                                .Where(img => img.Deleted == 1)
-                                .ToList())
-                };
-                vm.CurrentVM = currentVM;
-                new TableEditor() { DataContext = vm }.ShowDialog();
-            }
+                                .Where(img => img.Deleted == 1)]);
+            vm.SelectedTab = vm.Tabs.FirstOrDefault()!;
+            new TableEditor() { DataContext = vm }.ShowDialog();
         }
     }
 }
