@@ -7,7 +7,8 @@
         xmlns:uc="clr-namespace:NhakhoaMyNgoc.UserControls"
         xmlns:vm="clr-namespace:NhakhoaMyNgoc.ViewModels"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="450" Width="800">
+        Title="Thùng rác" Height="450" Width="800"
+        Background="#5d6b99">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:CustomerViewModel}">
             <DockPanel LastChildFill="True">
@@ -30,6 +31,17 @@
         </DataTemplate>
     </Window.Resources>
     <Grid>
-        <ContentControl Content="{Binding CurrentVM}" />
+        <TabControl Background="#f7f9fe" ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+                    <Setter Property="Header" Value="{Binding Title}" />
+                </Style>
+            </TabControl.ItemContainerStyle>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentPresenter Content="{Binding}" />
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
     </Grid>
 </Window>
