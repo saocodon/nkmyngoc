@@ -38,12 +38,9 @@
                           Command="{Binding AppVM.OpenAboutCommand}" />
             </MenuItem>
             <MenuItem Header="Công cụ">
-                <MenuItem Header="Khách hàng đã xoá"
-                          Command="{Binding AppVM.OpenTableEditorCommand}"
-                          CommandParameter="CustomerRecycleBin"/>
-                <MenuItem Header="Ảnh đã xoá"
-                          Command="{Binding AppVM.OpenTableEditorCommand}"
-                          CommandParameter="ImageRecycleBin"/>
+                <!-- Khôi phục -->
+                <MenuItem Header="Thùng rác"
+                          Command="{Binding AppVM.OpenTableEditorCommand}"/>
                 <Separator />
                 <MenuItem Header="Cài đặt"
                           Command="{Binding AppVM.OpenSettingsCommand}" />

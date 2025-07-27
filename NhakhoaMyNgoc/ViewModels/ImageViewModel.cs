@@ -39,6 +39,8 @@ namespace NhakhoaMyNgoc.ViewModels
         [ObservableProperty]
         private Image selectedRecord = new();
 
+        public string Title => "Hình ảnh";
+
         public ImageViewModel(DataContext db)
         {
             _db = db;

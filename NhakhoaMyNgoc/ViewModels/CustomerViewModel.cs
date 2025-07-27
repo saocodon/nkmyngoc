@@ -34,6 +34,8 @@ namespace NhakhoaMyNgoc.ViewModels
 
         [ObservableProperty]
         private Customer selectedCustomer = new();
+
+        public string Title => "Khách hàng";
         #endregion
 
         #region Add & edit
