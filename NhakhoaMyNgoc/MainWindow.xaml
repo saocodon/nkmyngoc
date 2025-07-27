@@ -117,14 +117,23 @@
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate>
                                                         <DockPanel HorizontalAlignment="Stretch" LastChildFill="False">
-                                                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" DockPanel.Dock="Right"
+                                                            <Button FontFamily="Segoe MDL2 Assets" 
+                                                                    Foreground="#c80f21"
+                                                                    Background="Transparent"
+                                                                    BorderThickness="0"
+                                                                    Content="&#xE894;" DockPanel.Dock="Right"
                                                                     VerticalAlignment="Center"
                                                                     VerticalContentAlignment="Center"
                                                                     Command="{Binding DeleteCommand}"
                                                                     />
                                                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                                                 <Image Source="{Binding Image}" Width="64" Height="64" Stretch="Uniform"/>
-                                                                <TextBox Text="{Binding Note, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                                                <TextBox BorderThickness="0"
+                                                                         Background="Transparent" Text="{Binding Note, Mode=TwoWay}" VerticalAlignment="Center"
+                                                                         IsReadOnly="True"
+                                                                         Cursor="Arrow"
+                                                                         GotFocus="TextBox_GotFocus"
+                                                                         LostFocus="TextBox_LostFocus"/>
                                                             </StackPanel>
                                                         </DockPanel>
                                                     </DataTemplate>
