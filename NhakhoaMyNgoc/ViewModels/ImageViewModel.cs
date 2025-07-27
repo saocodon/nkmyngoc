@@ -160,7 +160,7 @@ namespace NhakhoaMyNgoc.ViewModels
         /// Hàm này chỉ có TableEditor được gọi.
         /// </summary>
         [RelayCommand]
-        void RestoreImage()
+        void Restore()
         {
             SelectedRecord.Deleted = 0;
             _db.SaveChanges();

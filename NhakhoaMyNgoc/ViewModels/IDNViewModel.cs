@@ -33,6 +33,8 @@ namespace NhakhoaMyNgoc.ViewModels
         [ObservableProperty]
         private ObservableCollection<Product> products = [];
 
+        public string Title => "Đơn nhập/xuất";
+
         public IDNViewModel(DataContext db)
         {
             _db = db;
@@ -58,6 +60,19 @@ namespace NhakhoaMyNgoc.ViewModels
             if (value is null) return;
             var items = _db.Idnitems.Where(i => i.IdnId == value.Id).ToList();
             IdnItems = new ObservableCollection<Idnitem>(items);
+        }
+
+        /// <summary>
+        /// Hàm này chỉ có TableEditor được gọi.
+        /// </summary>
+        [RelayCommand]
+        void Restore()
+        {
+            SelectedIdn.Deleted = 0;
+            _db.SaveChanges();
+
+            Idns.Remove(SelectedIdn);
+            SelectedIdn = new();
         }
     }
 }

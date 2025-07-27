@@ -131,7 +131,7 @@ namespace NhakhoaMyNgoc.ViewModels
         /// Hàm này chỉ có TableEditor được gọi.
         /// </summary>
         [RelayCommand]
-        void RestoreCustomer()
+        void Restore()
         {
             SelectedCustomer.Deleted = 0;
             _db.SaveChanges();

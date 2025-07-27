@@ -8,17 +8,13 @@
         xmlns:vm="clr-namespace:NhakhoaMyNgoc.ViewModels"
         mc:Ignorable="d"
         Title="Thùng rác" Height="450" Width="800"
-        Background="#5d6b99">
+        Background="#f7f9fe">
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:CustomerViewModel}">
-            <DockPanel LastChildFill="True">
-                <Button Content="Khôi phục" DockPanel.Dock="Bottom" Command="{Binding RestoreCustomerCommand}"/>
-                <uc:CustomerDataGrid />
-            </DockPanel>
+            <uc:CustomerDataGrid />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:ImageViewModel}">
             <DockPanel LastChildFill="True">
-                <Button Content="Khôi phục" DockPanel.Dock="Bottom" Command="{Binding RestoreImageCommand}"/>
                 <DataGrid ItemsSource="{Binding Records}" SelectedItem="{Binding SelectedRecord, Mode=TwoWay}" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="CCCD" Binding="{Binding Customer.Cid}"/>
@@ -29,9 +25,24 @@
                 </DataGrid>
             </DockPanel>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:InvoiceViewModel}">
+            <uc:InvoiceDataGrid />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:IDNViewModel}">
+            <uc:InvoiceDataGrid />
+        </DataTemplate>
     </Window.Resources>
     <Grid>
-        <TabControl Background="#f7f9fe" ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Nội dung tab -->
+        <TabControl Background="#f7f9fe"
+                ItemsSource="{Binding Tabs}"
+                SelectedItem="{Binding SelectedTab}"
+                Grid.Row="0">
             <TabControl.ItemContainerStyle>
                 <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
                     <Setter Property="Header" Value="{Binding Title}" />
@@ -39,9 +50,19 @@
             </TabControl.ItemContainerStyle>
             <TabControl.ContentTemplate>
                 <DataTemplate>
+                    <!-- Nội dung riêng theo từng ViewModel -->
                     <ContentPresenter Content="{Binding}" />
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
+
+        <!-- Nút khôi phục ở dưới cố định -->
+        <Button Grid.Row="1"
+            Content="Khôi phục"
+            Height="36"
+            Margin="12"
+            HorizontalAlignment="Right"
+            Padding="20,4"
+            Command="{Binding SelectedTab.RestoreCommand}" />
     </Grid>
 </Window>
