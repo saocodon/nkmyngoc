@@ -8,6 +8,7 @@
         xmlns:cvt="clr-namespace:NhakhoaMyNgoc.Converters"
         xmlns:uc="clr-namespace:NhakhoaMyNgoc.UserControls"
         xmlns:model="clr-namespace:NhakhoaMyNgoc.Models"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="Nha khoa Mỹ Ngọc" Height="1100" Width="1600"
         WindowState="Maximized"
@@ -102,7 +103,17 @@
                                             </StackPanel>
                                             
                                             <!-- Listview ảnh -->
-                                            <ListView ItemsSource="{Binding ImageVM.Images}" Grid.Row="5" Grid.Column="1" Height="150" HorizontalContentAlignment="Stretch">
+                                            <ListView ItemsSource="{Binding ImageVM.Images}" Grid.Row="5" 
+                                                      Grid.Column="1" Height="150" 
+                                                      SelectedItem="{Binding ImageVM.SelectedImage}"
+                                                      HorizontalContentAlignment="Stretch">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                                        <i:InvokeCommandAction 
+                                                                Command="{Binding DataContext.ImageVM.OpenImageCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                                CommandParameter="{Binding DataContext.ImageVM.SelectedImage, RelativeSource={RelativeSource AncestorType=ListView}}" />
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate>
                                                         <DockPanel HorizontalAlignment="Stretch" LastChildFill="False">
