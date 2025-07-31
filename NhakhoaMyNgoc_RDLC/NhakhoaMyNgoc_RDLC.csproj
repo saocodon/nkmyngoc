@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Reports\DeliveryNoteReport.cs" />
     <Compile Include="Reports\InvoiceReport.cs" />
     <Compile Include="Reports\CustomerHistoryReport.cs" />
     <Compile Include="frmPrint.cs">
@@ -112,8 +113,13 @@
     <Content Include="Templates\Invoice.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Templates\DeliveryNote.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.CustomerDto.datasource" />
+    <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.IdnDto.datasource" />
+    <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.IdnItemDto.datasource" />
     <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.InvoiceDto.datasource" />
     <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.SummaryServiceDto.datasource" />
     <None Include="Properties\Settings.settings">

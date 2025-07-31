@@ -81,6 +81,13 @@ namespace NhakhoaMyNgoc.ViewModels
             OnPropertyChanged(nameof(IsRevisitValid));
         }
 
+        partial void OnInvoiceItemsChanged(ObservableCollection<InvoiceItem> value)
+        {
+            SelectedInvoice.Total = 0;
+            foreach (var item in value)
+                SelectedInvoice.Total += item.Quantity * item.Price - item.Discount;
+        }
+
         #region Add & edit
         [RelayCommand]
         void StartAddNew(Customer current) => SelectedInvoice = new() { CustomerId = current.Id };
@@ -88,21 +95,18 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void SaveInvoice()
         {
-            // Một field NOT NULL = NULL thì return ngay.
-            if (SelectedInvoice.CustomerId == 0) return;
-
             if (SelectedInvoice.Id == 0) // hoá đơn mới
             {
                 _db.Invoices.Add(SelectedInvoice);
+                _db.SaveChanges();
+
                 Invoices.Add(SelectedInvoice);
 
                 // thêm từng dịch vụ
                 foreach (var item in InvoiceItems)
                 {
                     // đặt mã hoá đơn
-                    // vì chưa gọi AcceptChanges() nên phải +1
-                    item.InvoiceId = _db.Invoices.Count() + 1;
-
+                    item.InvoiceId = SelectedInvoice.Id;
                     _db.InvoiceItems.Add(item);
                 }
             }
