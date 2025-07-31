@@ -361,15 +361,21 @@
                                          IsReadOnly="True" MinWidth="200" HorizontalAlignment="Left" />
                                 <DockPanel Grid.Row="7" Grid.Column="1">
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
+                                        <!-- In đơn nhập -->
+                                        <Button Command="{Binding IdnVM.PrintCommand}"
+                                                FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
                                         <!-- Thêm đơn nhập -->
-                                        <Button Foreground="#208c20" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" />
+                                        <Button Command="{Binding IdnVM.StartAddNewCommand}"
+                                                Foreground="#208c20"
+                                                FontFamily="Segoe MDL2 Assets" Content="&#xE710;" />
                                         <!-- Sửa đơn nhập -->
-                                        <Button Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" />
+                                        <Button Command="{Binding IdnVM.SaveIdnCommand}"
+                                                Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" />
                                         <!-- Xóa đơn nhập -->
-                                        <Button Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" />
+                                        <Button Command="{Binding IdnVM.DeleteIdnCommand}"
+                                                Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" />
                                     </StackPanel>
                                 </DockPanel>
                             </Grid>
@@ -385,7 +391,7 @@
                                         <!-- Tìm đơn nhập -->
                                         <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding IdnVM.LoadIDNsCommand}" />
                                     </StackPanel>
-                                    <uc:IdnDataGrid />
+                                    <uc:IdnDataGrid DataContext="{Binding IdnVM}" />
                                 </StackPanel>
                             </TabItem>
                             <TabItem Header="Kho hàng">
