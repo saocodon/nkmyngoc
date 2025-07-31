@@ -7,14 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <DataGrid ItemsSource="{Binding Invoices}" SelectedItem="{Binding SelectedInvoice, Mode=TwoWay}" AutoGenerateColumns="False">
+        <DataGrid ItemsSource="{Binding Invoices}"
+                  SelectedItem="{Binding SelectedInvoice, Mode=TwoWay}"
+                  AutoGenerateColumns="False"
+                  CanUserDeleteRows="False"
+                  CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="CCCD" IsReadOnly="True" Binding="{Binding Customer.Cid}"/>
                 <DataGridTextColumn Header="Tên" IsReadOnly="True" Binding="{Binding Customer.Name}"/>
                 <DataGridTextColumn Header="Mã HĐ" IsReadOnly="True" Binding="{Binding Id}" />
                 <DataGridTextColumn Header="Ngày khám" Binding="{Binding Date}"/>
                 <DataGridTextColumn Header="Thành tiền" IsReadOnly="True" Binding="{Binding Total}"/>
-                <DataGridTextColumn Header="Còn nợ" IsReadOnly="True" Binding="{Binding Remaining}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -15,7 +15,11 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:ImageViewModel}">
             <DockPanel LastChildFill="True">
-                <DataGrid ItemsSource="{Binding Records}" SelectedItem="{Binding SelectedRecord, Mode=TwoWay}" AutoGenerateColumns="False">
+                <DataGrid ItemsSource="{Binding Records}"
+                          SelectedItem="{Binding SelectedRecord, Mode=TwoWay}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="CCCD" Binding="{Binding Customer.Cid}"/>
                         <DataGridTextColumn Header="Tên" Binding="{Binding Customer.Name}"/>

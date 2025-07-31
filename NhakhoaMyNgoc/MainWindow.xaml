@@ -26,7 +26,7 @@
         <cvt:InverseToBoolConverter x:Key="InverseToBoolConverter" />
         <cvt:ProductsToNameConverter x:Key="ProductsToNameConverter" />
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -101,7 +101,7 @@
                                                 <TextBlock Text="Ảnh:"/>
                                                 <Button Content=" ... " FontSize="14" HorizontalAlignment="Left" Command="{Binding CustomerVM.AddCustomerImageCommand}"/>
                                             </StackPanel>
-                                            
+
                                             <!-- Listview ảnh -->
                                             <ListView ItemsSource="{Binding ImageVM.Images}" Grid.Row="5" 
                                                       Grid.Column="1" Height="150" 
@@ -139,7 +139,7 @@
                                                     </DataTemplate>
                                                 </ListView.ItemTemplate>
                                             </ListView>
-                                            
+
                                             <DockPanel Grid.Row="6" Grid.Column="1">
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                                     <!-- In lịch sử khách hàng -->
@@ -159,9 +159,9 @@
                                         </Grid>
                                     </StackPanel>
                                 </GroupBox>
-                            <GroupBox Header="Thu tiền">
-                                <Grid>
-                                    <Grid.RowDefinitions>
+                                <GroupBox Header="Thu tiền">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
@@ -169,10 +169,10 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
+                                        <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                                        </Grid.ColumnDefinitions>
 
                                         <TextBlock Text="Ngày khám:" Grid.Row="0" Grid.Column="0"/>
                                         <DatePicker Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"
@@ -184,8 +184,13 @@
 
                                         <TextBlock Text="Nội dung điều trị:" Grid.Row="2" Grid.Column="0"/>
                                         <DataGrid Grid.Row="2" Grid.Column="1" Height="200" HorizontalAlignment="Stretch"
-                                                  ItemsSource="{Binding InvoiceVM.InvoiceItems}" AutoGenerateColumns="False"
+                                                  ItemsSource="{Binding InvoiceVM.InvoiceItems, Mode=TwoWay}"
+                                                  SelectedItem="{Binding InvoiceVM.SelectedInvoiceItem}"
+                                                  AutoGenerateColumns="False"
                                                   CanUserAddRows="True">
+                                            <DataGrid.InputBindings>
+                                                <KeyBinding Key="Delete" Command="{Binding InvoiceVM.DeleteInvoiceItemCommand}" />
+                                            </DataGrid.InputBindings>
                                             <DataGrid.Columns>
                                                 <!-- Combobox dịch vụ -->
                                                 <DataGridTemplateColumn Header="Dịch vụ">
@@ -223,7 +228,7 @@
                                         </DataGrid>
 
                                         <TextBlock Text="Tổng cộng:" Grid.Row="3" Grid.Column="0" />
-                                        <TextBox Text="{Binding InvoiceVM.SelectedInvoice.Total}" Grid.Row="3" Grid.Column="1"
+                                        <TextBox Text="{Binding InvoiceVM.Total, Mode=OneWay}" Grid.Row="3" Grid.Column="1"
                                                  IsReadOnly="True" HorizontalAlignment="Stretch" />
 
                                         <TextBlock Text="Ghi chú:" Grid.Row="4" Grid.Column="0"/>
@@ -253,7 +258,7 @@
                                             </StackPanel>
                                         </DockPanel>
                                     </Grid>
-                            </GroupBox>
+                                </GroupBox>
                             </StackPanel>
                         </Grid>
                         <TabControl>
@@ -268,71 +273,71 @@
                 </TabItem>
                 <TabItem Header="Nhập/xuất kho">
                     <DockPanel LastChildFill="True">
-                        <Grid DockPanel.Dock="Left" Width="740">
-                            <Grid Margin="10">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
+                        <Grid DockPanel.Dock="Left">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                                        <TextBlock Text="Loại đơn:" Grid.Row="0" Grid.Column="0" />
-                                        <StackPanel Grid.Row="0" Grid.Column="1">
-                                            <StackPanel Orientation="Horizontal">
-                                                <RadioButton Content="Nhập"
-                                                             IsChecked="{Binding IdnVM.SelectedIdn.Input,
-                                                                         Converter={StaticResource InverseToBoolConverter},
-                                                                         ConverterParameter=1,
-                                                                         Mode=TwoWay}" />
+                                <TextBlock Text="Loại đơn:" Grid.Row="0" Grid.Column="0" />
+                                <StackPanel Grid.Row="0" Grid.Column="1">
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton Content="Nhập"
+                                                        IsChecked="{Binding IdnVM.SelectedIdn.Input,
+                                                                    Converter={StaticResource InverseToBoolConverter},
+                                                                    ConverterParameter=1,
+                                                                    Mode=TwoWay}" />
 
-                                                <RadioButton Content="Xuất"
-                                                             IsChecked="{Binding IdnVM.SelectedIdn.Input,
-                                                                         Converter={StaticResource InverseToBoolConverter},
-                                                                         ConverterParameter=0,
-                                                                         Mode=TwoWay}" />
-                                            </StackPanel>
-                                        </StackPanel>
+                                        <RadioButton Content="Xuất"
+                                                        IsChecked="{Binding IdnVM.SelectedIdn.Input,
+                                                                    Converter={StaticResource InverseToBoolConverter},
+                                                                    ConverterParameter=0,
+                                                                    Mode=TwoWay}" />
+                                    </StackPanel>
+                                </StackPanel>
 
-                                    <TextBlock Text="Ngày:" Grid.Row="1" Grid.Column="0" />
-                                    <DatePicker Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+                                <TextBlock Text="Ngày:" Grid.Row="1" Grid.Column="0" />
+                                <DatePicker Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
                                 SelectedDate="{Binding IdnVM.SelectedIdn.Date, Mode=TwoWay}"/>
 
-                                    <TextBlock Text="Tên:" Grid.Row="2" Grid.Column="0"/>
-                                    <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="False">
-                                        <TextBox HorizontalAlignment="Left"
+                                <TextBlock Text="Tên:" Grid.Row="2" Grid.Column="0"/>
+                                <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="False">
+                                    <TextBox HorizontalAlignment="Left"
                                                              Text="{Binding IdnVM.SelectedIdn.Correspondent, Mode=TwoWay}"
                                                              MinWidth="200"
                                                              DockPanel.Dock="Left"/>
-                                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                                            <TextBlock Text="Bộ phận:" />
-                                            <TextBox HorizontalAlignment="Stretch"
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                        <TextBlock Text="Bộ phận:" />
+                                        <TextBox HorizontalAlignment="Stretch"
                                                              MinWidth="200"
                                                              Text="{Binding IdnVM.SelectedIdn.Division, Mode=TwoWay}"/>
-                                        </StackPanel>
-                                    </DockPanel>
+                                    </StackPanel>
+                                </DockPanel>
 
-                                    <TextBlock Text="Lý do:" Grid.Row="3" Grid.Column="0"/>
-                                    <TextBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch"
+                                <TextBlock Text="Lý do:" Grid.Row="3" Grid.Column="0"/>
+                                <TextBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch"
                              Text="{Binding IdnVM.SelectedIdn.Reason, Mode=TwoWay}"/>
 
-                                    <TextBlock Text="Số chứng từ:" Grid.Row="4" Grid.Column="0"/>
-                                    <TextBox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch"
+                                <TextBlock Text="Số chứng từ:" Grid.Row="4" Grid.Column="0"/>
+                                <TextBox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch"
                              Text="{Binding IdnVM.SelectedIdn.CertificateId, Mode=TwoWay}"/>
 
-                                    <TextBlock Text="Chi tiết:" Grid.Row="5" Grid.Column="0"/>
-                                    <DataGrid Grid.Row="5" Grid.Column="1" Height="200" HorizontalAlignment="Stretch"
+                                <TextBlock Text="Chi tiết:" Grid.Row="5" Grid.Column="0"/>
+                                <DataGrid Grid.Row="5" Grid.Column="1" Height="200" HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding IdnVM.IdnItems}" AutoGenerateColumns="False">
-                                        <DataGrid.Columns>
-                                            <!-- Combobox hàng hoá -->
+                                    <DataGrid.Columns>
+                                        <!-- Combobox hàng hoá -->
                                         <DataGridTemplateColumn Header="Hàng hoá">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
@@ -351,12 +356,24 @@
                                             </DataGridTemplateColumn.CellEditingTemplate>
                                         </DataGridTemplateColumn>
                                         <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" />
-                                            <DataGridTextColumn Header="Yêu cầu" Binding="{Binding Demand}" />
-                                            <DataGridTextColumn Header="Đơn giá" Binding="{Binding Price}" />
-                                        </DataGrid.Columns>
-                                    </DataGrid>
+                                        <DataGridTextColumn Header="Yêu cầu" Binding="{Binding Demand}" />
+                                        <DataGridTextColumn Header="Đơn giá" Binding="{Binding Price}" />
+                                        <!-- Nút xoá cho item hoá đơn -->
+                                        <DataGridTemplateColumn>
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button FontFamily="Segoe MDL2 Assets" 
+                                                                    Foreground="#c80f21"
+                                                                    Content="&#xE894;"
+                                                                    FontSize="8"
+                                                                    />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
 
-                                    <TextBlock Text="Tổng cộng:" Grid.Row="6" Grid.Column="0" />
+                                <TextBlock Text="Tổng cộng:" Grid.Row="6" Grid.Column="0" />
                                 <TextBox Text="{Binding IdnVM.SelectedIdn.Total}" Grid.Row="6" Grid.Column="1"
                                          IsReadOnly="True" MinWidth="200" HorizontalAlignment="Left" />
                                 <DockPanel Grid.Row="7" Grid.Column="1">
@@ -418,20 +435,113 @@
                 </TabItem>
                 <TabItem Header="Quyết toán thu chi">
                     <DockPanel>
+                        <Grid DockPanel.Dock="Left">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="59*"/>
+                                <ColumnDefinition Width="407*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Loại đơn:" Grid.Column="0" />
+                            <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3">
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton Content="Nhập"
+                                IsChecked="{Binding IdnVM.SelectedIdn.Input,
+                                            Converter={StaticResource InverseToBoolConverter},
+                                            ConverterParameter=1,
+                                            Mode=TwoWay}" />
+
+                                    <RadioButton Content="Xuất"
+                                IsChecked="{Binding IdnVM.SelectedIdn.Input,
+                                            Converter={StaticResource InverseToBoolConverter},
+                                            ConverterParameter=0,
+                                            Mode=TwoWay}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <TextBlock Text="Ngày:" Grid.Row="1" Grid.Column="0" />
+                            <DatePicker Grid.Row="1" Grid.Column="1"
+SelectedDate="{Binding IdnVM.SelectedIdn.Date, Mode=TwoWay}" Grid.ColumnSpan="2"/>
+
+                            <TextBlock Text="Tên:" Grid.Row="2" Grid.Column="0"/>
+                            <DockPanel Grid.Row="2" LastChildFill="False" Grid.ColumnSpan="3" Grid.Column="1">
+                                <TextBox HorizontalAlignment="Left"
+                                Text="{Binding IdnVM.SelectedIdn.Correspondent, Mode=TwoWay}"
+                                MinWidth="200"
+                                DockPanel.Dock="Left"/>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                    <TextBlock Text="Địa chỉ:" />
+                                    <TextBox HorizontalAlignment="Stretch"
+                                MinWidth="300"
+                                Text="{Binding IdnVM.SelectedIdn.Division, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </DockPanel>
+
+                            <TextBlock Text="Lý do:" Grid.Row="3" Grid.Column="0"/>
+                            <TextBox Grid.Row="3" Grid.Column="1"
+Text="{Binding IdnVM.SelectedIdn.Reason, Mode=TwoWay}" Grid.ColumnSpan="2" />
+
+                            <TextBlock Text="Số tiền:" Grid.Row="4" Grid.Column="0"/>
+                            <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" />
+
+                            <TextBlock Text="Số chứng từ:" Grid.Row="5" Grid.Column="0"/>
+                            <TextBox Grid.Row="5" Grid.Column="1"
+Text="{Binding IdnVM.SelectedIdn.CertificateId, Mode=TwoWay}" Grid.ColumnSpan="2" />
+
+                            <DockPanel Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2">
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                    <!-- In đơn nhập -->
+                                    <Button Command="{Binding IdnVM.PrintCommand}"
+                FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                    <!-- Thêm đơn nhập -->
+                                    <Button Command="{Binding IdnVM.StartAddNewCommand}"
+                Foreground="#208c20"
+                FontFamily="Segoe MDL2 Assets" Content="&#xE710;" />
+                                    <!-- Sửa đơn nhập -->
+                                    <Button Command="{Binding IdnVM.SaveIdnCommand}"
+                Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" />
+                                    <!-- Xóa đơn nhập -->
+                                    <Button Command="{Binding IdnVM.DeleteIdnCommand}"
+                Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Grid>
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                             <TextBlock Text="Từ " />
-                            <DatePicker SelectedDate="{Binding IdnVM.FromDate, Mode=TwoWay}" />
+                            <DatePicker SelectedDate="{Binding ExpenseVM.FromDate, Mode=TwoWay}" />
                             <TextBlock Text=" đến " />
-                            <DatePicker SelectedDate="{Binding IdnVM.ToDate, Mode=TwoWay}" />
-                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding IdnVM.LoadIDNsCommand}" />
-                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE749;" Command="{Binding IdnVM.LoadIDNsCommand}" />
+                            <DatePicker SelectedDate="{Binding ExpenseVM.ToDate, Mode=TwoWay}" />
+                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding ExpenseVM.LoadExpensesCommand}" />
                         </StackPanel>
                         <StatusBar DockPanel.Dock="Bottom" Background="#3b4f81" Foreground="White">
                             <StatusBarItem Content="Tổng thu: 0" />
                             <StatusBarItem Content="Tổng chi: 0" />
                             <StatusBarItem Content="Còn lại: 0" />
                         </StatusBar>
-                        <DataGrid />
+                        <DataGrid ItemsSource="{Binding ExpenseVM.Expenses}" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Mã đơn" Binding="{Binding Id}" />
+                                <DataGridCheckBoxColumn Header="Nhập" Binding="{Binding Input}" />
+                                <DataGridTextColumn Header="Ngày" Binding="{Binding Date}" />
+                                <DataGridTextColumn Header="Người chi/nhận tiền" Binding="{Binding Participant}" />
+                                <DataGridTextColumn Header="Địa chỉ" Binding="{Binding Address}" />
+                                <DataGridTextColumn Header="Lý do chi" Binding="{Binding Content}" />
+                                <DataGridTextColumn Header="Số tiền" Binding="{Binding Amount}" />
+                                <DataGridTextColumn Header="Số chứng từ" Binding="{Binding CertificateId}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </DockPanel>
                 </TabItem>
             </TabControl>

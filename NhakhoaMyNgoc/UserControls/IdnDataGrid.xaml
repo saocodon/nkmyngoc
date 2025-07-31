@@ -8,7 +8,10 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <DataGrid ItemsSource="{Binding Idns}"
-                          SelectedItem="{Binding SelectedIdn}" AutoGenerateColumns="False">
+                  SelectedItem="{Binding SelectedIdn}"
+                  AutoGenerateColumns="False"
+                  CanUserDeleteRows="False"
+                  CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã đơn" Binding="{Binding Id}" IsReadOnly="True" />
                 <DataGridCheckBoxColumn Header="Nhập" Binding="{Binding Input}" />

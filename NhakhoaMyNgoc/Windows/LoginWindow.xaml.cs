@@ -85,7 +85,7 @@ namespace NhakhoaMyNgoc.Windows
             btnForgot.Content = isCollapsed ? "Không cần nữa" : "Quên mật khẩu";
         }
 
-        private void ValidatePassword(object? sender, RoutedEventArgs e)
+        private async void ValidatePassword(object? sender, RoutedEventArgs e)
         {
             bool isValid = PBKDF2.VerifyPassword(txtPassword.Password, Config.admin_password, Config.admin_password_salt);
             bool isValid1 = PBKDF2.VerifyPassword(txtQ1.Text, Config.security_answers[q[0]], Config.security_salts[q[0]]);
@@ -111,6 +111,8 @@ namespace NhakhoaMyNgoc.Windows
                     lblStatus.Text = $"Đã nhập sai {failed_attempts} lần liên tiếp, thử lại sau.";
                     remaining_time = Convert.ToInt32(30 * Math.Pow(2, failed_attempts / 5 - 1));
                     btnOK.IsEnabled = false;
+                    timer.Start();
+                    await Task.Delay(1);
                 }
             }
         }

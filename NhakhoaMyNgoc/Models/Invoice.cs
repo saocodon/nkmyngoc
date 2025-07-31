@@ -13,8 +13,6 @@ public partial class Invoice
 
     public DateTime Date { get; set; }
 
-    public int Total { get; set; }
-
     public int Remaining { get; set; }
 
     public DateTime? Revisit { get; set; }

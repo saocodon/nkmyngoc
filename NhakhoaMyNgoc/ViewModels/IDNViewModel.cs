@@ -22,11 +22,11 @@ namespace NhakhoaMyNgoc.ViewModels
         private ObservableCollection<Idn> idns = [];
 
         [ObservableProperty]
-        private DateTime? fromDate = DateTime.Today;
+        private DateTime fromDate = DateTime.Today;
 
         // DatePicker overwrite giá trị thành 12:00:00AM
         [ObservableProperty]
-        private DateTime? toDate = DateTime.Today;
+        private DateTime toDate = DateTime.Today;
 
         [ObservableProperty]
         private Idn selectedIdn = new();
@@ -45,13 +45,16 @@ namespace NhakhoaMyNgoc.ViewModels
 
             // load sẵn kho vào đây.
             Products = new([ .. _db.Products]);
+
+            // load ngày hôm nay vào datepicker.
+            SelectedIdn.Date = DateTime.Now;
         }
 
         [RelayCommand]
         void LoadIDNs()
         {
             // vì thế phải làm như này
-            DateTime? to = ToDate?.Date.AddDays(1).AddTicks(-1);
+            DateTime to = ToDate.Date.AddDays(1).AddTicks(-1);
 
             var result = _db.Idns.Where(i => i.Date >= FromDate &&
                                               i.Date <= to &&
@@ -61,7 +64,7 @@ namespace NhakhoaMyNgoc.ViewModels
         }
 
         [RelayCommand]
-        void StartAddNew() => SelectedIdn = new();
+        void StartAddNew() => SelectedIdn = new() { Date = DateTime.Now };
 
         [RelayCommand]
         void SaveIdn()
