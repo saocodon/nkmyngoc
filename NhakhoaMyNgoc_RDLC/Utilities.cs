@@ -74,7 +74,8 @@ namespace NhakhoaMyNgoc_RDLC
         private static readonly Dictionary<string, IReportTemplate> reports = new Dictionary<string, IReportTemplate>
         {
             { "customer-history", new CustomerHistoryReport() },
-            { "invoice", new InvoiceReport() }
+            { "invoice", new InvoiceReport() },
+            { "delivery-note", new DeliveryNoteReport() }
         };
 
         public static IReportTemplate Resolve(string key)

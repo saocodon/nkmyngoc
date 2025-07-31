@@ -34,7 +34,7 @@ namespace NhakhoaMyNgoc.Windows
         {
             InitializeComponent();
 
-            q = Config.security_answers.Keys.ToList();
+            q = [.. Config.security_answers.Keys];
             q1_id = q[0][1] - '0';
             q2_id = q[1][1] - '0';
 
@@ -44,8 +44,10 @@ namespace NhakhoaMyNgoc.Windows
             failed_attempts = Config.failed_login_streak;
             remaining_time = Config.remaining_time;
 
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
+            timer = new()
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
             timer.Tick += Timer_Tick;
 
             if (remaining_time <= 0)
@@ -64,11 +66,13 @@ namespace NhakhoaMyNgoc.Windows
             {
                 remaining_time--;
                 TimeSpan t = TimeSpan.FromSeconds(remaining_time);
+                lblStatus.Visibility = Visibility.Visible;
                 lblStatus.Text = $"{t.Days * 24 + t.Hours:D2}:{t.Minutes:D2}:{t.Seconds:D2}";
             }
             else
             {
                 btnOK.IsEnabled = true;
+                lblStatus.Visibility = Visibility.Hidden;
                 timer.Stop();
             }
         }
@@ -97,11 +101,13 @@ namespace NhakhoaMyNgoc.Windows
                 failed_attempts++;
                 if (failed_attempts % 5 != 0)
                 {
+                    lblStatus.Visibility = Visibility.Visible;
                     lblStatus.Text = "Thông tin đăng nhập sai.";
                     btnOK.IsEnabled = true;
                 }
                 else
                 {
+                    lblStatus.Visibility = Visibility.Visible;
                     lblStatus.Text = $"Đã nhập sai {failed_attempts} lần liên tiếp, thử lại sau.";
                     remaining_time = Convert.ToInt32(30 * Math.Pow(2, failed_attempts / 5 - 1));
                     btnOK.IsEnabled = false;

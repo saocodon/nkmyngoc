@@ -10,11 +10,13 @@
         WindowStartupLocation="CenterScreen">
     <Grid>
         <StackPanel>
-            <TextBlock Text="Nhập mật khẩu" />
-            <PasswordBox x:Name="txtPassword" />
+            <GroupBox Header="Nhập mật khẩu">
+                <PasswordBox x:Name="txtPassword" />
+            </GroupBox>
             <DockPanel LastChildFill="False">
-                <TextBlock Text="00:00:00" x:Name="lblStatus"/>
-                <Button Content="Quên mật khẩu" DockPanel.Dock="Right" x:Name="btnForgot" Click="ToggleForgot" />
+                <TextBlock Text="00:00:00" x:Name="lblStatus" Visibility="Hidden"/>
+                <Button Content="Quên mật khẩu?" DockPanel.Dock="Right" x:Name="btnForgot" Click="ToggleForgot"
+                        Background="Transparent" BorderThickness="0" Foreground="Blue"/>
             </DockPanel>
             <StackPanel x:Name="ForgotPanel" Visibility="Collapsed">
                 <TextBlock Text="Trả lời các câu hỏi sau:" />

@@ -29,7 +29,7 @@
             <uc:InvoiceDataGrid />
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:IDNViewModel}">
-            <uc:InvoiceDataGrid />
+            <uc:IdnDataGrid />
         </DataTemplate>
     </Window.Resources>
     <Grid>
