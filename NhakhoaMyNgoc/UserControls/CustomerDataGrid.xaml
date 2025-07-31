@@ -18,10 +18,11 @@
     </UserControl.Resources>
     <Grid>
         <DataGrid
-    ItemsSource="{Binding Customers}"
-    SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
-    AutoGenerateColumns="False">
-
+            ItemsSource="{Binding Customers}"
+            SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
+            AutoGenerateColumns="False"
+            CanUserDeleteRows="False"
+            CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="CCCD" Binding="{Binding Cid}"/>
                 <DataGridTextColumn Header="Tên" Binding="{Binding Name}"/>
