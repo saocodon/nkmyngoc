@@ -7,7 +7,10 @@ using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.Utilities;
 using NhakhoaMyNgoc_Connector.DTOs;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
@@ -25,7 +28,7 @@ namespace NhakhoaMyNgoc.ViewModels
             Services = new ObservableCollection<Service>([.. _db.Services]);
 
             // khởi tạo ít nhất 1 hàng trong bảng chi tiết
-            InvoiceItems.Add(new InvoiceItem());
+            InvoiceItems.Add(new InvoiceItemWrapper(new InvoiceItem()));
 
             // đăng ký nhận khách hàng đang chọn
             Messenger.Subscribe("OnSelectedCustomerChanged", data =>
@@ -38,11 +41,51 @@ namespace NhakhoaMyNgoc.ViewModels
                     FindCustomersInvoices(customer);
                 }
             });
+
+            // load ngày tháng hiện tại cho datepicker
+            SelectedInvoice.Date = DateTime.Now;
+            SelectedInvoice.Revisit = DateTime.Now;
+
+            InvoiceItems.CollectionChanged += InvoiceItems_CollectionChanged;
+
+            foreach (var item in InvoiceItems)
+                item.PropertyChanged += InvoiceItem_PropertyChanged;
+        }
+
+        private void InvoiceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems is not null)
+            {
+                foreach (InvoiceItemWrapper item in e.NewItems)
+                    item.PropertyChanged += InvoiceItem_PropertyChanged;
+            }
+
+            if (e.OldItems is not null)
+            {
+                foreach (InvoiceItemWrapper item in e.OldItems)
+                    item.PropertyChanged -= InvoiceItem_PropertyChanged;
+            }
+
+            OnPropertyChanged(nameof(Total));
+        }
+
+        private void InvoiceItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is nameof(InvoiceItemWrapper.Quantity)
+                or nameof(InvoiceItemWrapper.Price)
+                or nameof(InvoiceItemWrapper.Discount)
+                or nameof(InvoiceItemWrapper.Total))
+            {
+                OnPropertyChanged(nameof(Total));
+            }
         }
 
         #region global
         [ObservableProperty]
         private Invoice selectedInvoice = new();
+
+        [ObservableProperty]
+        private InvoiceItemWrapper selectedInvoiceItem = new(new InvoiceItem());
 
         // gọi đệ quy xuống thuộc tính con (OnPropertyChanged)
         public bool IsRevisitValid =>
@@ -51,8 +94,12 @@ namespace NhakhoaMyNgoc.ViewModels
             inv.Revisit != default &&
             inv.Date.AddYears(1) >= inv.Revisit;
 
+        // đối với các thuộc tính như thế này
+        // không nên sử dụng của model mà nên tự tính riêng.
+        public int Total => InvoiceItems?.Sum(i => i.Quantity * i.Price - i.Discount) ?? 0;
+
         [ObservableProperty]
-        private ObservableCollection<InvoiceItem> invoiceItems = [];
+        private ObservableCollection<InvoiceItemWrapper> invoiceItems = [];
 
         [ObservableProperty]
         private ObservableCollection<Service> services;
@@ -75,51 +122,68 @@ namespace NhakhoaMyNgoc.ViewModels
                             .Where(i => i.InvoiceId == value.Id)
                             .ToList();
 
-            InvoiceItems = new ObservableCollection<InvoiceItem>(result);
+            var wrapped = result.Select(i =>
+            {
+                var wrapper = new InvoiceItemWrapper(i);
+                wrapper.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Total));
+                return wrapper;
+            });
 
-            // thông báo là thuộc tính con của SelectedInvoice thay đổi
+            InvoiceItems.Clear();
+            foreach (var item in wrapped)
+            {
+                item.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Total));
+                InvoiceItems.Add(item);
+            }
+            InvoiceItems.CollectionChanged += InvoiceItems_CollectionChanged;
+
             OnPropertyChanged(nameof(IsRevisitValid));
-        }
-
-        partial void OnInvoiceItemsChanged(ObservableCollection<InvoiceItem> value)
-        {
-            SelectedInvoice.Total = 0;
-            foreach (var item in value)
-                SelectedInvoice.Total += item.Quantity * item.Price - item.Discount;
+            OnPropertyChanged(nameof(Total));
         }
 
         #region Add & edit
         [RelayCommand]
-        void StartAddNew(Customer current) => SelectedInvoice = new() { CustomerId = current.Id };
+        void StartAddNew(Customer current) => SelectedInvoice = new()
+        {
+            CustomerId = current.Id,
+            Date = DateTime.Now
+        };
 
         [RelayCommand]
         void SaveInvoice()
         {
-            if (SelectedInvoice.Id == 0) // hoá đơn mới
+            try
             {
-                _db.Invoices.Add(SelectedInvoice);
-                _db.SaveChanges();
+                if (SelectedInvoice.Id == 0) // hoá đơn mới
+                {
+                    _db.Invoices.Add(SelectedInvoice);
+                    _db.SaveChanges();
 
-                Invoices.Add(SelectedInvoice);
+                    Invoices.Add(SelectedInvoice);
+                }
+                else // hoá đơn cũ
+                {
+                    _db.Invoices.Update(SelectedInvoice);
+                }
 
-                // thêm từng dịch vụ
                 foreach (var item in InvoiceItems)
                 {
-                    // đặt mã hoá đơn
                     item.InvoiceId = SelectedInvoice.Id;
-                    _db.InvoiceItems.Add(item);
-                }
-            }
-            else // hoá đơn cũ
-            {
-                _db.Invoices.Update(SelectedInvoice);
-            }
 
-            _db.SaveChanges();
-            SelectedInvoice = new(); // reset sau khi lưu
+                    if (item.Id == 0)
+                        _db.InvoiceItems.Add(item.Model);
+                }
+
+                _db.SaveChanges();
         }
+            catch
+            {
+                MessageBox.Show("Có một số trường dữ liệu bị rỗng. Kiểm tra lại và thử lại.");
+            }
+}
         #endregion
 
+        #region Delete
         [RelayCommand]
         void DeleteInvoice()
         {
@@ -129,6 +193,18 @@ namespace NhakhoaMyNgoc.ViewModels
             Invoices.Remove(SelectedInvoice);
             SelectedInvoice = new();
         }
+
+        [RelayCommand]
+        void DeleteInvoiceItem()
+        {
+            // phải xoá trong DB trước rồi mới xoá trên Model
+            // vì sau khi xoá trong Model trước thì nó sẽ bị null
+            // (không thể sử dụng tiếp).
+            _db.InvoiceItems.Remove(SelectedInvoiceItem.Model);
+            InvoiceItems.Remove(SelectedInvoiceItem);
+            _db.SaveChanges();
+        }
+        #endregion
 
         /// <summary>
         /// Hàm này chỉ có TableEditor được gọi.
@@ -167,7 +243,7 @@ namespace NhakhoaMyNgoc.ViewModels
             var invoice = new InvoiceDto
             {
                 Date = SelectedInvoice.Date,
-                Total = SelectedInvoice.Total,
+                Total = this.Total,
                 Revisit = SelectedInvoice.Revisit ?? DateTime.UnixEpoch,
                 Note = SelectedInvoice.Note +
                        (IsRevisitValid ? $" (Tái khám ngày {SelectedInvoice.Revisit:dd/MM/yyyy})" : "")
@@ -178,6 +254,8 @@ namespace NhakhoaMyNgoc.ViewModels
                                        .ThenInclude(ii => ii.Service)
                                        .Where(i => i.Id == SelectedInvoice.Id).ToList();
             List<SummaryServiceDto> services = [];
+
+            // lấy invoices[0] vì chắc chắn rằng chỉ có 1 kết quả (tìm theo primary key)
             foreach (var item in invoices[0].InvoiceItems)
             {
                 // line in timeline
@@ -187,7 +265,7 @@ namespace NhakhoaMyNgoc.ViewModels
                     Quantity = item.Quantity,
                     Price = item.Price,
                     Discount = item.Discount,
-                    Total = SelectedInvoice.Total
+                    Total = this.Total
                 };
                 services.Add(line);
             }

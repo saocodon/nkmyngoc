@@ -11,7 +11,6 @@ using System.Globalization;
 using System.Text;
 using System.Windows;
 using NhakhoaMyNgoc_Connector.DTOs;
-using NhakhoaMyNgoc_RDLC;
 using NhakhoaMyNgoc_Connector;
 using System.IO;
 using System.Text.Json;

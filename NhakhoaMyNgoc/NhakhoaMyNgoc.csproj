@@ -42,7 +42,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NhakhoaMyNgoc_Connector\NhakhoaMyNgoc_Connector.csproj" />
-    <ProjectReference Include="..\NhakhoaMyNgoc_RDLC\NhakhoaMyNgoc_RDLC.csproj" />
+    <ProjectReference Include="..\NhakhoaMyNgoc_RDLC\NhakhoaMyNgoc_RDLC.csproj" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
   </ItemGroup>
 
 	<PropertyGroup>
