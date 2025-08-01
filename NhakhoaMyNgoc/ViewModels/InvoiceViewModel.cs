@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using NhakhoaMyNgoc.Converters;
 using NhakhoaMyNgoc.Models;
+using NhakhoaMyNgoc.ModelWrappers;
 using NhakhoaMyNgoc.Utilities;
 using NhakhoaMyNgoc_Connector.DTOs;
 using System.Collections.ObjectModel;
@@ -25,10 +26,7 @@ namespace NhakhoaMyNgoc.ViewModels
             _db = db;
 
             // load tất cả dịch vụ
-            Services = new ObservableCollection<Service>([.. _db.Services]);
-
-            // khởi tạo ít nhất 1 hàng trong bảng chi tiết
-            InvoiceItems.Add(new InvoiceItemWrapper(new InvoiceItem()));
+            Services = [.. _db.Services];
 
             // đăng ký nhận khách hàng đang chọn
             Messenger.Subscribe("OnSelectedCustomerChanged", data =>
@@ -45,11 +43,6 @@ namespace NhakhoaMyNgoc.ViewModels
             // load ngày tháng hiện tại cho datepicker
             SelectedInvoice.Date = DateTime.Now;
             SelectedInvoice.Revisit = DateTime.Now;
-
-            InvoiceItems.CollectionChanged += InvoiceItems_CollectionChanged;
-
-            foreach (var item in InvoiceItems)
-                item.PropertyChanged += InvoiceItem_PropertyChanged;
         }
 
         private void InvoiceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -85,7 +78,7 @@ namespace NhakhoaMyNgoc.ViewModels
         private Invoice selectedInvoice = new();
 
         [ObservableProperty]
-        private InvoiceItemWrapper selectedInvoiceItem = new(new InvoiceItem());
+        private InvoiceItemWrapper? selectedInvoiceItem;
 
         // gọi đệ quy xuống thuộc tính con (OnPropertyChanged)
         public bool IsRevisitValid =>
@@ -101,8 +94,7 @@ namespace NhakhoaMyNgoc.ViewModels
         [ObservableProperty]
         private ObservableCollection<InvoiceItemWrapper> invoiceItems = [];
 
-        [ObservableProperty]
-        private ObservableCollection<Service> services;
+        public List<Service> Services { get; }
 
         [ObservableProperty]
         private ObservableCollection<Invoice> invoices = [];
@@ -124,7 +116,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
             var wrapped = result.Select(i =>
             {
-                var wrapper = new InvoiceItemWrapper(i);
+                var wrapper = new InvoiceItemWrapper(i) { Services = this.Services };
                 wrapper.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Total));
                 return wrapper;
             });
@@ -200,7 +192,7 @@ namespace NhakhoaMyNgoc.ViewModels
             // phải xoá trong DB trước rồi mới xoá trên Model
             // vì sau khi xoá trong Model trước thì nó sẽ bị null
             // (không thể sử dụng tiếp).
-            _db.InvoiceItems.Remove(SelectedInvoiceItem.Model);
+            _db.InvoiceItems.Remove(SelectedInvoiceItem!.Model);
             InvoiceItems.Remove(SelectedInvoiceItem);
             _db.SaveChanges();
         }

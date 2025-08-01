@@ -19,7 +19,7 @@
                 <DataGridTextColumn Header="Số chứng từ" Binding="{Binding CertificateId}" />
                 <DataGridTextColumn Header="Người thực hiện" Binding="{Binding Correspondent}" />
                 <DataGridTextColumn Header="Lý do" Binding="{Binding Reason}" />
-                <DataGridTextColumn Header="Tổng cộng" Binding="{Binding Total}" />
+                <DataGridTextColumn Header="Tổng cộng" Binding="{Binding Total, StringFormat=N0}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

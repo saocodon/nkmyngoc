@@ -1,5 +1,6 @@
 ﻿using NhakhoaMyNgoc.Converters;
 using NhakhoaMyNgoc.Models;
+using NhakhoaMyNgoc.ModelWrappers;
 using NhakhoaMyNgoc.ViewModels;
 using System.Diagnostics;
 using System.Text;
@@ -35,6 +36,9 @@ namespace NhakhoaMyNgoc
                 ptn.Products = vm.IdnVM.Products;
         }
 
+        /// <summary>
+        /// Đổi form tìm kiếm và form nhập.
+        /// </summary>
         private void CustomerVM_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(CustomerViewModel.IsSearchMode))
@@ -45,6 +49,7 @@ namespace NhakhoaMyNgoc
             }
         }
 
+        #region Giả label mô tả hình
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             if (sender is TextBox tb)
@@ -65,6 +70,16 @@ namespace NhakhoaMyNgoc
                 tb.BorderThickness = new Thickness(0);
                 tb.IsReadOnly = true;
                 tb.Cursor = Cursors.Arrow;
+            }
+        }
+        #endregion
+
+        private void InvoiceItemsGrid_InitializingNewItem(object sender, InitializingNewItemEventArgs e)
+        {
+            if (e.NewItem is InvoiceItemWrapper wrapper)
+            {
+                var vm = DataContext as MainViewModel; // hoặc ViewModel bạn dùng
+                wrapper.Services = vm?.InvoiceVM?.Services ?? new();
             }
         }
     }
