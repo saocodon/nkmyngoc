@@ -1,68 +1,93 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NhakhoaMyNgoc.Models;
+using System.Diagnostics;
 
-public class InvoiceItemWrapper : ObservableObject
+namespace NhakhoaMyNgoc.ModelWrappers
 {
-    public InvoiceItem Model { get; }
-
-    public InvoiceItemWrapper() : this(new InvoiceItem()) { }
-
-    public InvoiceItemWrapper(InvoiceItem item)
+    public class InvoiceItemWrapper(InvoiceItem item) : ObservableObject
     {
-        Model = item;
-    }
+        public InvoiceItem Model { get; } = item;
 
-    public int Quantity
-    {
-        get => Model.Quantity;
-        set
+        public InvoiceItemWrapper() : this(new InvoiceItem()) { }
+
+        public List<Service> Services { get; set; } = [];
+
+        public int Quantity
         {
-            if (Model.Quantity != value)
+            get => Model.Quantity;
+            set
             {
-                Model.Quantity = value;
-                OnPropertyChanged();
+                if (Model.Quantity != value)
+                {
+                    Model.Quantity = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Total));
+                }
+            }
+        }
+
+        public int Price
+        {
+            get => Model.Price;
+            set
+            {
+                if (Model.Price != value)
+                {
+                    Model.Price = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Total));
+                }
+            }
+        }
+
+        public int Discount
+        {
+            get => Model.Discount;
+            set
+            {
+                if (Model.Discount != value)
+                {
+                    Model.Discount = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Total));
+                }
+            }
+        }
+
+        public int Total => Quantity * Price - Discount;
+
+        public int Id => Model.Id;
+        public int InvoiceId { get => Model.InvoiceId; set => Model.InvoiceId = value; }
+        public int ServiceId
+        {
+            get => Model.ServiceId;
+            set
+            {
+                // SetProperty không hỗ trợ POCO (Plain Old CLR Object) class nên phải viết bằng tay
+                if (Model.ServiceId != value)
+                {
+                    Model.ServiceId = value;
+                    Debug.WriteLine($"ServiceId set: {value}");
+                    OnPropertyChanged();
+                    OnServiceIdChanged(value);
+                }
+            }
+        }
+
+        private void OnServiceIdChanged(int serviceId)
+        {
+            var matched = Services.FirstOrDefault(s => s.Id == serviceId);
+            if (matched is not null)
+            {
+                Price = matched.Price;
                 OnPropertyChanged(nameof(Total));
             }
         }
-    }
 
-    public int Price
-    {
-        get => Model.Price;
-        set
+        public Service Service
         {
-            if (Model.Price != value)
-            {
-                Model.Price = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
-            }
+            get => Model.Service;
+            set => Model.Service = value;
         }
-    }
-
-    public int Discount
-    {
-        get => Model.Discount;
-        set
-        {
-            if (Model.Discount != value)
-            {
-                Model.Discount = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
-            }
-        }
-    }
-
-    public int Total => Quantity * Price - Discount;
-
-    public int Id => Model.Id;
-    public int InvoiceId { get => Model.InvoiceId; set => Model.InvoiceId = value; }
-    public int ServiceId { get => Model.ServiceId; set => Model.ServiceId = value; }
-
-    public Service Service
-    {
-        get => Model.Service;
-        set => Model.Service = value;
     }
 }
