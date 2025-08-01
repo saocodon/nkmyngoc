@@ -187,7 +187,8 @@
                                                   ItemsSource="{Binding InvoiceVM.InvoiceItems, Mode=TwoWay}"
                                                   SelectedItem="{Binding InvoiceVM.SelectedInvoiceItem}"
                                                   AutoGenerateColumns="False"
-                                                  CanUserAddRows="True">
+                                                  CanUserAddRows="True"
+                                                  InitializingNewItem="InvoiceItemsGrid_InitializingNewItem">
                                             <DataGrid.InputBindings>
                                                 <KeyBinding Key="Delete" Command="{Binding InvoiceVM.DeleteInvoiceItemCommand}" />
                                             </DataGrid.InputBindings>
@@ -209,27 +210,26 @@
                                                     <!-- Khi chỉnh sửa sẽ hóa thành ComboBox -->
                                                     <DataGridTemplateColumn.CellEditingTemplate>
                                                         <DataTemplate>
-                                                            <!-- Bind đến InvoiceItem.ServiceID -->
+                                                            <!-- Bind đến InvoiceItemWrapper.ServiceId -->
                                                             <!-- lấy datacontext lớn nhất (Window) -->
                                                             <!-- không được bind vào NP vì new InvoiceItem() không tự tạo new Service() -> EF sẽ nghĩ đây là dịch vụ mới! -->
-                                                            <!-- Combobox datacontext vẫn là InvoiceItem, nên bind Service.Id -->
                                                             <ComboBox
+                                                                DataContext="{Binding}"
                                                                 ItemsSource="{Binding DataContext.InvoiceVM.Services, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                SelectedValue="{Binding ServiceId, Mode=TwoWay}"
+                                                                SelectedValue="{Binding ServiceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                 SelectedValuePath="Id"
                                                                 DisplayMemberPath="Name" />
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellEditingTemplate>
                                                 </DataGridTemplateColumn>
                                                 <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" />
-                                                <DataGridTextColumn Header="Đơn giá" Binding="{Binding Price}" />
-                                                <DataGridTextColumn Header="Giảm giá" Binding="{Binding Discount}" />
+                                                <DataGridTextColumn Header="Đơn giá" Binding="{Binding Price, StringFormat=N0}" />
+                                                <DataGridTextColumn Header="Giảm giá" Binding="{Binding Discount, StringFormat=N0}" />
                                             </DataGrid.Columns>
                                         </DataGrid>
 
                                         <TextBlock Text="Tổng cộng:" Grid.Row="3" Grid.Column="0" />
-                                        <TextBox Text="{Binding InvoiceVM.Total, Mode=OneWay}" Grid.Row="3" Grid.Column="1"
-                                                 IsReadOnly="True" HorizontalAlignment="Stretch" />
+                                        <TextBlock Text="{Binding InvoiceVM.Total, Mode=OneWay, StringFormat=N0}" Grid.Row="3" Grid.Column="1" FontWeight="Bold" />
 
                                         <TextBlock Text="Ghi chú:" Grid.Row="4" Grid.Column="0"/>
                                         <TextBox AcceptsReturn="True"
@@ -357,7 +357,7 @@
                                         </DataGridTemplateColumn>
                                         <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" />
                                         <DataGridTextColumn Header="Yêu cầu" Binding="{Binding Demand}" />
-                                        <DataGridTextColumn Header="Đơn giá" Binding="{Binding Price}" />
+                                        <DataGridTextColumn Header="Đơn giá" Binding="{Binding Price, StringFormat=N0}" />
                                         <!-- Nút xoá cho item hoá đơn -->
                                         <DataGridTemplateColumn>
                                             <DataGridTemplateColumn.CellTemplate>
@@ -374,8 +374,8 @@
                                 </DataGrid>
 
                                 <TextBlock Text="Tổng cộng:" Grid.Row="6" Grid.Column="0" />
-                                <TextBox Text="{Binding IdnVM.SelectedIdn.Total}" Grid.Row="6" Grid.Column="1"
-                                         IsReadOnly="True" MinWidth="200" HorizontalAlignment="Left" />
+                                <TextBlock Text="{Binding IdnVM.SelectedIdn.Total}" Grid.Row="6" Grid.Column="1"
+                                           HorizontalAlignment="Left" FontWeight="Bold" />
                                 <DockPanel Grid.Row="7" Grid.Column="1">
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                         <!-- In đơn nhập -->
