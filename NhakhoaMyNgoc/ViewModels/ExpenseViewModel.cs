@@ -68,5 +68,38 @@ namespace NhakhoaMyNgoc.ViewModels
                 Arguments = $"--report expense --expense {dtoPath}"
             });
         }
+
+        [RelayCommand]
+        void StartAddNew() => SelectedExpense = new() { Date = DateTime.Now };
+
+        [RelayCommand]
+        void SaveExpense()
+        {
+            if (SelectedExpense == null) return;
+
+            if (SelectedExpense.Id == 0)
+            {
+                _db.Expenses.Add(SelectedExpense);
+                Expenses.Add(SelectedExpense);
+
+                _db.SaveChanges();
+                SelectedExpense = new();
+            }
+            else
+            {
+                _db.Expenses.Update(SelectedExpense);
+                _db.SaveChanges();
+            }
+        }
+
+        [RelayCommand]
+        void DeleteExpense()
+        {
+            if (SelectedExpense == null) return;
+
+            _db.Expenses.Remove(SelectedExpense);
+            _db.SaveChanges();
+            Expenses.Remove(SelectedExpense);
+        }
     }
 }
