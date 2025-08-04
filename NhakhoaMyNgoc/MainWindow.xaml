@@ -456,13 +456,13 @@
                             <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3">
                                 <StackPanel Orientation="Horizontal">
                                     <RadioButton Content="Nhập"
-                                IsChecked="{Binding IdnVM.SelectedIdn.Input,
+                                IsChecked="{Binding ExpenseVM.SelectedExpense.Input,
                                             Converter={StaticResource InverseToBoolConverter},
                                             ConverterParameter=1,
                                             Mode=TwoWay}" />
 
                                     <RadioButton Content="Xuất"
-                                IsChecked="{Binding IdnVM.SelectedIdn.Input,
+                                IsChecked="{Binding ExpenseVM.SelectedExpense.Input,
                                             Converter={StaticResource InverseToBoolConverter},
                                             ConverterParameter=0,
                                             Mode=TwoWay}" />
@@ -471,37 +471,37 @@
 
                             <TextBlock Text="Ngày:" Grid.Row="1" Grid.Column="0" />
                             <DatePicker Grid.Row="1" Grid.Column="1"
-SelectedDate="{Binding IdnVM.SelectedIdn.Date, Mode=TwoWay}" Grid.ColumnSpan="2"/>
+SelectedDate="{Binding ExpenseVM.SelectedExpense.Date, Mode=TwoWay}" Grid.ColumnSpan="2"/>
 
                             <TextBlock Text="Tên:" Grid.Row="2" Grid.Column="0"/>
                             <DockPanel Grid.Row="2" LastChildFill="False" Grid.ColumnSpan="3" Grid.Column="1">
                                 <TextBox HorizontalAlignment="Left"
-                                Text="{Binding IdnVM.SelectedIdn.Correspondent, Mode=TwoWay}"
+                                Text="{Binding ExpenseVM.SelectedExpense.Participant, Mode=TwoWay}"
                                 MinWidth="200"
                                 DockPanel.Dock="Left"/>
                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                                     <TextBlock Text="Địa chỉ:" />
                                     <TextBox HorizontalAlignment="Stretch"
                                 MinWidth="300"
-                                Text="{Binding IdnVM.SelectedIdn.Division, Mode=TwoWay}"/>
+                                Text="{Binding ExpenseVM.SelectedExpense.Address, Mode=TwoWay}"/>
                                 </StackPanel>
                             </DockPanel>
 
                             <TextBlock Text="Lý do:" Grid.Row="3" Grid.Column="0"/>
                             <TextBox Grid.Row="3" Grid.Column="1"
-Text="{Binding IdnVM.SelectedIdn.Reason, Mode=TwoWay}" Grid.ColumnSpan="2" />
+Text="{Binding ExpenseVM.SelectedExpense.Content, Mode=TwoWay}" Grid.ColumnSpan="2" />
 
                             <TextBlock Text="Số tiền:" Grid.Row="4" Grid.Column="0"/>
-                            <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" />
+                            <TextBox Text="{Binding ExpenseVM.SelectedExpense.Amount}" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" />
 
                             <TextBlock Text="Số chứng từ:" Grid.Row="5" Grid.Column="0"/>
                             <TextBox Grid.Row="5" Grid.Column="1"
-Text="{Binding IdnVM.SelectedIdn.CertificateId, Mode=TwoWay}" Grid.ColumnSpan="2" />
+Text="{Binding ExpenseVM.SelectedExpense.CertificateId, Mode=TwoWay}" Grid.ColumnSpan="2" />
 
                             <DockPanel Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2">
                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                                    <!-- In đơn nhập -->
-                                    <Button Command="{Binding IdnVM.PrintCommand}"
+                                    <!-- In phiếu thu/chi -->
+                                    <Button Command="{Binding ExpenseVM.PrintCommand}"
                 FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
@@ -530,7 +530,8 @@ Text="{Binding IdnVM.SelectedIdn.CertificateId, Mode=TwoWay}" Grid.ColumnSpan="2
                             <StatusBarItem Content="Tổng chi: 0" />
                             <StatusBarItem Content="Còn lại: 0" />
                         </StatusBar>
-                        <DataGrid ItemsSource="{Binding ExpenseVM.Expenses}" AutoGenerateColumns="False">
+                        <DataGrid ItemsSource="{Binding ExpenseVM.Expenses}" AutoGenerateColumns="False"
+                                  SelectedItem="{Binding ExpenseVM.SelectedExpense}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Mã đơn" Binding="{Binding Id}" />
                                 <DataGridCheckBoxColumn Header="Nhập" Binding="{Binding Input}" />

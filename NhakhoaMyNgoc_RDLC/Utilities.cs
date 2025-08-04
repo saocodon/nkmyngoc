@@ -75,7 +75,8 @@ namespace NhakhoaMyNgoc_RDLC
         {
             { "customer-history", new CustomerHistoryReport() },
             { "invoice", new InvoiceReport() },
-            { "delivery-note", new DeliveryNoteReport() }
+            { "delivery-note", new DeliveryNoteReport() },
+            { "expense", new ExpenseReport() }
         };
 
         public static IReportTemplate Resolve(string key)

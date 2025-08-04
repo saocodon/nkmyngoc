@@ -14,5 +14,6 @@ namespace NhakhoaMyNgoc.ViewModels
         public InvoiceViewModel InvoiceVM { get; set; } = new(db);
         public ImageViewModel ImageVM { get; set; } = new(db);
         public IDNViewModel IdnVM { get; set; } = new(db);
+        public ExpenseViewModel ExpenseVM { get; set; } = new(db);
     }
 }

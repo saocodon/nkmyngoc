@@ -17,6 +17,8 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<Customer> Customers { get; set; }
 
+    public virtual DbSet<Expense> Expenses { get; set; }
+
     public virtual DbSet<Idn> Idns { get; set; }
 
     public virtual DbSet<Idnitem> Idnitems { get; set; }
@@ -48,6 +50,19 @@ public partial class DataContext : DbContext
                 .HasDefaultValue("Chưa rõ")
                 .UseCollation("NOCASE");
             entity.Property(e => e.Sex).HasDefaultValue(2);
+        });
+
+        modelBuilder.Entity<Expense>(entity =>
+        {
+            entity.ToTable("Expense");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Address).HasDefaultValue("Chưa rõ");
+            entity.Property(e => e.CertificateId).HasColumnName("CertificateID");
+            entity.Property(e => e.Content).HasDefaultValue("Chưa rõ");
+            entity.Property(e => e.Date).HasDefaultValue(new DateTime(1970, 1, 1, 12, 0, 0, 0, DateTimeKind.Unspecified));
+            entity.Property(e => e.Input).HasDefaultValue(1);
+            entity.Property(e => e.Participant).HasDefaultValue("Chưa rõ");
         });
 
         modelBuilder.Entity<Idn>(entity =>
