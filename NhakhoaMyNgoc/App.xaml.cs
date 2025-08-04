@@ -44,10 +44,8 @@ namespace NhakhoaMyNgoc
                     else
                         Current.Shutdown();
                 }
-                // copy templates nếu cần
-                splash.SetStatus(2);
-                IOUtil.CopyDirectory(Path.Combine(AppContext.BaseDirectory, "Templates"), PrintablePaper.RESOURCE_PATH);
 
+                splash.SetStatus(2);
                 // lưu lại đường dẫn root
                 var drive = IOUtil.FindDriveLetter();
                 string fullPath = Path.Combine(drive.Name, Config.root_directory);

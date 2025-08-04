@@ -127,7 +127,7 @@ namespace NhakhoaMyNgoc.ViewModels
                     Total = item.Total ?? 0
                 };
                 dtoItems.Add(dtoItem);
-            }
+            }   
             var idnPath = IOUtil.WriteJsonToTempFile(idn, $"IDN{SelectedIdn.Id}.json");
             var itemsPath = IOUtil.WriteJsonToTempFile(dtoItems, $"IDNItem{SelectedIdn.Id}.json");
             // TODO: cái này phải thay đổi khi đóng gói
