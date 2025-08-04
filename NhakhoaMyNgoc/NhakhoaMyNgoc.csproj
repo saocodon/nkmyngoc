@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+	<TieredCompilation>false</TieredCompilation>
+	<ConcurrentBuild>true</ConcurrentBuild>
+	<Deterministic>true</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>
