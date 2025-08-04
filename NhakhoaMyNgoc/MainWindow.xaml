@@ -505,15 +505,15 @@ Text="{Binding ExpenseVM.SelectedExpense.CertificateId, Mode=TwoWay}" Grid.Colum
                 FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
-                                    <!-- Thêm đơn nhập -->
-                                    <Button Command="{Binding IdnVM.StartAddNewCommand}"
-                Foreground="#208c20"
-                FontFamily="Segoe MDL2 Assets" Content="&#xE710;" />
-                                    <!-- Sửa đơn nhập -->
-                                    <Button Command="{Binding IdnVM.SaveIdnCommand}"
+                                    <!-- Thêm đơn -->
+                                    <Button Command="{Binding ExpenseVM.StartAddNewCommand}"
+                                            Foreground="#208c20"
+                                            FontFamily="Segoe MDL2 Assets" Content="&#xE710;" />
+                                    <!-- Sửa đơn -->
+                                    <Button Command="{Binding ExpenseVM.SaveExpenseCommand}"
                 Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" />
-                                    <!-- Xóa đơn nhập -->
-                                    <Button Command="{Binding IdnVM.DeleteIdnCommand}"
+                                    <!-- Xóa đơn -->
+                                    <Button Command="{Binding ExpenseVM.DeleteExpenseCommand}"
                 Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" />
                                 </StackPanel>
                             </DockPanel>
