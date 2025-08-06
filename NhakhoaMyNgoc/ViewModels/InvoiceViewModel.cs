@@ -167,12 +167,12 @@ namespace NhakhoaMyNgoc.ViewModels
                 }
 
                 _db.SaveChanges();
-        }
+            }
             catch
             {
                 MessageBox.Show("Có một số trường dữ liệu bị rỗng. Kiểm tra lại và thử lại.");
             }
-}
+        }
         #endregion
 
         #region Delete
@@ -189,10 +189,11 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void DeleteInvoiceItem()
         {
+            if (SelectedInvoiceItem == null) return;
             // phải xoá trong DB trước rồi mới xoá trên Model
             // vì sau khi xoá trong Model trước thì nó sẽ bị null
             // (không thể sử dụng tiếp).
-            _db.InvoiceItems.Remove(SelectedInvoiceItem!.Model);
+            _db.InvoiceItems.Remove(SelectedInvoiceItem.Model);
             InvoiceItems.Remove(SelectedInvoiceItem);
             _db.SaveChanges();
         }
