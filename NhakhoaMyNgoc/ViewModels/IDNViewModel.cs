@@ -2,15 +2,19 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
 using NhakhoaMyNgoc.Models;
+using NhakhoaMyNgoc.ModelWrappers;
 using NhakhoaMyNgoc.Utilities;
 using NhakhoaMyNgoc_Connector.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
@@ -32,12 +36,13 @@ namespace NhakhoaMyNgoc.ViewModels
         private Idn selectedIdn = new();
 
         [ObservableProperty]
-        private ObservableCollection<Idnitem> idnItems = [];
+        private ObservableCollection<IdnItemWrapper> idnItems = [];
 
-        [ObservableProperty]
-        private ObservableCollection<Product> products = [];
+        public List<Product> Products { get; }
 
         public static string Title => "Đơn nhập/xuất";
+
+        public int Total => IdnItems?.Sum(i => i.Quantity * i.Price) ?? 0;
 
         public IDNViewModel(DataContext db)
         {
@@ -61,6 +66,7 @@ namespace NhakhoaMyNgoc.ViewModels
                                               i.Deleted == 0).ToList();
             
             Idns = new ObservableCollection<Idn>(result);
+            SelectedIdn = Idns.FirstOrDefault() ?? new();
         }
 
         [RelayCommand]
@@ -69,23 +75,34 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void SaveIdn()
         {
-            if (SelectedIdn.Id == 0)
+            try
             {
-                _db.Idns.Add(SelectedIdn);
-                Idns.Add(SelectedIdn);
-
-                foreach (Idnitem item in IdnItems)
+                if (SelectedIdn.Id == 0) // hoá đơn mới
                 {
-                    item.IdnId = _db.Idns.Count() + 1;
-                    _db.Idnitems.Add(item);
-                }    
+                    _db.Idns.Add(SelectedIdn);
+                    _db.SaveChanges();
+
+                    Idns.Add(SelectedIdn);
+                }
+                else // hoá đơn cũ
+                {
+                    _db.Idns.Update(SelectedIdn);
+                }
+
+                foreach (var item in IdnItems)
+                {
+                    item.IdnId = SelectedIdn.Id;
+
+                    if (item.Id == 0)
+                        _db.Idnitems.Add(item.Model);
+                }
+
+                _db.SaveChanges();
             }
-            else
+            catch
             {
-                _db.Idns.Update(SelectedIdn);
+                MessageBox.Show("Có một số trường dữ liệu bị rỗng. Kiểm tra lại và thử lại.");
             }
-            _db.SaveChanges();
-            SelectedIdn = new();
         }
 
         [RelayCommand]
@@ -109,7 +126,7 @@ namespace NhakhoaMyNgoc.ViewModels
                 Division = SelectedIdn.Division,
                 Reason = SelectedIdn.Reason,
                 CertificateId = SelectedIdn.CertificateId,
-                Total = SelectedIdn.Total
+                Total = this.Total
             };
             List<IdnItemDto> dtoItems = [];
             var items = _db.Idnitems.Include(i => i.Item)
@@ -142,14 +159,53 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             if (value is null) return;
             var items = _db.Idnitems.Where(i => i.IdnId == value.Id).ToList();
-            IdnItems = new ObservableCollection<Idnitem>(items);
+            var wrapped = items.Select(i =>
+            {
+                var wrapper = new IdnItemWrapper(i) { Products = this.Products };
+                wrapper.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Total));
+                return wrapper;
+            });
+            IdnItems.Clear();
+            foreach (var item in wrapped)
+            {
+                item.PropertyChanged += (_, _) => OnPropertyChanged(nameof(Total));
+                IdnItems.Add(item);
+            }
+            IdnItems.CollectionChanged += IdnItems_CollectionChanged;
+
+            OnPropertyChanged(nameof(Total));
         }
 
-        partial void OnIdnItemsChanged(ObservableCollection<Idnitem> value)
+        private void IdnItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            SelectedIdn.Total = 0;
-            foreach (var item in value)
-                SelectedIdn.Total += item.Quantity * item.Price;
+            if (e.NewItems is not null)
+            {
+                foreach (IdnItemWrapper item in e.NewItems)
+                    item.PropertyChanged += IdnItem_PropertyChanged;
+            }
+
+            if (e.OldItems is not null)
+            {
+                foreach (IdnItemWrapper item in e.OldItems)
+                    item.PropertyChanged -= IdnItem_PropertyChanged;
+            }
+
+            OnPropertyChanged(nameof(Total));
+        }
+
+        private void IdnItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is nameof(InvoiceItemWrapper.Quantity)
+                or nameof(InvoiceItemWrapper.Price)
+                or nameof(InvoiceItemWrapper.Total))
+            {
+                OnPropertyChanged(nameof(Total));
+            }
+        }
+
+        partial void OnIdnItemsChanged(ObservableCollection<IdnItemWrapper> value)
+        {
+            OnPropertyChanged(nameof(Total));
         }
 
         /// <summary>

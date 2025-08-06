@@ -17,7 +17,6 @@
                 <DataGridTextColumn Header="Tên" IsReadOnly="True" Binding="{Binding Customer.Name}"/>
                 <DataGridTextColumn Header="Mã HĐ" IsReadOnly="True" Binding="{Binding Id}" />
                 <DataGridTextColumn Header="Ngày khám" Binding="{Binding Date}"/>
-                <DataGridTextColumn Header="Thành tiền" IsReadOnly="True" Binding="{Binding Total, StringFormat=N0}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

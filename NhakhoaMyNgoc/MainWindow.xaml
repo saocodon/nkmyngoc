@@ -335,7 +335,7 @@
 
                                 <TextBlock Text="Chi tiết:" Grid.Row="5" Grid.Column="0"/>
                                 <DataGrid Grid.Row="5" Grid.Column="1" Height="200" HorizontalAlignment="Stretch"
-                                                  ItemsSource="{Binding IdnVM.IdnItems}" AutoGenerateColumns="False">
+                                          ItemsSource="{Binding IdnVM.IdnItems}" AutoGenerateColumns="False">
                                     <DataGrid.Columns>
                                         <!-- Combobox hàng hoá -->
                                         <DataGridTemplateColumn Header="Hàng hoá">
@@ -355,26 +355,16 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellEditingTemplate>
                                         </DataGridTemplateColumn>
-                                        <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" />
-                                        <DataGridTextColumn Header="Yêu cầu" Binding="{Binding Demand}" />
-                                        <DataGridTextColumn Header="Đơn giá" Binding="{Binding Price, StringFormat=N0}" />
-                                        <!-- Nút xoá cho item hoá đơn -->
-                                        <DataGridTemplateColumn>
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <Button FontFamily="Segoe MDL2 Assets" 
-                                                                    Foreground="#c80f21"
-                                                                    Content="&#xE894;"
-                                                                    FontSize="8"
-                                                                    />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
+
+                                        <!-- TwoWay bindings thêm vào đây -->
+                                        <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <DataGridTextColumn Header="Yêu cầu" Binding="{Binding Demand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <DataGridTextColumn Header="Đơn giá" Binding="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
 
                                 <TextBlock Text="Tổng cộng:" Grid.Row="6" Grid.Column="0" />
-                                <TextBlock Text="{Binding IdnVM.SelectedIdn.Total}" Grid.Row="6" Grid.Column="1"
+                                <TextBlock Text="{Binding IdnVM.Total, StringFormat=N0}" Grid.Row="6" Grid.Column="1"
                                            HorizontalAlignment="Left" FontWeight="Bold" />
                                 <DockPanel Grid.Row="7" Grid.Column="1">
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">

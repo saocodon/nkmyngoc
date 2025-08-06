@@ -67,7 +67,6 @@ namespace NhakhoaMyNgoc.ModelWrappers
                 if (Model.ServiceId != value)
                 {
                     Model.ServiceId = value;
-                    Debug.WriteLine($"ServiceId set: {value}");
                     OnPropertyChanged();
                     OnServiceIdChanged(value);
                 }
