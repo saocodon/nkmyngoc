@@ -21,7 +21,5 @@ public partial class Idn
 
     public string? Reason { get; set; }
 
-    public int Total { get; set; }
-
     public virtual ICollection<Idnitem> Idnitems { get; set; } = new List<Idnitem>();
 }

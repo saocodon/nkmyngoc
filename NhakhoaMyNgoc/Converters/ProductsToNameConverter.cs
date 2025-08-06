@@ -12,7 +12,7 @@ namespace NhakhoaMyNgoc.Converters
 {
     public class ProductsToNameConverter : IValueConverter
     {
-        public ObservableCollection<Product> Products { get; set; } = [];
+        public List<Product> Products { get; set; } = [];
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
