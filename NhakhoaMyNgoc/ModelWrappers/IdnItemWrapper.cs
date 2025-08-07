@@ -2,6 +2,7 @@
 using NhakhoaMyNgoc.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +15,45 @@ namespace NhakhoaMyNgoc.ModelWrappers
 
         public IdnItemWrapper() : this(new Idnitem()) { }
 
-        public List<Product> Products { get; set; } = [];
+        public ObservableCollection<ProductWrapper> Products { get; set; } = [];
 
-        public int ItemId { get => Model.ItemId; set => Model.ItemId = value; }
+        private int _previousItemId = -1;
+
+        public int ItemId
+        {
+            get => Model.ItemId;
+            set
+            {
+                if (Model.ItemId != value)
+                {
+                    // Lưu lại ID cũ để biết chuyển từ đâu
+                    int oldItemId = Model.ItemId;
+                    Model.ItemId = value;
+                    OnPropertyChanged();
+
+                    // Chuyển số lượng sang item mới (nếu Products đã có)
+                    if (Products is not null && Products.Count > 0)
+                    {
+                        var oldProduct = Products.FirstOrDefault(p => p.Id == oldItemId);
+                        var newProduct = Products.FirstOrDefault(p => p.Id == value);
+
+                        if (oldProduct != null)
+                        {
+                            oldProduct.Quantity = oldProduct.Quantity - Quantity;
+                            oldProduct.Total = oldProduct.Total - Quantity * Price;
+                        }
+
+                        if (newProduct != null)
+                        {
+                            newProduct.Quantity = newProduct.Quantity + Quantity;
+                            newProduct.Total = newProduct.Total + Quantity * Price;
+                        }
+                    }
+
+                    OnPropertyChanged(nameof(Item));
+                }
+            }
+        }
 
         public int Quantity
         {
