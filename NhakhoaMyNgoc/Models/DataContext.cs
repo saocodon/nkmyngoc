@@ -87,7 +87,6 @@ public partial class DataContext : DbContext
             entity.Property(e => e.IdnId).HasColumnName("IdnID");
             entity.Property(e => e.ItemId).HasColumnName("ItemID");
             entity.Property(e => e.Quantity).HasDefaultValue(1);
-            entity.Property(e => e.Total).HasComputedColumnSql();
 
             entity.HasOne(d => d.Idn).WithMany(p => p.Idnitems)
                 .HasForeignKey(d => d.IdnId)

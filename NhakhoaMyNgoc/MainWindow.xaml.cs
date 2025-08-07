@@ -33,7 +33,7 @@ namespace NhakhoaMyNgoc
             if (Resources["ServiceIdToNameConverter"] is ServiceIdToNameConverter stn)
                 stn.Services = vm.InvoiceVM.Services;
             if (Resources["ProductsToNameConverter"] is ProductsToNameConverter ptn)
-                ptn.Products = vm.IdnVM.Products;
+                ptn.Products = vm.IdnVM.Products!; // không null được vì đã load từ lúc bật app
         }
 
         /// <summary>

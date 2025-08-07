@@ -1,4 +1,4 @@
-﻿using NhakhoaMyNgoc.Models;
+﻿using NhakhoaMyNgoc.ModelWrappers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +12,7 @@ namespace NhakhoaMyNgoc.Converters
 {
     public class ProductsToNameConverter : IValueConverter
     {
-        public List<Product> Products { get; set; } = [];
+        public ObservableCollection<ProductWrapper> Products { get; set; } = [];
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

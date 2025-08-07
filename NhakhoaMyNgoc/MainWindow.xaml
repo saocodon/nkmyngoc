@@ -294,13 +294,13 @@
                                 <StackPanel Grid.Row="0" Grid.Column="1">
                                     <StackPanel Orientation="Horizontal">
                                         <RadioButton Content="Nhập"
-                                                        IsChecked="{Binding IdnVM.SelectedIdn.Input,
+                                                        IsChecked="{Binding IdnVM.Input,
                                                                     Converter={StaticResource InverseToBoolConverter},
                                                                     ConverterParameter=1,
                                                                     Mode=TwoWay}" />
 
                                         <RadioButton Content="Xuất"
-                                                        IsChecked="{Binding IdnVM.SelectedIdn.Input,
+                                                        IsChecked="{Binding IdnVM.Input,
                                                                     Converter={StaticResource InverseToBoolConverter},
                                                                     ConverterParameter=0,
                                                                     Mode=TwoWay}" />
@@ -334,8 +334,11 @@
                              Text="{Binding IdnVM.SelectedIdn.CertificateId, Mode=TwoWay}"/>
 
                                 <TextBlock Text="Chi tiết:" Grid.Row="5" Grid.Column="0"/>
-                                <DataGrid Grid.Row="5" Grid.Column="1" Height="200" HorizontalAlignment="Stretch"
-                                          ItemsSource="{Binding IdnVM.IdnItems}" AutoGenerateColumns="False">
+                                <DataGrid Grid.Row="5" Grid.Column="1" Height="200"
+                                          HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding IdnVM.IdnItems}"
+                                          SelectedItem="{Binding IdnVM.SelectedIdnItem, Mode=TwoWay}"
+                                          AutoGenerateColumns="False">
                                     <DataGrid.Columns>
                                         <!-- Combobox hàng hoá -->
                                         <DataGridTemplateColumn Header="Hàng hoá">

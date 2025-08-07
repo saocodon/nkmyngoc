@@ -7,8 +7,6 @@ public partial class Idnitem
 {
     public int Id { get; set; }
 
-    public int Deleted { get; set; }
-
     public int IdnId { get; set; }
 
     public int ItemId { get; set; }
@@ -18,8 +16,6 @@ public partial class Idnitem
     public int Demand { get; set; }
 
     public int Price { get; set; }
-
-    public int? Total { get; set; }
 
     public virtual Idn Idn { get; set; } = null!;
 
