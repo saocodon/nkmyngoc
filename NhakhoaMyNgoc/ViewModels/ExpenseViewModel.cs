@@ -30,6 +30,16 @@ namespace NhakhoaMyNgoc.ViewModels
         [ObservableProperty]
         private Expense? selectedExpense;
 
+        public int IncomeSum => Expenses
+            .Where(e => e.Input == 1)
+            .Sum(e => e.Amount);
+
+        public int OutcomeSum => Expenses
+            .Where(e => e.Input == 0)
+            .Sum(e => e.Amount);
+
+        public int RemainingSum => IncomeSum - OutcomeSum;
+
         [RelayCommand]
         void LoadExpenses()
         {
@@ -41,6 +51,7 @@ namespace NhakhoaMyNgoc.ViewModels
                                               i.Deleted == 0).ToList();
 
             Expenses = new ObservableCollection<Expense>(result);
+            UpdateFigures();
         }
 
         [RelayCommand]
@@ -90,6 +101,7 @@ namespace NhakhoaMyNgoc.ViewModels
                 _db.Expenses.Update(SelectedExpense);
                 _db.SaveChanges();
             }
+            UpdateFigures();
         }
 
         [RelayCommand]
@@ -100,6 +112,14 @@ namespace NhakhoaMyNgoc.ViewModels
             _db.Expenses.Remove(SelectedExpense);
             _db.SaveChanges();
             Expenses.Remove(SelectedExpense);
+            UpdateFigures();
+        }
+
+        void UpdateFigures()
+        {
+            OnPropertyChanged(nameof(IncomeSum));
+            OnPropertyChanged(nameof(OutcomeSum));
+            OnPropertyChanged(nameof(RemainingSum));
         }
     }
 }

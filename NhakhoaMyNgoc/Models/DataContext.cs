@@ -54,8 +54,6 @@ public partial class DataContext : DbContext
 
         modelBuilder.Entity<Expense>(entity =>
         {
-            entity.ToTable("Expense");
-
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Address).HasDefaultValue("Chưa rõ");
             entity.Property(e => e.CertificateId).HasColumnName("CertificateID");
