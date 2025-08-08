@@ -20,7 +20,6 @@ namespace NhakhoaMyNgoc.ViewModels
         private object selectedTab = new();
 
         public CustomerViewModel CustomerVM { get; }
-        public ImageViewModel ImageVM { get; }
         public InvoiceViewModel InvoiceVM { get; }
         public IDNViewModel IdnVM { get; }
         public ProductViewModel ProductVM { get; }
@@ -28,13 +27,11 @@ namespace NhakhoaMyNgoc.ViewModels
         public TableEditorViewModel(DataContext db)
         {
             CustomerVM = new CustomerViewModel(db);
-            ImageVM = new ImageViewModel(db);
             InvoiceVM = new InvoiceViewModel(db);
             IdnVM = new IDNViewModel(db);
             ProductVM = new ProductViewModel(db);
 
             Tabs.Add(CustomerVM);
-            Tabs.Add(ImageVM);
             Tabs.Add(InvoiceVM);
             Tabs.Add(IdnVM);
             Tabs.Add(ProductVM);
