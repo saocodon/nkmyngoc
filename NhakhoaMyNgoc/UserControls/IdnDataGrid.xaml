@@ -11,7 +11,8 @@
                   SelectedItem="{Binding SelectedIdn}"
                   AutoGenerateColumns="False"
                   CanUserDeleteRows="False"
-                  CanUserAddRows="False">
+                  CanUserAddRows="False"
+                  IsReadOnly="{Binding IsReadOnly}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Mã đơn" Binding="{Binding Id}" IsReadOnly="True" />
                 <DataGridCheckBoxColumn Header="Nhập" Binding="{Binding Input}" />

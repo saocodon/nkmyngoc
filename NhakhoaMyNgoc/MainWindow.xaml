@@ -407,20 +407,19 @@
                             <TabItem Header="Kho hàng">
                                 <DockPanel LastChildFill="True">
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
-                                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" />
+                                        <TextBlock Text="Tên vật phẩm:" />
+                                        <TextBox Width="200" Text="{Binding IdnVM.SelectedProduct.Name}" />
+                                        <TextBlock Text="Đơn vị:" />
+                                        <TextBox Width="50" Text="{Binding IdnVM.SelectedProduct.Unit}" />
+                                        <Button Command="{Binding IdnVM.StartAddNewProductCommand}"
+                                                Foreground="#208c20"
+                                                FontFamily="Segoe MDL2 Assets" Content="&#xE710;" />
+                                        <Button Command="{Binding IdnVM.SaveProductCommand}"
+                                                Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" />
+                                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE74D;"
+                                                Foreground="Red" Command="{Binding IdnVM.DeleteProductCommand}"/>
                                     </StackPanel>
-                                    <DataGrid
-                                    ItemsSource="{Binding IdnVM.Products}"
-                                    AutoGenerateColumns="False"
-                                    IsReadOnly="True">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Mã VL" Binding="{Binding Id}" />
-                                            <DataGridTextColumn Header="Tên" Binding="{Binding Name}" />
-                                            <DataGridTextColumn Header="Đơn vị" Binding="{Binding Unit}" />
-                                            <DataGridTextColumn Header="SL" Binding="{Binding Quantity}" />
-                                            <DataGridTextColumn Header="Tổng cộng" Binding="{Binding Total}" />
-                                        </DataGrid.Columns>
-                                    </DataGrid>
+                                    <uc:ProductDataGrid DataContext="{Binding IdnVM}" />
                                 </DockPanel>
                             </TabItem>
                         </TabControl>

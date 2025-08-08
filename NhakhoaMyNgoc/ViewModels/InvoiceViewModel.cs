@@ -100,6 +100,8 @@ namespace NhakhoaMyNgoc.ViewModels
         private ObservableCollection<Invoice> invoices = [];
 
         public static string Title => "Hoá đơn";
+
+        public bool IsReadOnly { get; set; } = false;
         #endregion
 
         /// <summary>

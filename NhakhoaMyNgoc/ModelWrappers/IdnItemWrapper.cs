@@ -17,8 +17,6 @@ namespace NhakhoaMyNgoc.ModelWrappers
 
         public ObservableCollection<ProductWrapper> Products { get; set; } = [];
 
-        private int _previousItemId = -1;
-
         public int ItemId
         {
             get => Model.ItemId;

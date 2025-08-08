@@ -23,6 +23,7 @@ namespace NhakhoaMyNgoc.ViewModels
         public ImageViewModel ImageVM { get; }
         public InvoiceViewModel InvoiceVM { get; }
         public IDNViewModel IdnVM { get; }
+        public ProductViewModel ProductVM { get; }
 
         public TableEditorViewModel(DataContext db)
         {
@@ -30,11 +31,13 @@ namespace NhakhoaMyNgoc.ViewModels
             ImageVM = new ImageViewModel(db);
             InvoiceVM = new InvoiceViewModel(db);
             IdnVM = new IDNViewModel(db);
+            ProductVM = new ProductViewModel(db);
 
             Tabs.Add(CustomerVM);
             Tabs.Add(ImageVM);
             Tabs.Add(InvoiceVM);
             Tabs.Add(IdnVM);
+            Tabs.Add(ProductVM);
         }
     }
 }
