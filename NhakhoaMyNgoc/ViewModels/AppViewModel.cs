@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
 using NhakhoaMyNgoc.Models;
+using NhakhoaMyNgoc.ModelWrappers;
 using NhakhoaMyNgoc.Windows;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,21 @@ namespace NhakhoaMyNgoc.ViewModels
                                 .Where(i => i.Deleted == 1)]);
             vm.IdnVM.Idns = new([.. _db.Idns
                                 .Where(i => i.Deleted == 1)]);
+
+            var deletedProducts = _db.Products.Where(i => i.Deleted == 1).ToList();
+            // Gán sự kiện tính Total cho mọi item
+            var wrapped = deletedProducts.Select(i =>
+            {
+                var wrapper = new ProductWrapper(i);
+                return wrapper;
+            }).ToList();
+            vm.ProductVM.Products = new(wrapped);
+
+            vm.CustomerVM.IsReadOnly
+                = vm.InvoiceVM.IsReadOnly
+                = vm.IdnVM.IsReadOnly
+                = true;
+
             vm.SelectedTab = vm.Tabs.FirstOrDefault()!;
             new TableEditor() { DataContext = vm }.ShowDialog();
         }

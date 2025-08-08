@@ -22,7 +22,8 @@
             SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
             AutoGenerateColumns="False"
             CanUserDeleteRows="False"
-            CanUserAddRows="False">
+            CanUserAddRows="False"
+            IsReadOnly="{Binding IsReadOnly}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="CCCD" Binding="{Binding Cid}"/>
                 <DataGridTextColumn Header="Tên" Binding="{Binding Name}"/>

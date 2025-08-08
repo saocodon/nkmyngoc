@@ -15,9 +15,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
+
     public partial class IDNViewModel : ObservableObject
     {
         private readonly DataContext _db;
@@ -44,6 +46,9 @@ namespace NhakhoaMyNgoc.ViewModels
         [ObservableProperty]
         public ObservableCollection<ProductWrapper>? products;
 
+        [ObservableProperty]
+        public ProductWrapper selectedProduct = new();
+
         public static string Title => "Đơn nhập/xuất";
 
         // tính lại Total bằng OnPropertyChanged (gọi lại getter)
@@ -51,6 +56,8 @@ namespace NhakhoaMyNgoc.ViewModels
 
         [ObservableProperty]
         private int? input;
+
+        public bool IsReadOnly { get; set; } = false;
 
         public IDNViewModel(DataContext db)
         {
@@ -77,8 +84,8 @@ namespace NhakhoaMyNgoc.ViewModels
             SelectedIdn = Idns.FirstOrDefault() ?? new() { Date = DateTime.Now };
 
             // load lại số lượng từ kho
-            var products_list = _db.Products.ToList();
-            Products = new();
+            var products_list = _db.Products.Where(i => i.Deleted == 0).ToList();
+            Products = [];
             foreach (var p in products_list)
                 Products.Add(new ProductWrapper(p, IdnItems));
         }
@@ -234,6 +241,39 @@ namespace NhakhoaMyNgoc.ViewModels
             });
         }
 
+
+        [RelayCommand]
+        void StartAddNewProduct() => SelectedProduct = new();
+
+        [RelayCommand]
+        void SaveProduct()
+        {
+            if (SelectedProduct!.Id == 0) // hàng mới
+            {
+                _db.Products.Add(SelectedProduct.Model);
+                Products!.Add(SelectedProduct);
+
+                _db.SaveChanges();
+                SelectedProduct = new(); // reset sau khi lưu
+            }
+            else // hàng cũ
+            {
+                _db.Products.Update(SelectedProduct.Model);
+                _db.SaveChanges();
+            }
+        }
+
+        [RelayCommand]
+        void DeleteProduct()
+        {
+            SelectedProduct.Deleted = 1;
+            _db.SaveChanges();
+
+            // xóa trong RAM
+            Products!.Remove(SelectedProduct);
+            SelectedProduct = new();
+        }
+
         partial void OnSelectedIdnChanged(Idn value)
         {
             if (value is null) return;
@@ -359,7 +399,7 @@ namespace NhakhoaMyNgoc.ViewModels
         /// Hàm này chỉ có TableEditor được gọi.
         /// </summary>
         [RelayCommand]
-        void Restore()
+        protected virtual void Restore()
         {
             SelectedIdn.Deleted = 0;
 
@@ -372,13 +412,13 @@ namespace NhakhoaMyNgoc.ViewModels
 
                 if (SelectedIdn.Input == 1)
                 {
-                    product.Quantity = product.Quantity + item.Quantity;
-                    product.Total = product.Total + item.Quantity * item.Price;
+                    product.Quantity += item.Quantity;
+                    product.Total += item.Quantity * item.Price;
                 }
                 else
                 {
-                    product.Quantity = product.Quantity - item.Quantity;
-                    product.Total = product.Total - item.Quantity * item.Price;
+                    product.Quantity -= item.Quantity;
+                    product.Total -= item.Quantity * item.Price;
                 }
             }
 
