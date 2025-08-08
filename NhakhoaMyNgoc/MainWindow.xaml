@@ -8,6 +8,7 @@
         xmlns:cvt="clr-namespace:NhakhoaMyNgoc.Converters"
         xmlns:uc="clr-namespace:NhakhoaMyNgoc.UserControls"
         xmlns:model="clr-namespace:NhakhoaMyNgoc.Models"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="Nha khoa Mỹ Ngọc" Height="1100" Width="1600"
@@ -175,12 +176,12 @@
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock Text="Ngày khám:" Grid.Row="0" Grid.Column="0"/>
-                                        <DatePicker Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"
-                                                    SelectedDate="{Binding InvoiceVM.SelectedInvoice.Date}"/>
+                                        <xctk:DateTimePicker Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"
+                                          Value="{Binding InvoiceVM.SelectedInvoice.Date}"/>
 
                                         <CheckBox Content="Tái khám:" Grid.Row="1" IsChecked="{Binding InvoiceVM.IsRevisitValid, Mode=OneWay}" />
-                                        <DatePicker Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
-                                                    SelectedDate="{Binding InvoiceVM.SelectedInvoice.Revisit}"/>
+                                        <xctk:DateTimePicker Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+                                          Value="{Binding InvoiceVM.SelectedInvoice.Revisit}"/>
 
                                         <TextBlock Text="Nội dung điều trị:" Grid.Row="2" Grid.Column="0"/>
                                         <DataGrid Grid.Row="2" Grid.Column="1" Height="200" HorizontalAlignment="Stretch"
@@ -308,8 +309,8 @@
                                 </StackPanel>
 
                                 <TextBlock Text="Ngày:" Grid.Row="1" Grid.Column="0" />
-                                <DatePicker Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
-                                SelectedDate="{Binding IdnVM.SelectedIdn.Date, Mode=TwoWay}"/>
+                                <xctk:DateTimePicker Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+                                Value="{Binding IdnVM.SelectedIdn.Date, Mode=TwoWay}"/>
 
                                 <TextBlock Text="Tên:" Grid.Row="2" Grid.Column="0"/>
                                 <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="False">
@@ -462,8 +463,7 @@
                             </StackPanel>
 
                             <TextBlock Text="Ngày:" Grid.Row="1" Grid.Column="0" />
-                            <DatePicker Grid.Row="1" Grid.Column="1"
-SelectedDate="{Binding ExpenseVM.SelectedExpense.Date, Mode=TwoWay}" Grid.ColumnSpan="2"/>
+                            <xctk:DateTimePicker Grid.Row="1" Grid.Column="1" Value="{Binding ExpenseVM.SelectedExpense.Date, Mode=TwoWay}" Grid.ColumnSpan="2"/>
 
                             <TextBlock Text="Tên:" Grid.Row="2" Grid.Column="0"/>
                             <DockPanel Grid.Row="2" LastChildFill="False" Grid.ColumnSpan="3" Grid.Column="1">
