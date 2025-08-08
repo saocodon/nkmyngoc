@@ -40,9 +40,6 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             var vm = new TableEditorViewModel(_db);
             vm.CustomerVM.Customers = new(_db.Customers.Where(c => c.Deleted == 1));
-            vm.ImageVM.Records = new([.. _db.Images
-                                .Include(img => img.Customer) // eager loading để tăng tốc độ
-                                .Where(img => img.Deleted == 1)]);
             vm.InvoiceVM.Invoices = new([.. _db.Invoices
                                 .Include(i => i.Customer)
                                 .Where(i => i.Deleted == 1)]);

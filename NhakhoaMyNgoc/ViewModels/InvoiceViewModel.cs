@@ -185,7 +185,7 @@ namespace NhakhoaMyNgoc.ViewModels
             _db.SaveChanges();
 
             Invoices.Remove(SelectedInvoice);
-            SelectedInvoice = new();
+            SelectedInvoice = new() { Date = DateTime.Now };
         }
 
         [RelayCommand]
@@ -211,7 +211,7 @@ namespace NhakhoaMyNgoc.ViewModels
             _db.SaveChanges();
 
             Invoices.Remove(SelectedInvoice);
-            SelectedInvoice = new();
+            SelectedInvoice = new() { Date = DateTime.Now };
         }
 
         [RelayCommand]
