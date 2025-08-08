@@ -99,7 +99,9 @@ namespace NhakhoaMyNgoc.ViewModels
                 Note = record.Note ?? string.Empty,
                 DeleteCommand = new RelayCommand(() =>
                 {
-                    record.Deleted = 1;
+                    File.Delete(Path.Combine(Config.full_path,
+                        "Images", record.CustomerId.ToString(), record.Path));
+                    _db.Images.Remove(record);
                     Images.Remove(item!);
                     _db.SaveChanges();
                 })
@@ -154,19 +156,6 @@ namespace NhakhoaMyNgoc.ViewModels
                 BitmapImage img = IOUtil.LoadImage(fullPath);
                 CreateListViewItem(image, img);
             }
-        }
-
-        /// <summary>
-        /// Hàm này chỉ có TableEditor được gọi.
-        /// </summary>
-        [RelayCommand]
-        void Restore()
-        {
-            SelectedRecord.Deleted = 0;
-            _db.SaveChanges();
-
-            Records.Remove(SelectedRecord);
-            SelectedRecord = new();
         }
     }
 }
