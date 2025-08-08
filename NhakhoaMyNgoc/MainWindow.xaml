@@ -518,12 +518,15 @@ Text="{Binding ExpenseVM.SelectedExpense.CertificateId, Mode=TwoWay}" Grid.Colum
                             <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding ExpenseVM.LoadExpensesCommand}" />
                         </StackPanel>
                         <StatusBar DockPanel.Dock="Bottom" Background="#3b4f81" Foreground="White">
-                            <StatusBarItem Content="Tổng thu: 0" />
-                            <StatusBarItem Content="Tổng chi: 0" />
-                            <StatusBarItem Content="Còn lại: 0" />
+                            <StatusBarItem Content="Tổng thu: " />
+                            <StatusBarItem Content="{Binding ExpenseVM.IncomeSum, StringFormat=N0}" />
+                            <StatusBarItem Content="Tổng chi: " />
+                            <StatusBarItem Content="{Binding ExpenseVM.OutcomeSum, StringFormat=N0}" />
+                            <StatusBarItem Content="Còn lại: " />
+                            <StatusBarItem Content="{Binding ExpenseVM.RemainingSum, StringFormat=N0}" />
                         </StatusBar>
                         <DataGrid ItemsSource="{Binding ExpenseVM.Expenses}" AutoGenerateColumns="False"
-                                  SelectedItem="{Binding ExpenseVM.SelectedExpense}">
+                                  SelectedItem="{Binding ExpenseVM.SelectedExpense}" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Mã đơn" Binding="{Binding Id}" />
                                 <DataGridCheckBoxColumn Header="Nhập" Binding="{Binding Input}" />
