@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">
 
     <!-- Default margin style -->
     <Thickness x:Key="DefaultControlMargin">3,3,3,1</Thickness>
@@ -56,6 +57,14 @@
     <Style TargetType="DataGrid">
         <Setter Property="Margin" Value="{StaticResource DefaultControlMargin}" />
         <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <Style TargetType="xctk:DateTimePicker">
+        <Setter Property="AllowSpin" Value="True" />
+        <Setter Property="ShowButtonSpinner" Value="True" />
+        <Setter Property="Format" Value="Custom" />
+        <Setter Property="FormatString" Value="dd/MM/yyyy HH:mm" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
     </Style>
 
     <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
