@@ -19,7 +19,8 @@
                           SelectedItem="{Binding SelectedRecord, Mode=TwoWay}"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
-                          CanUserDeleteRows="False">
+                          CanUserDeleteRows="False"
+                          IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="CCCD" Binding="{Binding Customer.Cid}"/>
                         <DataGridTextColumn Header="Tên" Binding="{Binding Customer.Name}"/>
@@ -34,6 +35,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:IDNViewModel}">
             <uc:IdnDataGrid />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ProductViewModel}">
+            <uc:ProductDataGrid />
         </DataTemplate>
     </Window.Resources>
     <Grid>
@@ -60,13 +64,9 @@
             </TabControl.ContentTemplate>
         </TabControl>
 
-        <!-- Nút khôi phục ở dưới cố định -->
         <Button Grid.Row="1"
-            Content="Khôi phục"
-            Height="36"
-            Margin="12"
-            HorizontalAlignment="Right"
-            Padding="20,4"
-            Command="{Binding SelectedTab.RestoreCommand}" />
+        Content="Khôi phục"
+        HorizontalAlignment="Right"
+        Command="{Binding SelectedTab.RestoreCommand}"/>
     </Grid>
 </Window>

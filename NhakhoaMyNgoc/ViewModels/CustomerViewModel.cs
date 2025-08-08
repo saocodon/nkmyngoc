@@ -35,6 +35,8 @@ namespace NhakhoaMyNgoc.ViewModels
         private Customer selectedCustomer = new();
 
         public static string Title => "Khách hàng";
+
+        public bool IsReadOnly { get; set; } = false;
         #endregion
 
         #region Add & edit

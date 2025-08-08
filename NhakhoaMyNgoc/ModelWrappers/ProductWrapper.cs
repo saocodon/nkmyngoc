@@ -14,22 +14,34 @@ namespace NhakhoaMyNgoc.ModelWrappers
     {
         public Product Model { get; }
 
-        private readonly ObservableCollection<IdnItemWrapper> _idnItems;
+        private readonly ObservableCollection<IdnItemWrapper> idnItems;
 
-        public ProductWrapper(Product product, ObservableCollection<IdnItemWrapper> idnItems)
+        public ProductWrapper(Product product, ObservableCollection<IdnItemWrapper> _idnItems)
         {
             Model = product;
-            _idnItems = idnItems;
+            idnItems = _idnItems;
 
             // Theo dõi khi danh sách IdnItems thay đổi
-            _idnItems.CollectionChanged += _idnItems_CollectionChanged;
+            idnItems.CollectionChanged += IdnItems_CollectionChanged;
 
             // Theo dõi từng item thay đổi Quantity hoặc Price
-            foreach (var item in _idnItems)
+            foreach (var item in idnItems)
                 item.PropertyChanged += OnItemChanged;
         }
 
-        private void _idnItems_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        public ProductWrapper()
+        {
+            Model = new();
+            idnItems = [];
+        }
+
+        public ProductWrapper(Product p)
+        {
+            Model = p;
+            idnItems = [];
+        }
+
+        private void IdnItems_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems is not null)
             {
@@ -51,10 +63,33 @@ namespace NhakhoaMyNgoc.ModelWrappers
         }
 
         public int Id => Model.Id;
+        public int Deleted { get => Model.Deleted; set => Model.Deleted = value; }
 
-        public string Name => Model.Name;
+        public string Name
+        {
+            get => Model.Name;
+            set
+            {
+                if (Model.Name != value)
+                {
+                    Model.Name = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-        public string Unit => Model.Unit ?? string.Empty;
+        public string Unit
+        {
+            get => Model.Unit ?? string.Empty;
+            set
+            {
+                if (Model.Unit != value)
+                {
+                    Model.Unit = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public int Quantity
         {
