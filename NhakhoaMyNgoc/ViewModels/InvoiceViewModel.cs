@@ -21,12 +21,12 @@ namespace NhakhoaMyNgoc.ViewModels
 
         private Customer SelectedCustomer = new();
 
-        public InvoiceViewModel(DataContext db)
+        public InvoiceViewModel(DataContext db, IEnumerable<Service> services)
         {
             _db = db;
 
             // load tất cả dịch vụ
-            Services = [.. _db.Services];
+            Services = [.. services];
 
             // đăng ký nhận khách hàng đang chọn
             Messenger.Subscribe("OnSelectedCustomerChanged", data =>

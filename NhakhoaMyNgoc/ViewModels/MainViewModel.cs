@@ -13,6 +13,7 @@ namespace NhakhoaMyNgoc.ViewModels
         public AppViewModel AppVM { get; }
         public CustomerViewModel CustomerVM { get; }
         public InvoiceViewModel InvoiceVM { get; }
+        public ServiceViewModel ServiceVM { get; }
         public ImageViewModel ImageVM { get; }
         public ProductService ProductSvc { get; }
         public IDNViewModel IdnVM { get; }
@@ -23,7 +24,8 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             AppVM = new(db);
             CustomerVM = new(db);
-            InvoiceVM = new(db);
+            ServiceVM = new(db, loadDeleted: false);
+            InvoiceVM = new(db, ServiceVM.Services);
             ImageVM = new(db);
 
             ProductSvc = new ProductService(db);

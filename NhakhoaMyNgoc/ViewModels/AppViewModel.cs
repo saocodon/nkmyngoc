@@ -24,6 +24,12 @@ namespace NhakhoaMyNgoc.ViewModels
             _db = db;
         }
 
+        public enum ViewMode
+        {
+            Manage,
+            Restore
+        }
+
         [RelayCommand]
         static void OpenAbout() => new AboutWindow().ShowDialog();
 
@@ -33,11 +39,6 @@ namespace NhakhoaMyNgoc.ViewModels
             var login = new LoginWindow();
             if (login.ShowDialog() == true)
                 new SettingsWindow().ShowDialog();
-        }
-
-        public bool RequireLogin()
-        {
-            return new LoginWindow().ShowDialog() == true;
         }
 
         [RelayCommand]
@@ -59,11 +60,6 @@ namespace NhakhoaMyNgoc.ViewModels
                 return wrapper;
             }).ToList();
             vm.ProductVM!.Products = new(wrapped);
-
-            vm.CustomerVM.IsReadOnly
-                = vm.InvoiceVM.IsReadOnly
-                = vm.IdnVM.IsReadOnly
-                = true;
 
             vm.SelectedTab = vm.Tabs.FirstOrDefault()!;
             new TableEditor() { DataContext = vm }.ShowDialog();

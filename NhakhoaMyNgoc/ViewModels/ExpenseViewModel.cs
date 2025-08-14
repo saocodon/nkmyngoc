@@ -81,10 +81,24 @@ namespace NhakhoaMyNgoc.ViewModels
         }
 
         [RelayCommand]
-        void StartAddNew() => SelectedExpense = new() { Date = DateTime.Now };
+        void StartAddNew()
+        {
+            SelectedExpense = new()
+            {
+                Deleted = 0,
+                Date = DateTime.Now,
+                Input = 1,
+                Participant = "Chưa rõ",
+                Address = "Chưa rõ",
+                Content = "Chưa rõ",
+                Amount = 0,
+                CertificateId = -1
+            };
+            Expenses.Add(SelectedExpense);
+        }
 
         [RelayCommand]
-        void SaveExpense()
+        void Save()
         {
             if (SelectedExpense == null) return;
 
@@ -94,7 +108,6 @@ namespace NhakhoaMyNgoc.ViewModels
                 Expenses.Add(SelectedExpense);
 
                 _db.SaveChanges();
-                SelectedExpense = new();
             }
             else
             {
@@ -105,12 +118,15 @@ namespace NhakhoaMyNgoc.ViewModels
         }
 
         [RelayCommand]
-        void DeleteExpense()
+        void Delete()
         {
             if (SelectedExpense == null) return;
-
-            _db.Expenses.Remove(SelectedExpense);
-            _db.SaveChanges();
+            
+            if (SelectedExpense.Id != 0)
+            {
+                _db.Expenses.Remove(SelectedExpense);
+                _db.SaveChanges();
+            }
             Expenses.Remove(SelectedExpense);
             UpdateFigures();
         }

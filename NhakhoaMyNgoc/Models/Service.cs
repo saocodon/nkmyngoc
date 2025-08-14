@@ -7,6 +7,8 @@ public partial class Service
 {
     public int Id { get; set; }
 
+    public int Deleted { get; set; }
+
     public string Name { get; set; } = null!;
 
     public int Price { get; set; }

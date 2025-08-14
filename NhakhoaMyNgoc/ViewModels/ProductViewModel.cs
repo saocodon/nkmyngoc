@@ -5,6 +5,7 @@ using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.ModelWrappers;
 using NhakhoaMyNgoc.Services;
 using System.Collections.ObjectModel;
+using static NhakhoaMyNgoc.ViewModels.AppViewModel;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
@@ -12,14 +13,8 @@ namespace NhakhoaMyNgoc.ViewModels
     {
         public static string Title => "Hàng hoá";
 
-        public enum ProductViewMode
-        {
-            Manage,
-            Restore
-        }
-
         [ObservableProperty]
-        private ProductViewMode mode;
+        private ViewMode mode;
 
         private readonly IProductService _productService;
 
@@ -36,10 +31,24 @@ namespace NhakhoaMyNgoc.ViewModels
         }
 
         [RelayCommand]
-        public void StartAddNew() => SelectedProduct = new();
+        public void StartAddNew()
+        {
+            if (Products != null)
+            {
+                SelectedProduct = new()
+                {
+                    Deleted = 0,
+                    Name = "Chưa rõ",
+                    Unit = "cái",
+                    Quantity = 0,
+                    Total = 0
+                };
+                Products.Add(SelectedProduct);
+            }
+        }
 
         [RelayCommand]
-        public void SaveProduct()
+        public void Save()
         {
             if (SelectedProduct != null && Products != null)
             {
@@ -53,7 +62,7 @@ namespace NhakhoaMyNgoc.ViewModels
         }
 
         [RelayCommand]
-        public void DeleteProduct()
+        public void Delete()
         {
             if (SelectedProduct != null && Products != null)
             {

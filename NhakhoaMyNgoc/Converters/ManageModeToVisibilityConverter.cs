@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace NhakhoaMyNgoc.Converters
 {
-    public class ProductModeToVisibilityConverter : IValueConverter
+    public class ManageModeToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

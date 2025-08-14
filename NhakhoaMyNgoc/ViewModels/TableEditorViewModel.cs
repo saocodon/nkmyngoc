@@ -28,6 +28,7 @@ namespace NhakhoaMyNgoc.ViewModels
         public IDNViewModel? IdnVM { get; }
         public ProductService? ProductService { get; }
         public ProductViewModel? ProductVM { get; }
+        public ServiceViewModel? ServiceVM { get; }
         public string? Title { get; set; }
 
         public TableEditorViewModel(DataContext db, int func)
@@ -40,16 +41,19 @@ namespace NhakhoaMyNgoc.ViewModels
                     Title = "Thùng rác";
 
                     CustomerVM = new CustomerViewModel(db);
-                    InvoiceVM = new InvoiceViewModel(db);
+                    ServiceVM = new ServiceViewModel(_db, loadDeleted: true)
+                    { Mode = AppViewModel.ViewMode.Restore };
+                    InvoiceVM = new InvoiceViewModel(db, ServiceVM.Services);
                     ProductService = new ProductService(db);
                     IdnVM = new IDNViewModel(db, ProductService);
                     ProductVM = new ProductViewModel(ProductService, loadDeleted: true)
-                    { Mode = ProductViewModel.ProductViewMode.Restore };
+                    { Mode = AppViewModel.ViewMode.Restore };       
 
                     Tabs.Add(CustomerVM);
                     Tabs.Add(InvoiceVM);
                     Tabs.Add(IdnVM);
                     Tabs.Add(ProductVM);
+                    Tabs.Add(ServiceVM);
                     break;
                 // Quản lý tài nguyên (bảng dịch vụ, kho hàng...)
                 case 2:
@@ -57,9 +61,12 @@ namespace NhakhoaMyNgoc.ViewModels
 
                     ProductService = new ProductService(db);
                     ProductVM = new ProductViewModel(ProductService, loadDeleted: false)
-                    { Mode = ProductViewModel.ProductViewMode.Manage };
+                    { Mode = AppViewModel.ViewMode.Manage };
+                    ServiceVM = new ServiceViewModel(_db)
+                    { Mode = AppViewModel.ViewMode.Manage };
 
                     Tabs.Add(ProductVM);
+                    Tabs.Add(ServiceVM);
                     break;
                 default:
                     break;
