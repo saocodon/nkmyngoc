@@ -33,7 +33,7 @@ namespace NhakhoaMyNgoc
             if (Resources["ServiceIdToNameConverter"] is ServiceIdToNameConverter stn)
                 stn.Services = vm.InvoiceVM.Services;
             if (Resources["ProductsToNameConverter"] is ProductsToNameConverter ptn)
-                ptn.Products = vm.IdnVM.Products!; // không null được vì đã load từ lúc bật app
+                ptn.Products = vm.ProductVM.Products!; // không null được vì đã load từ lúc bật app
         }
 
         /// <summary>
@@ -79,7 +79,16 @@ namespace NhakhoaMyNgoc
             if (e.NewItem is InvoiceItemWrapper wrapper)
             {
                 var vm = DataContext as MainViewModel; // hoặc ViewModel bạn dùng
-                wrapper.Services = vm?.InvoiceVM?.Services ?? new();
+                wrapper.Services = vm?.InvoiceVM?.Services ?? [];
+            }
+        }
+
+        private void TabItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TabItem tab && tab.Header.ToString() == "Quyết toán thu chi")
+            {
+                if (!vm.AppVM.RequireLogin())
+                    e.Handled = true;
             }
         }
     }

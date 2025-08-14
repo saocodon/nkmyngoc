@@ -35,12 +35,26 @@ namespace NhakhoaMyNgoc.Utilities
 
         public static DriveInfo FindDriveLetter()
         {
+            // Quét lần 1 theo serial
             foreach (var drive in DriveInfo.GetDrives())
             {
                 string? serial = GetVolumeSerial(drive.Name);
                 if (serial == Config.volume_serial)
                     return drive;
             }
+
+            // Quét lần 2: tìm ổ có thư mục dữ liệu
+            foreach (var drive in DriveInfo.GetDrives())
+            {
+                string folder = Path.Combine(drive.Name, Config.root_directory);
+                if (Directory.Exists(folder))
+                {
+                    Config.volume_serial = GetVolumeSerial(drive.Name)!;
+                    Config.Save().GetAwaiter().GetResult(); // ép cho chạy đồng bộ
+                    return drive;
+                }
+            }
+
             return null!;
         }
 
@@ -137,7 +151,7 @@ namespace NhakhoaMyNgoc.Utilities
             {
                 try
                 {
-                    FileInfo info = new FileInfo(file);
+                    FileInfo info = new(file);
                     size += info.Length;
                 }
                 catch
@@ -151,7 +165,7 @@ namespace NhakhoaMyNgoc.Utilities
 
         public static string FormatSize(long sizeInBytes)
         {
-            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+            string[] sizes = ["B", "KB", "MB", "GB", "TB"];
             double len = sizeInBytes;
             int order = 0;
             while (len >= 1024 && order < sizes.Length - 1)

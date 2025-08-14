@@ -37,7 +37,7 @@ public partial class DataContext : DbContext
     public virtual DbSet<Service> Services { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite($"Data Source={Config.full_path}");
+        => optionsBuilder.UseSqlite($"Data Source={Config.full_path}\\data.db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

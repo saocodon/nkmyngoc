@@ -1,12 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 using NhakhoaMyNgoc.Models;
+using NhakhoaMyNgoc.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xceed.Wpf.Toolkit.PropertyGrid;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace NhakhoaMyNgoc.ViewModels
@@ -19,22 +21,49 @@ namespace NhakhoaMyNgoc.ViewModels
         [ObservableProperty]
         private object selectedTab = new();
 
-        public CustomerViewModel CustomerVM { get; }
-        public InvoiceViewModel InvoiceVM { get; }
-        public IDNViewModel IdnVM { get; }
-        public ProductViewModel ProductVM { get; }
+        private readonly DataContext _db;
 
-        public TableEditorViewModel(DataContext db)
+        public CustomerViewModel? CustomerVM { get; }
+        public InvoiceViewModel? InvoiceVM { get; }
+        public IDNViewModel? IdnVM { get; }
+        public ProductService? ProductService { get; }
+        public ProductViewModel? ProductVM { get; }
+        public string? Title { get; set; }
+
+        public TableEditorViewModel(DataContext db, int func)
         {
-            CustomerVM = new CustomerViewModel(db);
-            InvoiceVM = new InvoiceViewModel(db);
-            IdnVM = new IDNViewModel(db);
-            ProductVM = new ProductViewModel(db);
+            _db = db;
+            switch (func)
+            {
+                // Thùng rác
+                case 1:
+                    Title = "Thùng rác";
 
-            Tabs.Add(CustomerVM);
-            Tabs.Add(InvoiceVM);
-            Tabs.Add(IdnVM);
-            Tabs.Add(ProductVM);
+                    CustomerVM = new CustomerViewModel(db);
+                    InvoiceVM = new InvoiceViewModel(db);
+                    ProductService = new ProductService(db);
+                    IdnVM = new IDNViewModel(db, ProductService);
+                    ProductVM = new ProductViewModel(ProductService, loadDeleted: true)
+                    { Mode = ProductViewModel.ProductViewMode.Restore };
+
+                    Tabs.Add(CustomerVM);
+                    Tabs.Add(InvoiceVM);
+                    Tabs.Add(IdnVM);
+                    Tabs.Add(ProductVM);
+                    break;
+                // Quản lý tài nguyên (bảng dịch vụ, kho hàng...)
+                case 2:
+                    Title = "Quản lý tài nguyên";
+
+                    ProductService = new ProductService(db);
+                    ProductVM = new ProductViewModel(ProductService, loadDeleted: false)
+                    { Mode = ProductViewModel.ProductViewMode.Manage };
+
+                    Tabs.Add(ProductVM);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
