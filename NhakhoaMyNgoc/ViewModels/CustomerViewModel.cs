@@ -200,7 +200,7 @@ namespace NhakhoaMyNgoc.ViewModels
             // TODO: cái này phải thay đổi khi đóng gói
             Process.Start(new ProcessStartInfo()
             {
-                FileName = @"..\..\..\..\NhakhoaMyNgoc_RDLC\bin\Debug\NhakhoaMyNgoc_RDLC.exe",
+                FileName = @"NhakhoaMyNgoc_RDLC.exe",
                 Arguments = $"--report customer-history --customer {customerFilePath} --history {historyFilePath}"
             });
         }

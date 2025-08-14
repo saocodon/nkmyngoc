@@ -9,6 +9,9 @@
 	<TieredCompilation>false</TieredCompilation>
 	<ConcurrentBuild>true</ConcurrentBuild>
 	<Deterministic>true</Deterministic>
+	<PublishSingleFile>false</PublishSingleFile>
+	<!-- ClickOnce không hỗ trợ single-file -->
+	<GenerateClickOnceManifests>true</GenerateClickOnceManifests>
   </PropertyGroup>
 
   <ItemGroup>

@@ -35,15 +35,20 @@ namespace NhakhoaMyNgoc.ViewModels
                 new SettingsWindow().ShowDialog();
         }
 
-        [RelayCommand]
-        void OpenTableEditor(string key)
+        public bool RequireLogin()
         {
-            var vm = new TableEditorViewModel(_db);
-            vm.CustomerVM.Customers = new(_db.Customers.Where(c => c.Deleted == 1));
-            vm.InvoiceVM.Invoices = new([.. _db.Invoices
+            return new LoginWindow().ShowDialog() == true;
+        }
+
+        [RelayCommand]
+        void OpenTrashCan()
+        {
+            var vm = new TableEditorViewModel(_db, 1);
+            vm.CustomerVM!.Customers = new(_db.Customers.Where(c => c.Deleted == 1));
+            vm.InvoiceVM!.Invoices = new([.. _db.Invoices
                                 .Include(i => i.Customer)
                                 .Where(i => i.Deleted == 1)]);
-            vm.IdnVM.Idns = new([.. _db.Idns
+            vm.IdnVM!.Idns = new([.. _db.Idns
                                 .Where(i => i.Deleted == 1)]);
 
             var deletedProducts = _db.Products.Where(i => i.Deleted == 1).ToList();
@@ -53,12 +58,22 @@ namespace NhakhoaMyNgoc.ViewModels
                 var wrapper = new ProductWrapper(i);
                 return wrapper;
             }).ToList();
-            vm.ProductVM.Products = new(wrapped);
+            vm.ProductVM!.Products = new(wrapped);
 
             vm.CustomerVM.IsReadOnly
                 = vm.InvoiceVM.IsReadOnly
                 = vm.IdnVM.IsReadOnly
                 = true;
+
+            vm.SelectedTab = vm.Tabs.FirstOrDefault()!;
+            new TableEditor() { DataContext = vm }.ShowDialog();
+        }
+
+        [RelayCommand]
+        void OpenResources()
+        {
+            var vm = new TableEditorViewModel(_db, 2);
+            
 
             vm.SelectedTab = vm.Tabs.FirstOrDefault()!;
             new TableEditor() { DataContext = vm }.ShowDialog();

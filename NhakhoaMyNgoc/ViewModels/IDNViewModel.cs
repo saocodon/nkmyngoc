@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.EntityFrameworkCore;
+using NhakhoaMyNgoc.Interfaces;
 using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.ModelWrappers;
 using NhakhoaMyNgoc.Utilities;
@@ -12,17 +13,14 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
-
     public partial class IDNViewModel : ObservableObject
     {
         private readonly DataContext _db;
+        private readonly IProductService _productService;
 
         [ObservableProperty]
         private ObservableCollection<Idn> idns = [];
@@ -30,7 +28,6 @@ namespace NhakhoaMyNgoc.ViewModels
         [ObservableProperty]
         private DateTime fromDate = DateTime.Today;
 
-        // DatePicker overwrite giá trị thành 12:00:00AM
         [ObservableProperty]
         private DateTime toDate = DateTime.Today;
 
@@ -44,50 +41,34 @@ namespace NhakhoaMyNgoc.ViewModels
         private IdnItemWrapper? selectedIdnItem;
 
         [ObservableProperty]
-        public ObservableCollection<ProductWrapper>? products;
-
-        [ObservableProperty]
-        public ProductWrapper selectedProduct = new();
+        private int? input;
 
         public static string Title => "Đơn nhập/xuất";
 
-        // tính lại Total bằng OnPropertyChanged (gọi lại getter)
         public int Total => IdnItems?.Sum(i => i.Quantity * i.Price) ?? 0;
-
-        [ObservableProperty]
-        private int? input;
 
         public bool IsReadOnly { get; set; } = false;
 
-        public IDNViewModel(DataContext db)
+        public IDNViewModel(DataContext db, IProductService productService)
         {
             _db = db;
+            _productService = productService;
 
-            // load sẵn kho
             LoadIDNs();
-
-            // load ngày hôm nay vào datepicker.
             SelectedIdn.Date = DateTime.Now;
         }
 
         [RelayCommand]
         void LoadIDNs()
         {
-            // vì thế phải làm như này
             DateTime to = ToDate.Date.AddDays(1).AddTicks(-1);
 
             var result = _db.Idns.Where(i => i.Date >= FromDate &&
                                               i.Date <= to &&
                                               i.Deleted == 0).ToList();
-            
+
             Idns = new ObservableCollection<Idn>(result);
             SelectedIdn = Idns.FirstOrDefault() ?? new() { Date = DateTime.Now };
-
-            // load lại số lượng từ kho
-            var products_list = _db.Products.Where(i => i.Deleted == 0).ToList();
-            Products = [];
-            foreach (var p in products_list)
-                Products.Add(new ProductWrapper(p, IdnItems));
         }
 
         [RelayCommand]
@@ -103,7 +84,6 @@ namespace NhakhoaMyNgoc.ViewModels
                 {
                     _db.Idns.Add(SelectedIdn);
                     _db.SaveChanges();
-
                     Idns.Add(SelectedIdn);
                 }
                 else // hoá đơn cũ
@@ -114,47 +94,50 @@ namespace NhakhoaMyNgoc.ViewModels
                 foreach (var item in IdnItems)
                 {
                     item.IdnId = SelectedIdn.Id;
-                    var product = Products!.FirstOrDefault(p => p.Id == item.ItemId); // hoặc item.ItemId
 
-                    if (SelectedIdn.Input == 1)
+                    int quantityDelta, totalDelta;
+
+                    if (SelectedIdn.Input == 1) // Phiếu nhập
                     {
-                        // Phiếu nhập → cộng hàng
-                        // không thể null vì chỉ cho chọn hàng có trong kho.
-
-                        // nếu hàng này đã được thêm vào database, phải trừ đi số lượng cũ
                         if (item.Id != 0)
                         {
                             var oldItem = _db.Idnitems
                                             .AsNoTracking()
                                             .First(x => x.Id == item.Id);
-                            // không thể có chuyện product.Quantity < oldItem.Quantity được.
-                            product!.Quantity -= oldItem.Quantity;
-                            product!.Total -= oldItem.Quantity * oldItem.Price;
+                            quantityDelta = -oldItem.Quantity + item.Quantity;
+                            totalDelta = -oldItem.Quantity * oldItem.Price + item.Quantity * item.Price;
                         }
-                        product!.Quantity += item.Quantity;
-                        product!.Total += item.Quantity * item.Price;
-                    }
-                    else
-                    {
-                        // Phiếu xuất → trừ hàng
-                        if (product!.Quantity < item.Quantity)
+                        else
                         {
-                            MessageBox.Show($"Không đủ hàng để xuất cho sản phẩm: {product.Name}");
+                            quantityDelta = item.Quantity;
+                            totalDelta = item.Quantity * item.Price;
+                        }
+                    }
+                    else // Phiếu xuất
+                    {
+                        var currentProduct = _productService.GetAllProducts().FirstOrDefault(p => p.Id == item.ItemId);
+                        if (currentProduct != null && currentProduct.Quantity < item.Quantity)
+                        {
+                            MessageBox.Show($"Không đủ hàng để xuất cho sản phẩm: {currentProduct.Name}");
                             return;
                         }
 
-                        // nếu hàng này đã được thêm vào database, phải cộng lại số lượng cũ
                         if (item.Id != 0)
                         {
                             var oldItem = _db.Idnitems
                                             .AsNoTracking()
                                             .First(x => x.Id == item.Id);
-                            product!.Quantity += oldItem.Quantity;
-                            product!.Total += oldItem.Quantity * oldItem.Price;
+                            quantityDelta = oldItem.Quantity - item.Quantity;
+                            totalDelta = oldItem.Quantity * oldItem.Price - item.Quantity * item.Price;
                         }
-                        product.Quantity -= item.Quantity;
-                        product.Total -= item.Quantity * item.Price;
+                        else
+                        {
+                            quantityDelta = -item.Quantity;
+                            totalDelta = -item.Quantity * item.Price;
+                        }
                     }
+
+                    _productService.UpdateInventory(item.ItemId, quantityDelta, totalDelta);
 
                     if (item.Id != 0)
                         _db.Idnitems.Update(item.Model);
@@ -162,7 +145,7 @@ namespace NhakhoaMyNgoc.ViewModels
                         _db.Idnitems.Add(item.Model);
                 }
 
-                SaveProducts();
+                _db.SaveChanges();
             }
             catch
             {
@@ -179,26 +162,13 @@ namespace NhakhoaMyNgoc.ViewModels
 
             foreach (var item in items)
             {
-                var product = Products!.FirstOrDefault(p => p.Id == item.ItemId);
-
-                if (SelectedIdn.Input == 1)
-                {
-                    // Hủy phiếu nhập → trừ lại hàng
-                    // không thể null.
-                    product!.Quantity -= item.Quantity;
-                    product!.Total -= item.Quantity * item.Price;
-                }
-                else
-                {
-                    // Hủy phiếu xuất → cộng lại hàng
-                    product!.Quantity += item.Quantity;
-                    product!.Total += item.Quantity * item.Price;
-                }
+                int quantityDelta = SelectedIdn.Input == 1 ? -item.Quantity : item.Quantity;
+                int totalDelta = SelectedIdn.Input == 1 ? -item.Quantity * item.Price : item.Quantity * item.Price;
+                _productService.UpdateInventory(item.ItemId, quantityDelta, totalDelta);
             }
 
-            SaveProducts();
-
             Idns.Remove(SelectedIdn);
+            _db.SaveChanges();
         }
 
         [RelayCommand]
@@ -214,9 +184,11 @@ namespace NhakhoaMyNgoc.ViewModels
                 CertificateId = SelectedIdn.CertificateId,
                 Total = this.Total
             };
+
             List<IdnItemDto> dtoItems = [];
             var items = _db.Idnitems.Include(i => i.Item)
                                     .Where(i => i.IdnId == SelectedIdn.Id).ToList();
+
             foreach (var item in items)
             {
                 var dtoItem = new IdnItemDto
@@ -230,112 +202,41 @@ namespace NhakhoaMyNgoc.ViewModels
                     Total = item.Quantity * item.Price
                 };
                 dtoItems.Add(dtoItem);
-            }   
+            }
+
             var idnPath = IOUtil.WriteJsonToTempFile(idn, $"IDN{SelectedIdn.Id}.json");
             var itemsPath = IOUtil.WriteJsonToTempFile(dtoItems, $"IDNItem{SelectedIdn.Id}.json");
-            // TODO: cái này phải thay đổi khi đóng gói
+
             Process.Start(new ProcessStartInfo()
             {
-                FileName = @"..\..\..\..\NhakhoaMyNgoc_RDLC\bin\Debug\NhakhoaMyNgoc_RDLC.exe",
+                FileName = @"NhakhoaMyNgoc_RDLC.exe",
                 Arguments = $"--report delivery-note --idn {idnPath} --items {itemsPath}"
             });
-        }
-
-
-        [RelayCommand]
-        void StartAddNewProduct() => SelectedProduct = new();
-
-        [RelayCommand]
-        void SaveProduct()
-        {
-            if (SelectedProduct!.Id == 0) // hàng mới
-            {
-                _db.Products.Add(SelectedProduct.Model);
-                Products!.Add(SelectedProduct);
-
-                _db.SaveChanges();
-                SelectedProduct = new(); // reset sau khi lưu
-            }
-            else // hàng cũ
-            {
-                _db.Products.Update(SelectedProduct.Model);
-                _db.SaveChanges();
-            }
-        }
-
-        [RelayCommand]
-        void DeleteProduct()
-        {
-            SelectedProduct.Deleted = 1;
-            _db.SaveChanges();
-
-            // xóa trong RAM
-            Products!.Remove(SelectedProduct);
-            SelectedProduct = new();
         }
 
         partial void OnSelectedIdnChanged(Idn value)
         {
             if (value is null) return;
 
-            // load sẵn kho vào đây.
-            var products_list = _db.Products.ToList();
-            Products = new();
-            foreach (var p in products_list)
-                Products.Add(new ProductWrapper(p, IdnItems));
-
-            // cập nhật binding UI
             Input = value.Input;
 
             var items = _db.Idnitems.Where(i => i.IdnId == value.Id).ToList();
-            // Gán sự kiện tính Total cho mọi item
             var wrapped = items.Select(i =>
             {
-                var wrapper = new IdnItemWrapper(i) { Products = this.Products };
+                var wrapper = new IdnItemWrapper(i);
                 wrapper.PropertyChanged += SelectedIdnItem_PropertyChanged;
                 return wrapper;
-            }).ToList(); // Ép thành List để có thể .FirstOrDefault
+            }).ToList();
 
             IdnItems.CollectionChanged -= IdnItems_CollectionChanged;
             IdnItems.Clear();
-
             foreach (var item in wrapped)
                 IdnItems.Add(item);
 
-            // Gán lại SelectedIdnItem là 1 item thật sự trong danh sách
             SelectedIdnItem = IdnItems.FirstOrDefault() ?? new();
 
             IdnItems.CollectionChanged += IdnItems_CollectionChanged;
-
             OnPropertyChanged(nameof(Total));
-        }
-
-        partial void OnInputChanged(int? oldValue, int? newValue)
-        {
-            if (oldValue is null || newValue is null) return;
-            if (oldValue == newValue) return;
-
-            // Trạng thái Input đã thay đổi → cần cập nhật kho
-            foreach (var item in IdnItems)
-            {
-                var product = Products!.FirstOrDefault(p => p.Id == item.ItemId);
-                if (product is null) continue;
-
-                if (oldValue == 0)
-                {
-                    // chuyển từ Xuất → Nhập
-                    product.Quantity = product.Quantity + item.Quantity * 2;
-                    product.Total = product.Total + item.Quantity * item.Price * 2;
-                }
-                else
-                {
-                    // chuyển từ Nhập → Xuất
-                    product.Quantity = product.Quantity - item.Quantity * 2;
-                    product.Total = product.Total - item.Quantity * item.Price * 2;
-                }
-            }
-
-            SaveProducts();
         }
 
         private void IdnItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -351,91 +252,26 @@ namespace NhakhoaMyNgoc.ViewModels
                 foreach (IdnItemWrapper item in e.OldItems)
                 {
                     item.PropertyChanged -= IdnItem_PropertyChanged;
-                    // Trừ lại kho vì item đã bị xoá khỏi đơn
-                    var product = Products!.FirstOrDefault(p => p.Id == item.ItemId);
-                    if (product is not null)
-                    {
-                        if (SelectedIdn.Input == 1)
-                        {
-                            product.Quantity -= item.Quantity;
-                            product.Total -= item.Quantity * item.Price;
-                        }
-                        else
-                        {
-                            product.Quantity += item.Quantity;
-                            product.Total += item.Quantity * item.Price;
-                        }
-                    }
+                    int quantityDelta = SelectedIdn.Input == 1 ? -item.Quantity : item.Quantity;
+                    int totalDelta = SelectedIdn.Input == 1 ? -item.Quantity * item.Price : item.Quantity * item.Price;
+                    _productService.UpdateInventory(item.ItemId, quantityDelta, totalDelta);
 
-                    // Nếu đã có trong database, cần xoá luôn
                     if (item.Id != 0)
-                    {
                         _db.Idnitems.Remove(item.Model);
-                    }
                 }
             }
-
-            SaveProducts();
 
             OnPropertyChanged(nameof(Total));
         }
 
         private void IdnItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is nameof(InvoiceItemWrapper.Quantity)
-                or nameof(InvoiceItemWrapper.Price)
-                or nameof(InvoiceItemWrapper.Total))
+            if (e.PropertyName is nameof(IdnItemWrapper.Quantity)
+                or nameof(IdnItemWrapper.Price)
+                or nameof(IdnItemWrapper.Total))
             {
                 OnPropertyChanged(nameof(Total));
             }
-        }
-
-        partial void OnIdnItemsChanged(ObservableCollection<IdnItemWrapper> value)
-        {
-            OnPropertyChanged(nameof(Total));
-        }
-
-        /// <summary>
-        /// Hàm này chỉ có TableEditor được gọi.
-        /// </summary>
-        [RelayCommand]
-        protected virtual void Restore()
-        {
-            SelectedIdn.Deleted = 0;
-
-            var items = _db.Idnitems.Where(i => i.IdnId == SelectedIdn.Id).ToList();
-
-            foreach (var item in items)
-            {
-                var product = Products!.FirstOrDefault(p => p.Id == item.ItemId);
-                if (product is null) continue;
-
-                if (SelectedIdn.Input == 1)
-                {
-                    product.Quantity += item.Quantity;
-                    product.Total += item.Quantity * item.Price;
-                }
-                else
-                {
-                    product.Quantity -= item.Quantity;
-                    product.Total -= item.Quantity * item.Price;
-                }
-            }
-
-            SaveProducts();
-
-            Idns.Remove(SelectedIdn);
-        }
-
-        void SaveProducts()
-        {
-            foreach (var wrapper in Products!)
-            {
-                var product = wrapper.Model;
-                product.Quantity = wrapper.Quantity;
-                product.Total = wrapper.Total;
-            }
-            _db.SaveChanges();
         }
 
         partial void OnSelectedIdnItemChanged(IdnItemWrapper? oldValue, IdnItemWrapper? newValue)
@@ -451,9 +287,7 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             if (e.PropertyName == nameof(IdnItemWrapper.ItemId))
             {
-                // Gọi gì đó khi ItemId của item được chọn thay đổi
                 Debug.WriteLine("Selected item's ItemId changed!");
-                // hoặc OnPropertyChanged(nameof(...)) nếu bạn cần cập nhật
             }
 
             OnPropertyChanged(nameof(Total));
