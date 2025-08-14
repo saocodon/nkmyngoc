@@ -2,6 +2,7 @@
 using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.ModelWrappers;
 using NhakhoaMyNgoc.ViewModels;
+using NhakhoaMyNgoc.Windows;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
@@ -85,10 +86,23 @@ namespace NhakhoaMyNgoc
 
         private void TabItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is TabItem tab && tab.Header.ToString() == "Quyết toán thu chi")
+            // Chỉ xử lý nếu click header
+            if (e.OriginalSource is FrameworkElement fe && fe.TemplatedParent is TabItem)
             {
-                if (!vm.AppVM.RequireLogin())
-                    e.Handled = true;
+                if (sender is TabItem tab && tab.Header?.ToString() == "Quyết toán thu chi")
+                {
+                    e.Handled = true; // tạm chặn
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        var login = new LoginWindow();
+                        bool? success = login.ShowDialog();
+
+                        if (success == true)
+                        {
+                            ((TabControl)tab.Parent).SelectedItem = tab;
+                        }
+                    }), System.Windows.Threading.DispatcherPriority.Background);
+                }
             }
         }
     }
