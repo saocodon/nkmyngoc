@@ -12,7 +12,7 @@
         Background="#f7f9fe">
    
     <Window.Resources>
-        <cvt:ProductModeToVisibilityConverter x:Key="ProductModeToVisibilityConverter" />
+        <cvt:ManageModeToVisibilityConverter x:Key="ManageModeToVisibilityConverter" />
 
         <DataTemplate DataType="{x:Type vm:CustomerViewModel}">
             <DockPanel LastChildFill="True">
@@ -54,25 +54,33 @@
                 HorizontalAlignment="Right"
                 Command="{Binding RestoreCommand}"
                 DockPanel.Dock="Bottom"
-                Visibility="{Binding Mode, Converter={StaticResource ProductModeToVisibilityConverter}, ConverterParameter=Restore}"
+                Visibility="{Binding Mode, Converter={StaticResource ManageModeToVisibilityConverter}, ConverterParameter=Restore}"
                 />
 
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right"
-                            Visibility="{Binding Mode, Converter={StaticResource ProductModeToVisibilityConverter}, ConverterParameter=Manage}">
-                    <TextBlock Text="Tên vật phẩm:" />
-                    <TextBox Width="200" Text="{Binding SelectedProduct.Name}" />
-                    <TextBlock Text="Đơn vị:" />
-                    <TextBox Width="50" Text="{Binding SelectedProduct.Unit}" />
-                    <Button Command="{Binding StartAddNewProductCommand}"
-                            Foreground="#208c20"
-                            FontFamily="Segoe MDL2 Assets" Content="&#xE710;" />
-                    <Button Command="{Binding SaveProductCommand}"
-                            Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" />
-                    <Button FontFamily="Segoe MDL2 Assets" Content="&#xE74D;"
-                            Foreground="Red" Command="{Binding DeleteProductCommand}"/>
+                            Visibility="{Binding Mode, Converter={StaticResource ManageModeToVisibilityConverter}, ConverterParameter=Manage}">
+                    <uc:NewEditDelete />
                 </StackPanel>
                 
                 <uc:ProductDataGrid />
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ServiceViewModel}">
+            <DockPanel LastChildFill="True">
+                <Button
+                    Content="Khôi phục"
+                    HorizontalAlignment="Right"
+                    Command="{Binding RestoreCommand}"
+                    DockPanel.Dock="Bottom"
+                    Visibility="{Binding Mode, Converter={StaticResource ManageModeToVisibilityConverter}, ConverterParameter=Restore}"
+                    />
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right"
+                    Visibility="{Binding Mode, Converter={StaticResource ManageModeToVisibilityConverter}, ConverterParameter=Manage}">
+                    <uc:NewEditDelete />
+                </StackPanel>
+
+                <uc:ServiceDataGrid />
             </DockPanel>
         </DataTemplate>
     </Window.Resources>

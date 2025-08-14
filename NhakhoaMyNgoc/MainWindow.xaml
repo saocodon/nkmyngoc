@@ -72,6 +72,7 @@
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
@@ -142,19 +143,15 @@
                                                     </DataTemplate>
                                                 </ListView.ItemTemplate>
                                             </ListView>
+                                            <TextBlock Grid.Row="6" Grid.Column="1">(xoá vĩnh viễn)</TextBlock>
 
-                                            <DockPanel Grid.Row="6" Grid.Column="1">
+                                            <DockPanel Grid.Row="7" Grid.Column="1">
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                                     <!-- In lịch sử khách hàng -->
                                                     <Button FontFamily="Segoe MDL2 Assets" Content="&#xE749;" Command="{Binding CustomerVM.PrintCommand}" />
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
-                                                    <!-- Thêm khách hàng -->
-                                                    <Button Foreground="#208c20" FontFamily="Segoe MDL2 Assets" Content="&#xE710;" Command="{Binding CustomerVM.StartAddNewCommand}" />
-                                                    <!-- Sửa khách hàng -->
-                                                    <Button Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" Command="{Binding CustomerVM.SaveCustomerCommand}"/>
-                                                    <!-- Xóa khách hàng -->
-                                                    <Button Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" Command="{Binding CustomerVM.DeleteCustomerCommand}"/>
+                                                    <uc:NewEditDelete DataContext="{Binding CustomerVM}" />
                                                     <!-- Tìm khách hàng -->
                                                     <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding CustomerVM.FindCustomerCommand}" />
                                                 </StackPanel>
@@ -373,28 +370,16 @@
                                 <TextBlock Text="{Binding IdnVM.Total, StringFormat=N0}" Grid.Row="6" Grid.Column="1"
                                            HorizontalAlignment="Left" FontWeight="Bold" />
                                 <DockPanel Grid.Row="7" Grid.Column="1">
-                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                                        <!-- In đơn nhập -->
-                                        <Button Command="{Binding IdnVM.PrintCommand}"
-                                                FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
-                                        <!-- Thêm đơn nhập -->
-                                        <Button Command="{Binding IdnVM.StartAddNewCommand}"
-                                                Foreground="#208c20"
-                                                FontFamily="Segoe MDL2 Assets" Content="&#xE710;" />
-                                        <!-- Sửa đơn nhập -->
-                                        <Button Command="{Binding IdnVM.SaveIdnCommand}"
-                                                Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" />
-                                        <!-- Xóa đơn nhập -->
-                                        <Button Command="{Binding IdnVM.DeleteIdnCommand}"
-                                                Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" />
-                                    </StackPanel>
+                                    <!-- In đơn nhập -->
+                                    <Button Command="{Binding IdnVM.PrintCommand}" DockPanel.Dock="Left"
+                                            FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
+                                    <uc:NewEditDelete DataContext="{Binding IdnVM}" DockPanel.Dock="Right"
+                                                      HorizontalAlignment="Right" />
                                 </DockPanel>
                             </Grid>
                         </Grid>
                         <TabControl>
-                            <TabItem Header="Đơn nhập xuất">
+                            <TabItem Header="Đơn nhập/xuất">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Từ " />
@@ -432,81 +417,26 @@
                                 <ColumnDefinition Width="407*"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Loại đơn:" Grid.Column="0" />
-                            <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3">
-                                <StackPanel Orientation="Horizontal">
-                                    <RadioButton Content="Nhập"
-                                IsChecked="{Binding ExpenseVM.SelectedExpense.Input,
-                                            Converter={StaticResource InverseToBoolConverter},
-                                            ConverterParameter=1,
-                                            Mode=TwoWay}" />
-
-                                    <RadioButton Content="Xuất"
-                                IsChecked="{Binding ExpenseVM.SelectedExpense.Input,
-                                            Converter={StaticResource InverseToBoolConverter},
-                                            ConverterParameter=0,
-                                            Mode=TwoWay}" />
-                                </StackPanel>
-                            </StackPanel>
-
-                            <TextBlock Text="Ngày:" Grid.Row="1" Grid.Column="0" />
-                            <xctk:DateTimePicker Grid.Row="1" Grid.Column="1" Value="{Binding ExpenseVM.SelectedExpense.Date, Mode=TwoWay}" Grid.ColumnSpan="2"/>
-
-                            <TextBlock Text="Tên:" Grid.Row="2" Grid.Column="0"/>
-                            <DockPanel Grid.Row="2" LastChildFill="False" Grid.ColumnSpan="3" Grid.Column="1">
-                                <TextBox HorizontalAlignment="Left"
-                                Text="{Binding ExpenseVM.SelectedExpense.Participant, Mode=TwoWay}"
-                                MinWidth="200"
-                                DockPanel.Dock="Left"/>
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
-                                    <TextBlock Text="Địa chỉ:" />
-                                    <TextBox HorizontalAlignment="Stretch"
-                                MinWidth="300"
-                                Text="{Binding ExpenseVM.SelectedExpense.Address, Mode=TwoWay}"/>
-                                </StackPanel>
-                            </DockPanel>
-
-                            <TextBlock Text="Lý do:" Grid.Row="3" Grid.Column="0"/>
-                            <TextBox Grid.Row="3" Grid.Column="1"
-Text="{Binding ExpenseVM.SelectedExpense.Content, Mode=TwoWay}" Grid.ColumnSpan="2" />
-
-                            <TextBlock Text="Số tiền:" Grid.Row="4" Grid.Column="0"/>
-                            <TextBox Text="{Binding ExpenseVM.SelectedExpense.Amount,
-                                            StringFormat=N0,
-                                            UpdateSourceTrigger=PropertyChanged}"
-                                     Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" />
-
-                            <TextBlock Text="Số chứng từ:" Grid.Row="5" Grid.Column="0"/>
-                            <TextBox Grid.Row="5" Grid.Column="1"
-Text="{Binding ExpenseVM.SelectedExpense.CertificateId, Mode=TwoWay}" Grid.ColumnSpan="2" />
-
                             <DockPanel Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2">
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                                    <!-- In phiếu thu/chi -->
-                                    <Button Command="{Binding ExpenseVM.PrintCommand}"
-                FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
-                                    <!-- Thêm đơn -->
-                                    <Button Command="{Binding ExpenseVM.StartAddNewCommand}"
-                                            Foreground="#208c20"
-                                            FontFamily="Segoe MDL2 Assets" Content="&#xE710;" />
-                                    <!-- Sửa đơn -->
-                                    <Button Command="{Binding ExpenseVM.SaveExpenseCommand}"
-                Foreground="#006bbd" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;" />
-                                    <!-- Xóa đơn -->
-                                    <Button Command="{Binding ExpenseVM.DeleteExpenseCommand}"
-                Foreground="#c80f21" FontFamily="Segoe MDL2 Assets" Content="&#xE74D;" />
-                                </StackPanel>
+                                
                             </DockPanel>
                         </Grid>
-                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
-                            <TextBlock Text="Từ " />
-                            <DatePicker SelectedDate="{Binding ExpenseVM.FromDate, Mode=TwoWay}" />
-                            <TextBlock Text=" đến " />
-                            <DatePicker SelectedDate="{Binding ExpenseVM.ToDate, Mode=TwoWay}" />
-                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding ExpenseVM.LoadExpensesCommand}" />
-                        </StackPanel>
+                        <DockPanel DockPanel.Dock="Top">
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                <TextBlock Text="Từ " />
+                                <DatePicker SelectedDate="{Binding ExpenseVM.FromDate, Mode=TwoWay}" />
+                                <TextBlock Text=" đến " />
+                                <DatePicker SelectedDate="{Binding ExpenseVM.ToDate, Mode=TwoWay}" />
+                                <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding ExpenseVM.LoadExpensesCommand}" />
+                                <!-- In phiếu thu/chi -->
+                                <Button Command="{Binding ExpenseVM.PrintCommand}"
+FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                                <uc:NewEditDelete DataContext="{Binding ExpenseVM}" />
+                                <TextBlock>(Xoá vĩnh viễn)</TextBlock>
+                            </StackPanel>
+                        </DockPanel>
                         <StatusBar DockPanel.Dock="Bottom" Background="#3b4f81" Foreground="White">
                             <StatusBarItem Content="Tổng thu: " />
                             <StatusBarItem Content="{Binding ExpenseVM.IncomeSum, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="N0" />
@@ -516,7 +446,7 @@ Text="{Binding ExpenseVM.SelectedExpense.CertificateId, Mode=TwoWay}" Grid.Colum
                             <StatusBarItem Content="{Binding ExpenseVM.RemainingSum, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="N0" />
                         </StatusBar>
                         <DataGrid ItemsSource="{Binding ExpenseVM.Expenses}" AutoGenerateColumns="False"
-                                  SelectedItem="{Binding ExpenseVM.SelectedExpense}" IsReadOnly="True">
+                                  SelectedItem="{Binding ExpenseVM.SelectedExpense}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Mã đơn" Binding="{Binding Id}" />
                                 <DataGridCheckBoxColumn Header="Nhập" Binding="{Binding Input}" />

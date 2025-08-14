@@ -41,7 +41,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
         #region Add & edit
         [RelayCommand]
-        void SaveCustomer()
+        void Save()
         {
             if (SelectedCustomer.Id == 0) // khách mới
             {
@@ -66,7 +66,7 @@ namespace NhakhoaMyNgoc.ViewModels
         #endregion
 
         [RelayCommand]
-        void DeleteCustomer()
+        void Delete()
         {
             SelectedCustomer.Deleted = 1;
             _db.SaveChanges();

@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="NhakhoaMyNgoc.UserControls.ServiceDataGrid"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NhakhoaMyNgoc.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <DataGrid
+            ItemsSource="{Binding Services}"
+            SelectedItem="{Binding SelectedService}"
+            AutoGenerateColumns="False"
+            IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Dịch vụ" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Giá" Binding="{Binding Price, StringFormat=N0}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

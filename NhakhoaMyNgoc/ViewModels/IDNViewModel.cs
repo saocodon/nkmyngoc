@@ -75,7 +75,7 @@ namespace NhakhoaMyNgoc.ViewModels
         void StartAddNew() => SelectedIdn = new() { Date = DateTime.Now };
 
         [RelayCommand]
-        void SaveIdn()
+        void Save()
         {
             try
             {
@@ -154,7 +154,7 @@ namespace NhakhoaMyNgoc.ViewModels
         }
 
         [RelayCommand]
-        void DeleteIdn()
+        void Delete()
         {
             SelectedIdn.Deleted = 1;
 
