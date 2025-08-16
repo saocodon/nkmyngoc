@@ -57,6 +57,9 @@ namespace NhakhoaMyNgoc.Windows
                 !string.IsNullOrWhiteSpace(txtAnswer1.Text) &&
                 !string.IsNullOrWhiteSpace(txtAnswer2.Text))
             {
+                Config.security_answers.Clear();
+                Config.security_salts.Clear();
+
                 (string hash1, string salt1) = PBKDF2.HashPassword(txtAnswer1.Text);
                 Config.security_answers[$"q{question1_id}"] = hash1;
                 Config.security_salts[$"q{question1_id}"] = salt1;

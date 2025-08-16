@@ -7,7 +7,9 @@
         mc:Ignorable="d"
         Title="Đăng nhập" Height="Auto" SizeToContent="Height" Width="410"
         Closing="WindowClosing"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" 
+        >
     <Grid>
         <StackPanel>
             <GroupBox Header="Nhập mật khẩu">
