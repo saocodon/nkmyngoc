@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using NhakhoaMyNgoc.Converters;
@@ -29,15 +30,10 @@ namespace NhakhoaMyNgoc.ViewModels
             Services = [.. services];
 
             // đăng ký nhận khách hàng đang chọn
-            Messenger.Subscribe("OnSelectedCustomerChanged", data =>
+            WeakReferenceMessenger.Default.Register<SelectedCustomerChangedMessage>(this, (r, m) =>
             {
-                if (data is object[] obj &&
-                    obj.Length == 1 &&
-                    obj[0] is Customer customer)
-                {
-                    SelectedCustomer = customer;
-                    FindCustomersInvoices(customer);
-                }
+                SelectedCustomer = m.Value;
+                FindCustomersInvoices(m.Value);
             });
 
             // load ngày tháng hiện tại cho datepicker
@@ -279,11 +275,14 @@ namespace NhakhoaMyNgoc.ViewModels
 
         public void FindCustomersInvoices(Customer customer)
         {
-            var result = (from i in _db.Invoices
-                          where i.CustomerId == customer.Id && i.Deleted == 0
-                          select i).ToList();
-            Invoices = new ObservableCollection<Invoice>(result);
-            SelectedInvoice = Invoices.FirstOrDefault() ?? new();
+            if (customer != null)
+            {
+                var result = (from i in _db.Invoices
+                              where i.CustomerId == customer.Id && i.Deleted == 0
+                              select i).ToList();
+                Invoices = new ObservableCollection<Invoice>(result);
+                SelectedInvoice = Invoices.FirstOrDefault() ?? new();
+            }
         }
     }
 }

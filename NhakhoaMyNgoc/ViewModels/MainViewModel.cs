@@ -22,16 +22,17 @@ namespace NhakhoaMyNgoc.ViewModels
 
         public MainViewModel(DataContext db)
         {
-            AppVM = new(db);
             CustomerVM = new(db);
             ServiceVM = new(db, loadDeleted: false);
             InvoiceVM = new(db, ServiceVM.Services);
             ImageVM = new(db);
 
             ProductSvc = new ProductService(db);
+            AppVM = new(db, ProductSvc);
 
             IdnVM = new(db, ProductSvc);
-            ProductVM = new(ProductSvc, loadDeleted: false);
+            ProductVM = new(ProductSvc, loadDeleted: false)
+                { IsReadOnly = true };
 
             ExpenseVM = new(db);
         }

@@ -62,9 +62,9 @@
                             <StackPanel>
                                 <GroupBox Header="Thông tin cá nhân">
                                     <StackPanel>
-                                        <uc:CustomerBaseForm x:Name="CustomerFormUI" DataContext="{Binding CustomerVM.SelectedCustomer}" />
                                         <Grid>
                                             <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="Auto" />
                                                 <RowDefinition Height="Auto" />
@@ -79,8 +79,23 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <TextBlock Text="Giới tính:" Grid.Row="1" Grid.Column="0"/>
-                                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                            <TextBlock Text="Tên:" Grid.Row="0" Grid.Column="0"/>
+                                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CustomerVM.SelectedCustomer.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                            <TextBlock Text="Ngày sinh:" Grid.Row="1" Grid.Column="0"/>
+                                            <DatePicker Grid.Row="1" Grid.Column="1" SelectedDate="{Binding CustomerVM.SelectedCustomer.Birthdate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                            <TextBlock Text="CCCD:" Grid.Row="2" Grid.Column="0"/>
+                                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CustomerVM.SelectedCustomer.Cid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            
+                                            <TextBlock Text="Địa chỉ:" Grid.Row="3" Grid.Column="0"/>
+                                            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CustomerVM.SelectedCustomer.Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                            <TextBlock Text="SĐT:" Grid.Row="4" Grid.Column="0"/>
+                                            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CustomerVM.SelectedCustomer.Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                            <TextBlock Text="Giới tính:" Grid.Row="5" Grid.Column="0"/>
+                                            <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
                                                 <RadioButton Content="Nam" 
                                                          GroupName="SexGroup"
                                                          IsChecked="{Binding CustomerVM.SelectedCustomer.Sex,
@@ -101,13 +116,13 @@
                                                                      ConverterParameter=2}"/>
                                             </StackPanel>
 
-                                            <StackPanel Grid.Row="5" Grid.Column="0">
+                                            <StackPanel Grid.Row="6" Grid.Column="0">
                                                 <TextBlock Text="Ảnh:"/>
                                                 <Button Content=" ... " FontSize="14" HorizontalAlignment="Left" Command="{Binding CustomerVM.AddCustomerImageCommand}"/>
                                             </StackPanel>
 
                                             <!-- Listview ảnh -->
-                                            <ListView ItemsSource="{Binding ImageVM.Images}" Grid.Row="5" 
+                                            <ListView ItemsSource="{Binding ImageVM.Images}" Grid.Row="6" 
                                                       Grid.Column="1" Height="150" 
                                                       SelectedItem="{Binding ImageVM.SelectedImage}"
                                                       HorizontalContentAlignment="Stretch">
@@ -143,9 +158,9 @@
                                                     </DataTemplate>
                                                 </ListView.ItemTemplate>
                                             </ListView>
-                                            <TextBlock Grid.Row="6" Grid.Column="1">(xoá vĩnh viễn)</TextBlock>
+                                            <TextBlock Grid.Row="7" Grid.Column="1">(xoá vĩnh viễn)</TextBlock>
 
-                                            <DockPanel Grid.Row="7" Grid.Column="1">
+                                            <DockPanel Grid.Row="8" Grid.Column="1">
                                                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                                     <!-- In lịch sử khách hàng -->
                                                     <Button FontFamily="Segoe MDL2 Assets" Content="&#xE749;" Command="{Binding CustomerVM.PrintCommand}" />
@@ -351,7 +366,7 @@
                                             <DataGridTemplateColumn.CellEditingTemplate>
                                                 <DataTemplate>
                                                     <ComboBox
-                                                        ItemsSource="{Binding DataContext.IdnVM.Products, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        ItemsSource="{Binding DataContext.ProductVM.Products, RelativeSource={RelativeSource AncestorType=Window}}"
                                                         SelectedValue="{Binding ItemId, Mode=TwoWay}"
                                                         SelectedValuePath="Id"
                                                         DisplayMemberPath="Name" />

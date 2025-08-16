@@ -11,7 +11,7 @@
             ItemsSource="{Binding Services}"
             SelectedItem="{Binding SelectedService}"
             AutoGenerateColumns="False"
-            IsReadOnly="True">
+            IsReadOnly="{Binding IsReadOnly}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Dịch vụ" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Giá" Binding="{Binding Price, StringFormat=N0}" />

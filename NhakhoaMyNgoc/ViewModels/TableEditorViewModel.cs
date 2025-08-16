@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.EntityFrameworkCore;
+using NhakhoaMyNgoc.Interfaces;
 using NhakhoaMyNgoc.Models;
+using NhakhoaMyNgoc.ModelWrappers;
 using NhakhoaMyNgoc.Services;
 using System;
 using System.Collections.Generic;
@@ -31,7 +33,7 @@ namespace NhakhoaMyNgoc.ViewModels
         public ServiceViewModel? ServiceVM { get; }
         public string? Title { get; set; }
 
-        public TableEditorViewModel(DataContext db, int func)
+        public TableEditorViewModel(DataContext db, int func, IProductService ps)
         {
             _db = db;
             switch (func)
@@ -44,10 +46,26 @@ namespace NhakhoaMyNgoc.ViewModels
                     ServiceVM = new ServiceViewModel(_db, loadDeleted: true)
                     { Mode = AppViewModel.ViewMode.Restore };
                     InvoiceVM = new InvoiceViewModel(db, ServiceVM.Services);
-                    ProductService = new ProductService(db);
-                    IdnVM = new IDNViewModel(db, ProductService);
-                    ProductVM = new ProductViewModel(ProductService, loadDeleted: true)
-                    { Mode = AppViewModel.ViewMode.Restore };       
+                    IdnVM = new IDNViewModel(db, ps);
+                    ProductVM = new ProductViewModel(ps, loadDeleted: true)
+                    { Mode = AppViewModel.ViewMode.Restore };
+
+                    // không load sẵn nên phải làm như thế này
+                    CustomerVM.Customers = new(_db.Customers.Where(c => c.Deleted == 1));
+                    InvoiceVM.Invoices = new([.. _db.Invoices
+                                .Include(i => i.Customer)
+                                .Where(i => i.Deleted == 1)]);
+                    IdnVM.Idns = new([.. _db.Idns
+                                .Where(i => i.Deleted == 1)]);
+
+                    var deletedProducts = _db.Products.Where(i => i.Deleted == 1).ToList();
+                    // Gán sự kiện tính Total cho mọi item
+                    var wrapped = deletedProducts.Select(i =>
+                    {
+                        var wrapper = new ProductWrapper(i);
+                        return wrapper;
+                    }).ToList();
+                    ProductVM.Products = new(wrapped);
 
                     Tabs.Add(CustomerVM);
                     Tabs.Add(InvoiceVM);
@@ -59,9 +77,8 @@ namespace NhakhoaMyNgoc.ViewModels
                 case 2:
                     Title = "Quản lý tài nguyên";
 
-                    ProductService = new ProductService(db);
-                    ProductVM = new ProductViewModel(ProductService, loadDeleted: false)
-                    { Mode = AppViewModel.ViewMode.Manage };
+                    ProductVM = new ProductViewModel(ps, loadDeleted: false)
+                    { Mode = AppViewModel.ViewMode.Manage, IsReadOnly = false };
                     ServiceVM = new ServiceViewModel(_db)
                     { Mode = AppViewModel.ViewMode.Manage };
 

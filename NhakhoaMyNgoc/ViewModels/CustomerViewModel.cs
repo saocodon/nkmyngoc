@@ -1,20 +1,21 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Win32;
+using NhakhoaMyNgoc.Converters;
 using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.Utilities;
+using NhakhoaMyNgoc_Connector;
+using NhakhoaMyNgoc_Connector.DTOs;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Text;
-using System.Windows;
-using NhakhoaMyNgoc_Connector.DTOs;
-using NhakhoaMyNgoc_Connector;
 using System.IO;
+using System.Text;
 using System.Text.Json;
-using NhakhoaMyNgoc.Converters;
+using System.Windows;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
@@ -49,7 +50,6 @@ namespace NhakhoaMyNgoc.ViewModels
                 Customers.Add(SelectedCustomer);
 
                 _db.SaveChanges();
-                SelectedCustomer = new(); // reset sau khi lưu
             }
             else // khách cũ
             {
@@ -58,11 +58,11 @@ namespace NhakhoaMyNgoc.ViewModels
             }
 
             // để lưu ảnh
-            Messenger.Publish("SaveCustomer", SelectedCustomer);
+            WeakReferenceMessenger.Default.Send(new SaveCustomerMessage(SelectedCustomer));
         }
 
         [RelayCommand]
-        void StartAddNew() => SelectedCustomer = new();
+        void StartAddNew() => SelectedCustomer = new() { Birthdate = DateTime.Now };
         #endregion
 
         [RelayCommand]
@@ -77,15 +77,6 @@ namespace NhakhoaMyNgoc.ViewModels
         }
 
         #region Find
-        [ObservableProperty]
-        bool isSearchMode;
-
-        [ObservableProperty]
-        Customer searchForm = new();
-
-        [RelayCommand]
-        void SwitchToSearchMode() => IsSearchMode = true;
-
         // bỏ dấu trong tiếng Việt
         static string RemoveDiacritics(string? input)
         {
@@ -99,10 +90,10 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void FindCustomer()
         {
-            string? name = RemoveDiacritics(SearchForm.Name).ToLower();
-            string? address = RemoveDiacritics(SearchForm.Address).ToLower();
-            string? phone = SearchForm.Phone;
-            string? cid = SearchForm.Cid;
+            string? name = RemoveDiacritics(SelectedCustomer.Name).ToLower();
+            string? address = RemoveDiacritics(SelectedCustomer.Address).ToLower();
+            string? phone = SelectedCustomer.Phone;
+            string? cid = SelectedCustomer.Cid;
 
             var query = _db.Customers.AsEnumerable()
                                      .Where(i => i.Deleted == 0);
@@ -123,8 +114,6 @@ namespace NhakhoaMyNgoc.ViewModels
             var result = query.ToList();
             Customers = new ObservableCollection<Customer>(result);
             SelectedCustomer = Customers.FirstOrDefault() ?? new();
-
-            IsSearchMode = false;
         }
         #endregion
 
@@ -151,7 +140,9 @@ namespace NhakhoaMyNgoc.ViewModels
                 Filter = "Ảnh|*.png;*.jpg;*.jpeg;*.bmp"
             };
             if (imgOfd.ShowDialog() == true)
-                Messenger.Publish("AddCustomerImage", SelectedCustomer, imgOfd.FileNames);
+                WeakReferenceMessenger.Default.Send(
+                    new AddCustomerImageMessage((SelectedCustomer, imgOfd.FileNames))
+                );
         }
 
         [RelayCommand]
@@ -207,7 +198,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
         partial void OnSelectedCustomerChanged(Customer value)
         {
-            Messenger.Publish("OnSelectedCustomerChanged", value);
+            WeakReferenceMessenger.Default.Send(new SelectedCustomerChangedMessage(value));
         }
     }
 }
