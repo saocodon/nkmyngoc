@@ -12,14 +12,17 @@ namespace NhakhoaMyNgoc_RDLC.Reports
 {
     class ExpenseReport : IReportTemplate
     {
-        public string ReportPath => Path.Combine(Application.StartupPath, "Templates", "Expense.rdlc");
+        public string ReportPath { get; set; }
 
         public IEnumerable<ReportDataSource> GetDataSources(Dictionary<string, string> args)
         {
             var expense = Utilities.LoadFromJsonFile<ExpenseDto>(args, "expense");
+            args.TryGetValue("config", out string config);
 
-            if (expense == null)
+            if (expense == null || config == null)
                 throw new Exception("Không thể tải thông tin đơn");
+
+            ReportPath = Path.Combine(config, "Templates", "Expense.rdlc");
 
             yield return new ReportDataSource("ExpenseDto", new[] { expense });
         }

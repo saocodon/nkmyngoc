@@ -12,7 +12,7 @@ namespace NhakhoaMyNgoc_RDLC.Reports
 {
     class InvoiceReport : IReportTemplate
     {
-        public string ReportPath => Path.Combine(Application.StartupPath, "Templates", "Invoice.rdlc");
+        public string ReportPath { get; set; }
 
         public IEnumerable<ReportDataSource> GetDataSources(Dictionary<string, string> args)
         {
@@ -20,8 +20,12 @@ namespace NhakhoaMyNgoc_RDLC.Reports
             var invoice  = Utilities.LoadFromJsonFile<InvoiceDto>(args, "invoice");
             var services = Utilities.LoadFromJsonFile<List<SummaryServiceDto>>(args, "services") ?? new List<SummaryServiceDto>();
 
-            if (customer == null)
+            args.TryGetValue("config", out string config);
+
+            if (customer == null || invoice == null || services == null || config == null)
                 throw new Exception("Không thể tải thông tin khách hàng");
+
+            ReportPath = Path.Combine(config, "Templates", "Invoice.rdlc");
 
             yield return new ReportDataSource("CustomerDto", new[] { customer });
             yield return new ReportDataSource("InvoiceDto", new[] { invoice });

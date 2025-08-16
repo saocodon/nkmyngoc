@@ -210,7 +210,7 @@ namespace NhakhoaMyNgoc.ViewModels
             Process.Start(new ProcessStartInfo()
             {
                 FileName = @"NhakhoaMyNgoc_RDLC.exe",
-                Arguments = $"--report delivery-note --idn {idnPath} --items {itemsPath}"
+                Arguments = $"--report delivery-note --idn {idnPath} --items {itemsPath}  --config {Config.full_path}"
             });
         }
 

@@ -65,7 +65,7 @@ namespace NhakhoaMyNgoc_RDLC
 
     interface IReportTemplate
     {
-        string ReportPath { get; }
+        string ReportPath { get; set; }
         IEnumerable<ReportDataSource> GetDataSources(Dictionary<string, string> args);
     }
 

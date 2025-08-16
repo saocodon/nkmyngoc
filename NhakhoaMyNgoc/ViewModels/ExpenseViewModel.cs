@@ -76,7 +76,7 @@ namespace NhakhoaMyNgoc.ViewModels
             Process.Start(new ProcessStartInfo()
             {
                 FileName = @"NhakhoaMyNgoc_RDLC.exe",
-                Arguments = $"--report expense --expense {dtoPath}"
+                Arguments = $"--report expense --expense {dtoPath} --config {Config.full_path}"
             });
         }
 

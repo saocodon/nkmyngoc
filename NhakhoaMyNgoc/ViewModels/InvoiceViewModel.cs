@@ -269,7 +269,7 @@ namespace NhakhoaMyNgoc.ViewModels
             Process.Start(new ProcessStartInfo()
             {
                 FileName = @"NhakhoaMyNgoc_RDLC.exe",
-                Arguments = $"--report invoice --customer {customerFilePath} --invoice {invoiceFilePath} --services {servicesFilePath}"
+                Arguments = $"--report invoice --customer {customerFilePath} --invoice {invoiceFilePath} --services {servicesFilePath}  --config {Config.full_path}"
             });
         }
 
