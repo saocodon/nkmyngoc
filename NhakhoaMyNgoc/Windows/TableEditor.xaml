@@ -9,7 +9,9 @@
         xmlns:cvt="clr-namespace:NhakhoaMyNgoc.Converters"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="450" Width="800"
-        Background="#f7f9fe">
+        Background="#f7f9fe"
+        ResizeMode="NoResize" 
+        >
    
     <Window.Resources>
         <cvt:ManageModeToVisibilityConverter x:Key="ManageModeToVisibilityConverter" />

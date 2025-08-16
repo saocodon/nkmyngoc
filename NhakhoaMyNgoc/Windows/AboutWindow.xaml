@@ -8,7 +8,9 @@
         mc:Ignorable="d"
         Title="Về phần mềm" Height="250" Width="450"
         ShowInTaskbar="False"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize" 
+        >
 
     <Grid>
         <DockPanel LastChildFill="True">

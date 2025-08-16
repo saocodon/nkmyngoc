@@ -9,7 +9,9 @@
         Width="625"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False"
-        Background="#f7f9fe">
+        Background="#f7f9fe"
+        ResizeMode="NoResize" 
+        >
 
     <Grid>
         <StackPanel>
