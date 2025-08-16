@@ -24,6 +24,8 @@ namespace NhakhoaMyNgoc.ViewModels
         [ObservableProperty]
         private ProductWrapper? selectedProduct = new();
 
+        public bool IsReadOnly { get; set; }
+
         public ProductViewModel(IProductService productService, bool loadDeleted = false)
         {
             _productService = productService;

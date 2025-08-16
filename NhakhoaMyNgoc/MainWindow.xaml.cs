@@ -26,28 +26,12 @@ namespace NhakhoaMyNgoc
             DataContext = vm = _vm;
             InitializeComponent();
 
-            // nhảy UI theo CustomerVM.IsSearchMode
-            vm.CustomerVM.PropertyChanged += CustomerVM_PropertyChanged;
-
             // load bảng Services của ServicesIdToNameConverter
             // lấy key trong Resources (XAML).
             if (Resources["ServiceIdToNameConverter"] is ServiceIdToNameConverter stn)
                 stn.Services = vm.InvoiceVM.Services;
             if (Resources["ProductsToNameConverter"] is ProductsToNameConverter ptn)
                 ptn.Products = vm.ProductVM.Products!; // không null được vì đã load từ lúc bật app
-        }
-
-        /// <summary>
-        /// Đổi form tìm kiếm và form nhập.
-        /// </summary>
-        private void CustomerVM_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(CustomerViewModel.IsSearchMode))
-            {
-                CustomerFormUI.DataContext = vm.CustomerVM.IsSearchMode
-                    ? vm.CustomerVM.SearchForm
-                    : vm.CustomerVM.SelectedCustomer;
-            }
         }
 
         #region Giả label mô tả hình

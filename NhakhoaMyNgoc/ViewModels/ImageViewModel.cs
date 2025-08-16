@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Win32;
 using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.Utilities;
@@ -50,27 +51,19 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             _db = db;
 
-            Messenger.Subscribe("OnSelectedCustomerChanged", data =>
+            WeakReferenceMessenger.Default.Register<SelectedCustomerChangedMessage>(this, (r, m) =>
             {
-                if (data is object[] args &&
-                    args.Length == 1 &&
-                    args[0] is Customer customer)
-                    FindCustomerImages(customer);
+                FindCustomerImages(m.Value);
             });
 
-            Messenger.Subscribe("AddCustomerImage", data =>
+            WeakReferenceMessenger.Default.Register<AddCustomerImageMessage>(this, (r, m) =>
             {
-                if (data is object[] args &&
-                    args.Length == 2 &&
-                    args[0] is Customer customer &&
-                    args[1] is string[] fileNames)
-                    AddCustomerImage(customer, fileNames);
+                var (customer, fileNames) = m.Value;
+                AddCustomerImage(customer, fileNames);
             });
 
-            // Lưu note của ảnh
-            Messenger.Subscribe("SaveCustomer", data =>
+            WeakReferenceMessenger.Default.Register<SaveCustomerMessage>(this, (r, m) =>
             {
-                // records.Length = Images.Count
                 for (int i = 0; i < Images.Count; i++)
                     records[i].Note = Images[i].Note;
 
@@ -144,17 +137,20 @@ namespace NhakhoaMyNgoc.ViewModels
 
         void FindCustomerImages(Customer customer)
         {
-            var result = (from i in _db.Images
-                          where i.CustomerId == customer.Id && i.Deleted == 0
-                          select i).ToList();
-            Records = new ObservableCollection<Image>(result);
-            Images.Clear();
-            foreach (Image image in Records)
+            if (customer != null)
             {
-                string partialPath = Path.Combine("Images", customer.Id.ToString(), image.Path);
-                string fullPath = Path.Combine(Config.full_path, partialPath);
-                BitmapImage img = IOUtil.LoadImage(fullPath);
-                CreateListViewItem(image, img);
+                var result = (from i in _db.Images
+                              where i.CustomerId == customer.Id && i.Deleted == 0
+                              select i).ToList();
+                Records = new ObservableCollection<Image>(result);
+                Images.Clear();
+                foreach (Image image in Records)
+                {
+                    string partialPath = Path.Combine("Images", customer.Id.ToString(), image.Path);
+                    string fullPath = Path.Combine(Config.full_path, partialPath);
+                    BitmapImage img = IOUtil.LoadImage(fullPath);
+                    CreateListViewItem(image, img);
+                }
             }
         }
     }

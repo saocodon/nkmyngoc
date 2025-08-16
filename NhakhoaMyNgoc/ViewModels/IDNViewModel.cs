@@ -285,11 +285,6 @@ namespace NhakhoaMyNgoc.ViewModels
 
         private void SelectedIdnItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(IdnItemWrapper.ItemId))
-            {
-                Debug.WriteLine("Selected item's ItemId changed!");
-            }
-
             OnPropertyChanged(nameof(Total));
         }
     }
