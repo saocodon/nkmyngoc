@@ -108,7 +108,7 @@ namespace NhakhoaMyNgoc.ViewModels
             {
                 string destFolder = Path.Combine(Config.full_path, "Images", customer.Id.ToString());
                 string tempDesc = Path.GetFileNameWithoutExtension(path);
-                string filename = (Directory.GetFiles(destFolder).Length + 1).ToString();
+                string filename = Guid.NewGuid().ToString();
                 string extension = Path.GetExtension(path);
 
                 // Kiểm tra nếu khách hàng chưa có thư mục ảnh
