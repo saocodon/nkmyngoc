@@ -12,15 +12,18 @@ namespace NhakhoaMyNgoc_RDLC.Reports
 {
     class CustomerHistoryReport : IReportTemplate
     {
-        public string ReportPath => Path.Combine(Application.StartupPath, "Templates", "CustomerHistory.rdlc");
+        public string ReportPath { get; set; }
 
         public IEnumerable<ReportDataSource> GetDataSources(Dictionary<string, string> args)
         {
             var customer = Utilities.LoadFromJsonFile<CustomerDto>(args, "customer");
             var history = Utilities.LoadFromJsonFile<List<SummaryServiceDto>>(args, "history") ?? new List<SummaryServiceDto>();
+            args.TryGetValue("config", out var config);
 
-            if (customer == null)
+            if (customer == null || history == null || config == null)
                 throw new Exception("Không thể tải thông tin khách hàng");
+
+            ReportPath = Path.Combine(config, "Templates", "CustomerHistory.rdlc");
 
             yield return new ReportDataSource("CustomerDto", new[] { customer });
             yield return new ReportDataSource("SummaryServiceDto", history);

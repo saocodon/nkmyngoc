@@ -192,7 +192,7 @@ namespace NhakhoaMyNgoc.ViewModels
             Process.Start(new ProcessStartInfo()
             {
                 FileName = @"NhakhoaMyNgoc_RDLC.exe",
-                Arguments = $"--report customer-history --customer {customerFilePath} --history {historyFilePath}"
+                Arguments = $"--report customer-history --customer {customerFilePath} --history {historyFilePath} --config {Config.full_path}"
             });
         }
 
