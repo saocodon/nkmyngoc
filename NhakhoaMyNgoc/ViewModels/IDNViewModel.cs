@@ -172,6 +172,24 @@ namespace NhakhoaMyNgoc.ViewModels
         }
 
         [RelayCommand]
+        void Restore()
+        {
+            SelectedIdn.Deleted = 0;
+
+            var items = _db.Idnitems.Where(i => i.IdnId == SelectedIdn.Id).ToList();
+
+            foreach (var item in items)
+            {
+                int quantityDelta = SelectedIdn.Input == 0 ? -item.Quantity : item.Quantity;
+                int totalDelta = SelectedIdn.Input == 0 ? -item.Quantity * item.Price : item.Quantity * item.Price;
+                _productService.UpdateInventory(item.ItemId, quantityDelta, totalDelta);
+            }
+
+            Idns.Remove(SelectedIdn);
+            _db.SaveChanges();
+        }
+
+        [RelayCommand]
         void Print()
         {
             var idn = new IdnDto
@@ -223,7 +241,8 @@ namespace NhakhoaMyNgoc.ViewModels
             var items = _db.Idnitems.Where(i => i.IdnId == value.Id).ToList();
             var wrapped = items.Select(i =>
             {
-                var wrapper = new IdnItemWrapper(i);
+                var wrapper = new IdnItemWrapper(i)
+                    { Products = _productService.GetAllProducts() };
                 wrapper.PropertyChanged += SelectedIdnItem_PropertyChanged;
                 return wrapper;
             }).ToList();

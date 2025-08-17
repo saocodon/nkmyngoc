@@ -8,8 +8,10 @@ using NhakhoaMyNgoc.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -60,5 +62,12 @@ namespace NhakhoaMyNgoc.ViewModels
             vm.SelectedTab = vm.Tabs.FirstOrDefault()!;
             new TableEditor() { DataContext = vm }.ShowDialog();
         }
+
+        [RelayCommand]
+        void OpenGuide() => Process.Start(new ProcessStartInfo
+        {
+            FileName = "https://github.com/saocodon/nkmyngoc/wiki",
+            UseShellExecute = true // Bắt buộc từ .NET Core trở lên
+        });
     }
 }

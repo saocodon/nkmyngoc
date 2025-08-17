@@ -35,7 +35,7 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" Background="#ccd5f0">
             <MenuItem Header="Trợ giúp">
-                <MenuItem Header="Hướng dẫn"/>
+                <MenuItem Header="Hướng dẫn" Command="{Binding AppVM.OpenGuideCommand}" />
                 <MenuItem Header="Về phần mềm"
                           Command="{Binding AppVM.OpenAboutCommand}" />
             </MenuItem>
@@ -353,7 +353,9 @@
                                           HorizontalAlignment="Stretch"
                                           ItemsSource="{Binding IdnVM.IdnItems}"
                                           SelectedItem="{Binding IdnVM.SelectedIdnItem, Mode=TwoWay}"
-                                          AutoGenerateColumns="False">
+                                          AutoGenerateColumns="False"
+                                          InitializingNewItem="IdnDataGrid_InitializingNewItem"
+                                          >
                                     <DataGrid.Columns>
                                         <!-- Combobox hàng hoá -->
                                         <DataGridTemplateColumn Header="Hàng hoá">
@@ -367,7 +369,7 @@
                                                 <DataTemplate>
                                                     <ComboBox
                                                         ItemsSource="{Binding DataContext.ProductVM.Products, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                        SelectedValue="{Binding ItemId, Mode=TwoWay}"
+                                                        SelectedValue="{Binding ItemId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                         SelectedValuePath="Id"
                                                         DisplayMemberPath="Name" />
                                                 </DataTemplate>

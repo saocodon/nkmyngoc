@@ -13,6 +13,8 @@ public partial class Product
 
     public string? Unit { get; set; }
 
+    public int Price { get; set; }
+
     public int Quantity { get; set; }
 
     public int Total { get; set; }
