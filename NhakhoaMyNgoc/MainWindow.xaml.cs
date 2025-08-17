@@ -89,5 +89,15 @@ namespace NhakhoaMyNgoc
                 }
             }
         }
+
+        private void IdnDataGrid_InitializingNewItem(object sender, InitializingNewItemEventArgs e)
+        {
+            if (e.NewItem is IdnItemWrapper wrapper)
+            {
+                // inject Products từ VM vào
+                var stupid = ((MainViewModel)DataContext).ProductSvc.GetAllProducts();
+                wrapper.Products = ((MainViewModel)DataContext).ProductSvc.GetAllProducts();
+            }
+        }
     }
 }

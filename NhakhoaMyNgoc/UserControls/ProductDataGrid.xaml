@@ -16,8 +16,8 @@
                 <DataGridTextColumn Header="Mã VL" Binding="{Binding Id}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Tên" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Đơn vị" Binding="{Binding Unit}" />
-                <DataGridTextColumn Header="SL" Binding="{Binding Quantity}" />
-                <DataGridTextColumn Header="Tổng cộng" Binding="{Binding Total, StringFormat=N0}" />
+                <DataGridTextColumn Header="SL" Binding="{Binding Quantity}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Tổng cộng" Binding="{Binding Total, StringFormat=N0}" IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

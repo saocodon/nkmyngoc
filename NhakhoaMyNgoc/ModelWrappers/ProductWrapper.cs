@@ -91,6 +91,8 @@ namespace NhakhoaMyNgoc.ModelWrappers
             }
         }
 
+        public int Price { get => Model.Price; set => Model.Price = value; }
+
         public int Quantity
         {
             get => Model.Quantity;

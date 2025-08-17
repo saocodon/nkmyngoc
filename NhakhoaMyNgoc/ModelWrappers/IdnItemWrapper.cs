@@ -49,7 +49,18 @@ namespace NhakhoaMyNgoc.ModelWrappers
                     }
 
                     OnPropertyChanged(nameof(Item));
+                    OnItemIdChanged(value);
                 }
+            }
+        }
+
+        private void OnItemIdChanged(int itemId)
+        {
+            var matched = Products.FirstOrDefault(s => s.Id == itemId);
+            if (matched is not null)
+            {
+                Price = matched.Price;
+                OnPropertyChanged(nameof(Total));
             }
         }
 

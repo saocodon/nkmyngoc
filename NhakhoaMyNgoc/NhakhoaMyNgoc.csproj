@@ -15,11 +15,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="fsck.txt" />
     <None Remove="Images\LOGO.png" />
     <None Remove="Images\SPLASH.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="fsck.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="icon.ico" />
   </ItemGroup>
 
@@ -56,6 +60,9 @@
 		<AssemblyVersion>2.0.0</AssemblyVersion>
 		<FileVersion>2.0.0</FileVersion>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
+		<Product>Nha khoa Mỹ Ngọc</Product>
+		<Authors>Bùi Phan Khánh Duy</Authors>
+		<NeutralLanguage>vi-VN</NeutralLanguage>
 	</PropertyGroup>
 
 </Project>

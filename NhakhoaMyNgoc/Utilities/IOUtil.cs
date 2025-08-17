@@ -39,11 +39,12 @@ namespace NhakhoaMyNgoc.Utilities
             foreach (var drive in DriveInfo.GetDrives())
             {
                 string? serial = GetVolumeSerial(drive.Name);
-                if (serial == Config.volume_serial)
+                string folder = Path.Combine(drive.Name, Config.root_directory);
+                if (serial == Config.volume_serial && Directory.Exists(folder))
                     return drive;
             }
 
-            // Quét lần 2: tìm ổ có thư mục dữ liệu
+            // Quét lần 2: tìm ổ có thư mục dữ liệu (nếu ổ đã bị format)
             foreach (var drive in DriveInfo.GetDrives())
             {
                 string folder = Path.Combine(drive.Name, Config.root_directory);
