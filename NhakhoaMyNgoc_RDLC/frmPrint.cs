@@ -47,8 +47,9 @@ namespace NhakhoaMyNgoc_RDLC
                 reportViewer.LocalReport.DataSources.Clear();
                 foreach (var ds in dataSources)
                     reportViewer.LocalReport.DataSources.Add(ds);
-
+                var parameters = reportTemplate.GetParameters(parsedArgs);
                 reportViewer.LocalReport.ReportPath = reportTemplate.ReportPath;
+                reportViewer.LocalReport.SetParameters(parameters);
                 reportViewer.RefreshReport();
             }
             catch (Exception ex)

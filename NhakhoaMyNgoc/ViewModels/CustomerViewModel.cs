@@ -185,8 +185,8 @@ namespace NhakhoaMyNgoc.ViewModels
                 }
             }
 
-            var customerFilePath = IOUtil.WriteJsonToTempFile(customer, $"Customer{customer.Id}.json");
-            var historyFilePath = IOUtil.WriteJsonToTempFile(history, $"History{customer.Id}.json");
+            var customerFilePath = IOUtil.WriteJsonToTempFile(customer, $"{Guid.NewGuid()}.json");
+            var historyFilePath = IOUtil.WriteJsonToTempFile(history, $"{Guid.NewGuid()}.json");
 
             // TODO: cái này phải thay đổi khi đóng gói
             Process.Start(new ProcessStartInfo()

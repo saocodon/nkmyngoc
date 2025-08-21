@@ -405,6 +405,8 @@
                                         <DatePicker SelectedDate="{Binding IdnVM.ToDate, Mode=TwoWay}" />
                                         <!-- Tìm đơn nhập -->
                                         <Button FontFamily="Segoe MDL2 Assets" Content="&#xE721;" Command="{Binding IdnVM.LoadIDNsCommand}" />
+                                        <Button Command="{Binding IdnVM.PrintStockCommand}" DockPanel.Dock="Left"
+                                          FontFamily="Segoe MDL2 Assets" Content="&#xE749;" />
                                     </StackPanel>
                                     <uc:IdnDataGrid DataContext="{Binding IdnVM}" />
                                 </StackPanel>

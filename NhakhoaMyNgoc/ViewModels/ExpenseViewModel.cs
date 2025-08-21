@@ -71,7 +71,7 @@ namespace NhakhoaMyNgoc.ViewModels
                 Input = SelectedExpense.Input,
                 Participant = SelectedExpense.Participant
             };
-            var dtoPath = IOUtil.WriteJsonToTempFile(dto, $"Expense{dto.Id}.json");
+            var dtoPath = IOUtil.WriteJsonToTempFile(dto, $"{Guid.NewGuid()}.json");
             // TODO: cái này phải thay đổi khi đóng gói
             Process.Start(new ProcessStartInfo()
             {

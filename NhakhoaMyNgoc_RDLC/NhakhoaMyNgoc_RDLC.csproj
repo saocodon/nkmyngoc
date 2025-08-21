@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="Reports\DeliveryNoteReport.cs" />
     <Compile Include="Reports\ExpenseReport.cs" />
+    <Compile Include="Reports\StockSummaryReport.cs" />
     <Compile Include="Reports\InvoiceReport.cs" />
     <Compile Include="Reports\CustomerHistoryReport.cs" />
     <Compile Include="frmPrint.cs">
@@ -120,12 +121,16 @@
     <Content Include="Templates\Expense.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Templates\StockSummary.rdlc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.CustomerDto.datasource" />
     <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.ExpenseDto.datasource" />
     <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.IdnDto.datasource" />
     <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.IdnItemDto.datasource" />
     <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.InvoiceDto.datasource" />
+    <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.StockSummaryDto.datasource" />
     <None Include="Properties\DataSources\NhakhoaMyNgoc_Connector.DTOs.SummaryServiceDto.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
