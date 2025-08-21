@@ -67,6 +67,7 @@ namespace NhakhoaMyNgoc_RDLC
     {
         string ReportPath { get; set; }
         IEnumerable<ReportDataSource> GetDataSources(Dictionary<string, string> args);
+        IEnumerable<ReportParameter> GetParameters(Dictionary<string, string> args);
     }
 
     static class ReportRegistry
@@ -76,7 +77,8 @@ namespace NhakhoaMyNgoc_RDLC
             { "customer-history", new CustomerHistoryReport() },
             { "invoice", new InvoiceReport() },
             { "delivery-note", new DeliveryNoteReport() },
-            { "expense", new ExpenseReport() }
+            { "expense", new ExpenseReport() },
+            { "stock-summary", new StockSummaryReport() }
         };
 
         public static IReportTemplate Resolve(string key)

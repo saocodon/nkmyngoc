@@ -261,9 +261,9 @@ namespace NhakhoaMyNgoc.ViewModels
                 services.Add(line);
             }
 
-            var customerFilePath = IOUtil.WriteJsonToTempFile(customer, $"Customer{customer.Id}.json");
-            var invoiceFilePath = IOUtil.WriteJsonToTempFile(invoice, $"Invoice{customer.Id}.json");
-            var servicesFilePath = IOUtil.WriteJsonToTempFile(services, $"Services{SelectedInvoice.Id}.json");
+            var customerFilePath = IOUtil.WriteJsonToTempFile(customer, $"{Guid.NewGuid()}.json");
+            var invoiceFilePath = IOUtil.WriteJsonToTempFile(invoice, $"{Guid.NewGuid()}.json");
+            var servicesFilePath = IOUtil.WriteJsonToTempFile(services, $"{Guid.NewGuid()}.json");
 
             // TODO: cái này phải thay đổi khi đóng gói
             Process.Start(new ProcessStartInfo()

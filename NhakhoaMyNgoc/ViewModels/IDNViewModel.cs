@@ -228,7 +228,113 @@ namespace NhakhoaMyNgoc.ViewModels
             Process.Start(new ProcessStartInfo()
             {
                 FileName = @"NhakhoaMyNgoc_RDLC.exe",
-                Arguments = $"--report delivery-note --idn {idnPath} --items {itemsPath}  --config {Config.full_path}"
+                Arguments = $"--report delivery-note --idn {idnPath} --items {itemsPath} --config {Config.full_path}"
+            });
+        }
+
+        [RelayCommand]
+        void PrintStock()
+        {
+            DateTime to = ToDate.Date.AddDays(1).AddTicks(-1);
+
+            var transactions = (
+                from idn in _db.Idns
+                join item in _db.Idnitems on idn.Id equals item.IdnId
+                join p in _db.Products on item.ItemId equals p.Id
+                where idn.Deleted == 0
+                orderby idn.Date
+                select new StockTransactionDto
+                {
+                    Date = idn.Date,
+                    IsInput = idn.Input == 1,
+                    ProductId = item.ItemId,
+                    ProductName = p.Name,
+                    Quantity = item.Quantity,
+                    Price = item.Price
+                }
+            ).ToList();
+
+            // summary cho từng sản phẩm
+            var summary = new Dictionary<int, StockSummaryDto>();
+
+            // tồn hiện tại cho từng sản phẩm
+            var current = new Dictionary<int, (int qty, int value)>();
+
+            foreach (var t in transactions.OrderBy(x => x.Date))
+            {
+                if (!summary.ContainsKey(t.ProductId))
+                {
+                    summary[t.ProductId] = new StockSummaryDto
+                    {
+                        ProductId = t.ProductId,
+                        ProductName = t.ProductName
+                    };
+                    current[t.ProductId] = (0, 0);
+                }
+
+                var cur = current[t.ProductId];
+
+                if (t.Date < FromDate)
+                {
+                    // tồn đầu kỳ
+                    if (t.IsInput)
+                    {
+                        cur.qty += t.Quantity;
+                        cur.value += t.Quantity * t.Price;
+                    }
+                    else
+                    {
+                        var avgPrice = cur.qty > 0 ? cur.value / cur.qty : 0;
+                        cur.qty -= t.Quantity;
+                        cur.value -= t.Quantity * avgPrice;
+                    }
+                }
+                else if (t.Date <= to)
+                {
+                    if (t.IsInput)
+                    {
+                        summary[t.ProductId].InQty += t.Quantity;
+                        summary[t.ProductId].InValue += t.Quantity * t.Price;
+
+                        cur.qty += t.Quantity;
+                        cur.value += t.Quantity * t.Price;
+                    }
+                    else
+                    {
+                        var avgPrice = cur.qty > 0 ? cur.value / cur.qty : 0;
+
+                        summary[t.ProductId].OutQty += t.Quantity;
+                        summary[t.ProductId].OutValue += Convert.ToInt32(t.Quantity * avgPrice);
+
+                        cur.qty -= t.Quantity;
+                        cur.value -= t.Quantity * avgPrice;
+                    }
+                }
+
+                current[t.ProductId] = cur;
+            }
+
+            // sau khi duyệt hết, gán tồn đầu kỳ và cuối kỳ cho từng sản phẩm
+            foreach (var kv in summary)
+            {
+                var pid = kv.Key;
+                var s = kv.Value;
+                var (qty, value) = current[pid];
+
+                s.BeginningQty = s.InQty == 0 && s.OutQty == 0 ? qty : qty + s.OutQty - s.InQty;
+                s.BeginningValue = s.InValue == 0 && s.OutValue == 0 ? value : value + s.OutValue - s.InValue;
+
+                s.EndQty = qty;
+                s.EndValue = value;
+
+                summary[pid] = s;
+            }
+
+            var summaryPath = IOUtil.WriteJsonToTempFile(summary, $"{Guid.NewGuid()}.json");
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = @"NhakhoaMyNgoc_RDLC.exe",
+                Arguments = $"--report stock-summary --summary {summaryPath} --from {FromDate:dd/MM/yyyy} --to {to:dd/MM/yyyy} --total {summary.Values.Sum(s => s.EndValue)} --config {Config.full_path}"
             });
         }
 

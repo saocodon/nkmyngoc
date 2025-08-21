@@ -26,5 +26,10 @@ namespace NhakhoaMyNgoc_RDLC.Reports
 
             yield return new ReportDataSource("ExpenseDto", new[] { expense });
         }
+
+        public IEnumerable<ReportParameter> GetParameters(Dictionary<string, string> args)
+        {
+            return new List<ReportParameter>();
+        }
     }
 }
