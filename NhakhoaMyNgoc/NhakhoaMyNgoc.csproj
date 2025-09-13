@@ -36,16 +36,20 @@
 	    <None Update="appsettings.json">
 		    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	    </None>
+	    <None Update="Properties\Settings.settings">
+	      <Generator>SettingsSingleFileGenerator</Generator>
+	      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	    </None>
     </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25104.5739" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageReference Include="System.Management" Version="9.0.7" />
@@ -54,6 +58,14 @@
   <ItemGroup>
     <ProjectReference Include="..\NhakhoaMyNgoc_Connector\NhakhoaMyNgoc_Connector.csproj" />
     <ProjectReference Include="..\NhakhoaMyNgoc_RDLC\NhakhoaMyNgoc_RDLC.csproj" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 	<PropertyGroup>
