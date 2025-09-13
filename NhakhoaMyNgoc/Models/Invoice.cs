@@ -22,6 +22,4 @@ public partial class Invoice
     public virtual Customer Customer { get; set; } = null!;
 
     public virtual ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
-
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }

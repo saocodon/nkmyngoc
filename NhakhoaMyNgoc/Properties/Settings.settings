@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="FirebaseAPIKey" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">AIzaSyDxTOSfkgUU3HzFSUxoLJuRPAcfTtr-RS4</Value>
+      <Value Profile="(Default)">AIzaSyA6sSny_HGleBulaMnPbJ7GFOKUJMZyVS4</Value>
     </Setting>
     <Setting Name="FirebaseAuthPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)">RGVtb1Bhc3N3b3JkMTIzQA==</Value>
@@ -12,7 +12,7 @@
       <Value Profile="(Default)">https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=</Value>
     </Setting>
     <Setting Name="FirebaseRestApi" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">https://nhakhoamyngoc-default-rtdb.asia-southeast1.firebasedatabase.app/{node}.json?auth={idToken}</Value>
+      <Value Profile="(Default)">https://nhakhoamyngoc-dev-default-rtdb.asia-southeast1.firebasedatabase.app/{node}.json?auth={idToken}</Value>
     </Setting>
     <Setting Name="FirebaseAuthEmail" Type="System.String" Scope="User">
       <Value Profile="(Default)">duy.buiphankhanh@gmail.com</Value>

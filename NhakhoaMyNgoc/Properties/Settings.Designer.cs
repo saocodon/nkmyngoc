@@ -25,7 +25,7 @@ namespace NhakhoaMyNgoc.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("AIzaSyDxTOSfkgUU3HzFSUxoLJuRPAcfTtr-RS4")]
+        [global::System.Configuration.DefaultSettingValueAttribute("AIzaSyA6sSny_HGleBulaMnPbJ7GFOKUJMZyVS4")]
         public string FirebaseAPIKey {
             get {
                 return ((string)(this["FirebaseAPIKey"]));
@@ -55,8 +55,8 @@ namespace NhakhoaMyNgoc.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://nhakhoamyngoc-default-rtdb.asia-southeast1.firebasedatabase.app/{node}.js" +
-            "on?auth={idToken}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://nhakhoamyngoc-dev-default-rtdb.asia-southeast1.firebasedatabase.app/{node" +
+            "}.json?auth={idToken}")]
         public string FirebaseRestApi {
             get {
                 return ((string)(this["FirebaseRestApi"]));

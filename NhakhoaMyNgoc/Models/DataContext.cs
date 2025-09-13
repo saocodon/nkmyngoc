@@ -30,8 +30,6 @@ public partial class DataContext : DbContext
 
     public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }
 
-    public virtual DbSet<Payment> Payments { get; set; }
-
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<Service> Services { get; set; }
@@ -123,7 +121,6 @@ public partial class DataContext : DbContext
             entity.Property(e => e.InvoiceId).HasColumnName("InvoiceID");
             entity.Property(e => e.Quantity).HasDefaultValue(1);
             entity.Property(e => e.ServiceId).HasColumnName("ServiceID");
-            entity.Property(e => e.Total).HasComputedColumnSql();
 
             entity.HasOne(d => d.Invoice).WithMany(p => p.InvoiceItems)
                 .HasForeignKey(d => d.InvoiceId)
@@ -134,21 +131,10 @@ public partial class DataContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
-        modelBuilder.Entity<Payment>(entity =>
-        {
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Date).HasDefaultValue("1970-01-01");
-            entity.Property(e => e.InvoiceId).HasColumnName("InvoiceID");
-
-            entity.HasOne(d => d.Invoice).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.InvoiceId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-        });
-
         modelBuilder.Entity<Product>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Name).HasDefaultValueSql("\"Chưa rõ\"");
+            entity.Property(e => e.Name).HasDefaultValue("Chưa rõ");
         });
 
         modelBuilder.Entity<Service>(entity =>

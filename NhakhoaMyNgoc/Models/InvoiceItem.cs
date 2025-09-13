@@ -19,8 +19,6 @@ public partial class InvoiceItem
 
     public int Discount { get; set; }
 
-    public int? Total { get; set; }
-
     public virtual Invoice Invoice { get; set; } = null!;
 
     public virtual Service Service { get; set; } = null!;
