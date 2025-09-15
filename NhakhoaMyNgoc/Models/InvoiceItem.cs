@@ -5,19 +5,19 @@ namespace NhakhoaMyNgoc.Models;
 
 public partial class InvoiceItem
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
-    public int Deleted { get; set; }
+    public bool Deleted { get; set; }
 
-    public int InvoiceId { get; set; }
+    public long InvoiceId { get; set; }
 
-    public int ServiceId { get; set; }
+    public long ServiceId { get; set; }
 
     public int Quantity { get; set; }
 
-    public int Price { get; set; }
+    public long Price { get; set; }
 
-    public int Discount { get; set; }
+    public long Discount { get; set; }
 
     public virtual Invoice Invoice { get; set; } = null!;
 

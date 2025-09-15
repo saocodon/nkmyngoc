@@ -22,7 +22,7 @@ namespace NhakhoaMyNgoc.ViewModels
     public partial class ImageItem : ObservableObject
     {
         public BitmapImage Image { get; set; } = new();
-        public int CustomerId { get; set; }
+        public long CustomerId { get; set; }
         public string Path { get; set; } = string.Empty;
         public string Note { get; set; } = string.Empty;
 
@@ -122,7 +122,7 @@ namespace NhakhoaMyNgoc.ViewModels
                 Image img = new()
                 {
                     CustomerId = customer.Id,
-                    Deleted = 0,
+                    Deleted = false,
                     Note = tempDesc,
                     Path = filename + extension
                 };
@@ -140,7 +140,7 @@ namespace NhakhoaMyNgoc.ViewModels
             if (customer != null)
             {
                 var result = (from i in _db.Images
-                              where i.CustomerId == customer.Id && i.Deleted == 0
+                              where i.CustomerId == customer.Id && i.Deleted == false
                               select i).ToList();
                 Records = new ObservableCollection<Image>(result);
                 Images.Clear();

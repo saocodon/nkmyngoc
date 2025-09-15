@@ -5,17 +5,17 @@ namespace NhakhoaMyNgoc.Models;
 
 public partial class Idnitem
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
-    public int IdnId { get; set; }
+    public long IdnId { get; set; }
 
-    public int ItemId { get; set; }
+    public long ItemId { get; set; }
 
     public int Quantity { get; set; }
 
     public int Demand { get; set; }
 
-    public int Price { get; set; }
+    public long Price { get; set; }
 
     public virtual Idn Idn { get; set; } = null!;
 

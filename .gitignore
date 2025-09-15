@@ -1,8 +1,17 @@
+# VS preference files
 .vs/
 *.Backup.tmp
 *.user
+
+# during build
 */bin/*
 */obj/*
+
+# keys
+*/App.config
+
+# nuget
 packages/*
+
+# draft
 garbage/*
-NhakhoaMyNgoc/App.config

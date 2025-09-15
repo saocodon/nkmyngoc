@@ -8,7 +8,7 @@ namespace NhakhoaMyNgoc_Connector.DTOs
     {
         public DateTime Date { get; set; }
         public DateTime Revisit { get; set; }
-        public int Total { get; set; }
+        public long Total { get; set; }
         public string Note { get; set; }
     }
 }

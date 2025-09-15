@@ -39,7 +39,7 @@ namespace NhakhoaMyNgoc.ViewModels
             {
                 SelectedProduct = new()
                 {
-                    Deleted = 0,
+                    Deleted = false,
                     Name = "Chưa rõ",
                     Unit = "cái",
                     Quantity = 0,

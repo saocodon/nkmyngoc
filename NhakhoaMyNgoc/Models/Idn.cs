@@ -5,17 +5,17 @@ namespace NhakhoaMyNgoc.Models;
 
 public partial class Idn
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
-    public int Deleted { get; set; }
+    public bool Deleted { get; set; }
 
-    public int Input { get; set; }
+    public bool Input { get; set; }
 
     public DateTime Date { get; set; }
 
-    public int CertificateId { get; set; }
+    public string? CertificateId { get; set; }
 
-    public string Correspondent { get; set; } = null!;
+    public string? Correspondent { get; set; }
 
     public string? Division { get; set; }
 

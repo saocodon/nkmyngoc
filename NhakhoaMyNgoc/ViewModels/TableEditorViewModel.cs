@@ -51,14 +51,14 @@ namespace NhakhoaMyNgoc.ViewModels
                     { Mode = AppViewModel.ViewMode.Restore };
 
                     // không load sẵn nên phải làm như thế này
-                    CustomerVM.Customers = new(_db.Customers.Where(c => c.Deleted == 1));
+                    CustomerVM.Customers = new(_db.Customers.Where(c => c.Deleted == true));
                     InvoiceVM.Invoices = new([.. _db.Invoices
                                 .Include(i => i.Customer)
-                                .Where(i => i.Deleted == 1)]);
+                                .Where(i => i.Deleted == true)]);
                     IdnVM.Idns = new([.. _db.Idns
-                                .Where(i => i.Deleted == 1)]);
+                                .Where(i => i.Deleted == true)]);
 
-                    var deletedProducts = _db.Products.Where(i => i.Deleted == 1).ToList();
+                    var deletedProducts = _db.Products.Where(i => i.Deleted == true).ToList();
                     // Gán sự kiện tính Total cho mọi item
                     var wrapped = deletedProducts.Select(i =>
                     {

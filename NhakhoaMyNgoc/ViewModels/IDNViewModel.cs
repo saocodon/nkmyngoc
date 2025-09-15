@@ -41,11 +41,11 @@ namespace NhakhoaMyNgoc.ViewModels
         private IdnItemWrapper? selectedIdnItem;
 
         [ObservableProperty]
-        private int? input;
+        private bool? input;
 
         public static string Title => "Đơn nhập/xuất";
 
-        public int Total => IdnItems?.Sum(i => i.Quantity * i.Price) ?? 0;
+        public long Total => IdnItems?.Sum(i => i.Quantity * i.Price) ?? 0;
 
         public bool IsReadOnly { get; set; } = false;
 
@@ -65,7 +65,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
             var result = _db.Idns.Where(i => i.Date >= FromDate &&
                                               i.Date <= to &&
-                                              i.Deleted == 0).ToList();
+                                              i.Deleted == false).ToList();
 
             Idns = new ObservableCollection<Idn>(result);
             SelectedIdn = Idns.FirstOrDefault() ?? new() { Date = DateTime.Now };
@@ -79,7 +79,7 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             try
             {
-                SelectedIdn.Input = Input ?? 0;
+                SelectedIdn.Input = Input ?? false;
                 if (SelectedIdn.Id == 0) // hoá đơn mới
                 {
                     _db.Idns.Add(SelectedIdn);
@@ -95,9 +95,10 @@ namespace NhakhoaMyNgoc.ViewModels
                 {
                     item.IdnId = SelectedIdn.Id;
 
-                    int quantityDelta, totalDelta;
+                    int quantityDelta;
+                    long totalDelta;
 
-                    if (SelectedIdn.Input == 1) // Phiếu nhập
+                    if (SelectedIdn.Input == true) // Phiếu nhập
                     {
                         if (item.Id != 0)
                         {
@@ -156,14 +157,14 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void Delete()
         {
-            SelectedIdn.Deleted = 1;
+            SelectedIdn.Deleted = true;
 
             var items = _db.Idnitems.Where(i => i.IdnId == SelectedIdn.Id).ToList();
 
             foreach (var item in items)
             {
-                int quantityDelta = SelectedIdn.Input == 1 ? -item.Quantity : item.Quantity;
-                int totalDelta = SelectedIdn.Input == 1 ? -item.Quantity * item.Price : item.Quantity * item.Price;
+                int quantityDelta = SelectedIdn.Input == true ? -item.Quantity : item.Quantity;
+                long totalDelta = SelectedIdn.Input == true ? -item.Quantity * item.Price : item.Quantity * item.Price;
                 _productService.UpdateInventory(item.ItemId, quantityDelta, totalDelta);
             }
 
@@ -174,14 +175,14 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void Restore()
         {
-            SelectedIdn.Deleted = 0;
+            SelectedIdn.Deleted = false;
 
             var items = _db.Idnitems.Where(i => i.IdnId == SelectedIdn.Id).ToList();
 
             foreach (var item in items)
             {
-                int quantityDelta = SelectedIdn.Input == 0 ? -item.Quantity : item.Quantity;
-                int totalDelta = SelectedIdn.Input == 0 ? -item.Quantity * item.Price : item.Quantity * item.Price;
+                int quantityDelta = SelectedIdn.Input == false ? -item.Quantity : item.Quantity;
+                long totalDelta = SelectedIdn.Input == false ? -item.Quantity * item.Price : item.Quantity * item.Price;
                 _productService.UpdateInventory(item.ItemId, quantityDelta, totalDelta);
             }
 
@@ -241,12 +242,12 @@ namespace NhakhoaMyNgoc.ViewModels
                 from idn in _db.Idns
                 join item in _db.Idnitems on idn.Id equals item.IdnId
                 join p in _db.Products on item.ItemId equals p.Id
-                where idn.Deleted == 0
+                where idn.Deleted == false
                 orderby idn.Date
                 select new StockTransactionDto
                 {
                     Date = idn.Date,
-                    IsInput = idn.Input == 1,
+                    IsInput = idn.Input == true,
                     ProductId = item.ItemId,
                     ProductName = p.Name,
                     Quantity = item.Quantity,
@@ -255,10 +256,10 @@ namespace NhakhoaMyNgoc.ViewModels
             ).ToList();
 
             // summary cho từng sản phẩm
-            var summary = new Dictionary<int, StockSummaryDto>();
+            var summary = new Dictionary<long, StockSummaryDto>();
 
             // tồn hiện tại cho từng sản phẩm
-            var current = new Dictionary<int, (int qty, int value)>();
+            var current = new Dictionary<long, (int qty, long value)>();
 
             foreach (var t in transactions.OrderBy(x => x.Date))
             {
@@ -377,8 +378,8 @@ namespace NhakhoaMyNgoc.ViewModels
                 foreach (IdnItemWrapper item in e.OldItems)
                 {
                     item.PropertyChanged -= IdnItem_PropertyChanged;
-                    int quantityDelta = SelectedIdn.Input == 1 ? -item.Quantity : item.Quantity;
-                    int totalDelta = SelectedIdn.Input == 1 ? -item.Quantity * item.Price : item.Quantity * item.Price;
+                    int quantityDelta = SelectedIdn.Input == true ? -item.Quantity : item.Quantity;
+                    long totalDelta = SelectedIdn.Input == true ? -item.Quantity * item.Price : item.Quantity * item.Price;
                     _productService.UpdateInventory(item.ItemId, quantityDelta, totalDelta);
 
                     if (item.Id != 0)

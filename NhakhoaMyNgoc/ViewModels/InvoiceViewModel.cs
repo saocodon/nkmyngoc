@@ -38,7 +38,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
             // load ngày tháng hiện tại cho datepicker
             SelectedInvoice.Date = DateTime.Now;
-            SelectedInvoice.Revisit = DateTime.Now;
+            SelectedInvoice.Revisit = DateOnly.FromDateTime(DateTime.Now);
         }
 
         private void InvoiceItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -81,11 +81,11 @@ namespace NhakhoaMyNgoc.ViewModels
             SelectedInvoice is { } inv &&
             inv.Date != default &&
             inv.Revisit != default &&
-            inv.Date.AddYears(1) >= inv.Revisit;
+            DateOnly.FromDateTime(inv.Date.AddYears(1)) >= inv.Revisit;
 
         // đối với các thuộc tính như thế này
         // không nên sử dụng của model mà nên tự tính riêng.
-        public int Total => InvoiceItems?.Sum(i => i.Quantity * i.Price - i.Discount) ?? 0;
+        public long Total => InvoiceItems?.Sum(i => i.Quantity * i.Price - i.Discount) ?? 0;
 
         [ObservableProperty]
         private ObservableCollection<InvoiceItemWrapper> invoiceItems = [];
@@ -177,7 +177,7 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void DeleteInvoice()
         {
-            SelectedInvoice.Deleted = 1;
+            SelectedInvoice.Deleted = true;
             _db.SaveChanges();
 
             Invoices.Remove(SelectedInvoice);
@@ -203,7 +203,7 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void Restore()
         {
-            SelectedInvoice.Deleted = 0;
+            SelectedInvoice.Deleted = false;
             _db.SaveChanges();
 
             Invoices.Remove(SelectedInvoice);
@@ -213,6 +213,9 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void Print()
         {
+            DateOnly birthdate = SelectedCustomer.Birthdate ?? DateOnly.MaxValue;
+            DateOnly revisit = SelectedInvoice.Revisit ?? DateOnly.MaxValue;
+
             // Data Transfer Objects (DTO)
             var customer = new CustomerDto
             {
@@ -220,7 +223,7 @@ namespace NhakhoaMyNgoc.ViewModels
                 Deleted = SelectedCustomer.Deleted,
                 Cid = SelectedCustomer.Cid,
                 Name = SelectedCustomer.Name,
-                Birthdate = SelectedCustomer.Birthdate ?? DateTime.UnixEpoch,
+                Birthdate = birthdate.ToDateTime(TimeOnly.MinValue),
                 Address = SelectedCustomer.Address,
                 Phone = SelectedCustomer.Phone,
                 Sex = SelectedCustomer.Sex switch
@@ -235,7 +238,7 @@ namespace NhakhoaMyNgoc.ViewModels
             {
                 Date = SelectedInvoice.Date,
                 Total = this.Total,
-                Revisit = SelectedInvoice.Revisit ?? DateTime.UnixEpoch,
+                Revisit = revisit.ToDateTime(TimeOnly.MinValue),
                 Note = SelectedInvoice.Note +
                        (IsRevisitValid ? $" (Tái khám ngày {SelectedInvoice.Revisit:dd/MM/yyyy})" : "")
             };
@@ -252,7 +255,7 @@ namespace NhakhoaMyNgoc.ViewModels
                 // line in timeline
                 var line = new SummaryServiceDto()
                 {
-                    ServiceName = item.Service.Name,
+                    ServiceName = item.Service!.Name,
                     Quantity = item.Quantity,
                     Price = item.Price,
                     Discount = item.Discount,
@@ -278,7 +281,7 @@ namespace NhakhoaMyNgoc.ViewModels
             if (customer != null)
             {
                 var result = (from i in _db.Invoices
-                              where i.CustomerId == customer.Id && i.Deleted == 0
+                              where i.CustomerId == customer.Id && i.Deleted == false
                               select i).ToList();
                 Invoices = new ObservableCollection<Invoice>(result);
                 SelectedInvoice = Invoices.FirstOrDefault() ?? new();

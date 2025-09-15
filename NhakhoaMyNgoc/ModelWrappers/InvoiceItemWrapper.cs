@@ -26,7 +26,7 @@ namespace NhakhoaMyNgoc.ModelWrappers
             }
         }
 
-        public int Price
+        public long Price
         {
             get => Model.Price;
             set
@@ -40,7 +40,7 @@ namespace NhakhoaMyNgoc.ModelWrappers
             }
         }
 
-        public int Discount
+        public long Discount
         {
             get => Model.Discount;
             set
@@ -54,11 +54,11 @@ namespace NhakhoaMyNgoc.ModelWrappers
             }
         }
 
-        public int Total => Quantity * Price - Discount;
+        public long Total => Quantity * Price - Discount;
 
-        public int Id => Model.Id;
-        public int InvoiceId { get => Model.InvoiceId; set => Model.InvoiceId = value; }
-        public int ServiceId
+        public long Id => Model.Id;
+        public long InvoiceId { get => Model.InvoiceId; set => Model.InvoiceId = value; }
+        public long ServiceId
         {
             get => Model.ServiceId;
             set
@@ -73,7 +73,7 @@ namespace NhakhoaMyNgoc.ModelWrappers
             }
         }
 
-        private void OnServiceIdChanged(int serviceId)
+        private void OnServiceIdChanged(long serviceId)
         {
             var matched = Services.FirstOrDefault(s => s.Id == serviceId);
             if (matched is not null)
