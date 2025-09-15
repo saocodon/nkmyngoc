@@ -964,7 +964,7 @@
             <Value>logo</Value>
             <Sizing>FitProportional</Sizing>
             <Top>0.17639cm</Top>
-            <Left>3.41722cm</Left>
+            <Left>2.78222cm</Left>
             <Height>2.16146cm</Height>
             <Width>2.24083cm</Width>
             <ZIndex>18</ZIndex>
@@ -994,7 +994,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>268 Lý Thường Kiệt, P. 14, Q. 10, TP.HCM</Value>
+                    <Value>Khu vực Tràng Thọ 1, P. Thốt Nốt, TP. Cần Thơ</Value>
                     <Style>
                       <FontStyle>Italic</FontStyle>
                       <FontFamily>times New Roman</FontFamily>
@@ -1008,7 +1008,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Điện thoại: 0775 162 982</Value>
+                    <Value>Điện thoại: 0919 933 335</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>times New Roman</FontFamily>
@@ -1022,9 +1022,9 @@
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
             <Top>0.17639cm</Top>
-            <Left>5.83444cm</Left>
+            <Left>5.19944cm</Left>
             <Height>2.16146cm</Height>
-            <Width>7.76521cm</Width>
+            <Width>8.66479cm</Width>
             <ZIndex>19</ZIndex>
             <Style>
               <Border>

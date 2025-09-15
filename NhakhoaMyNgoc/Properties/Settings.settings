@@ -17,5 +17,8 @@
     <Setting Name="FirebaseAuthEmail" Type="System.String" Scope="User">
       <Value Profile="(Default)">duy.buiphankhanh@gmail.com</Value>
     </Setting>
+    <Setting Name="DatabaseConnectionString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Host=ep-quiet-brook-a1l7ctt8-pooler.ap-southeast-1.aws.neon.tech;Port=5432;Database=neondb;Username=neondb_owner;Password=npg_DKtAe2O1dqRr;Ssl Mode=Require;Trust Server Certificate=true</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

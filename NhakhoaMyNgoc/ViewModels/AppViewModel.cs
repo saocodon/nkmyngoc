@@ -69,5 +69,12 @@ namespace NhakhoaMyNgoc.ViewModels
             FileName = "https://github.com/saocodon/nkmyngoc/wiki",
             UseShellExecute = true // Bắt buộc từ .NET Core trở lên
         });
+
+        [RelayCommand]
+        void OpenReleasesView() => Process.Start(new ProcessStartInfo
+        {
+            FileName = "https://github.com/saocodon/nkmyngoc/releases",
+            UseShellExecute = true
+        });
     }
 }

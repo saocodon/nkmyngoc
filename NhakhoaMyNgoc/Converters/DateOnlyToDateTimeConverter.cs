@@ -8,18 +8,21 @@ using System.Windows.Data;
 
 namespace NhakhoaMyNgoc.Converters
 {
-    public class SexToBoolConverter : IValueConverter
+    public class DateOnlyToDateTimeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || parameter == null) return false;
-            return System.Convert.ToInt32(value) == int.Parse(parameter.ToString()!);
+            if (value is DateOnly dateOnly)
+                return dateOnly.ToDateTime(TimeOnly.MinValue); // DateOnly -> DateTime
+            return DateTime.MaxValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((bool)value) return int.Parse(parameter.ToString()!);
-            return Binding.DoNothing;
+            if (value is DateTime dateTime)
+                return DateOnly.FromDateTime(dateTime); // DateTime -> DateOnly
+            return DateOnly.MaxValue;
         }
     }
+
 }

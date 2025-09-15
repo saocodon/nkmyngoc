@@ -5,17 +5,17 @@ namespace NhakhoaMyNgoc.Models;
 
 public partial class Customer
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
-    public int Deleted { get; set; }
+    public bool Deleted { get; set; }
 
     public string? Cid { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string? Name { get; set; }
 
-    public int Sex { get; set; }
+    public short? Sex { get; set; }
 
-    public DateTime? Birthdate { get; set; }
+    public DateOnly? Birthdate { get; set; }
 
     public string? Address { get; set; }
 

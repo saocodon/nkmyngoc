@@ -17,7 +17,7 @@ namespace NhakhoaMyNgoc.ModelWrappers
 
         public ObservableCollection<ProductWrapper> Products { get; set; } = [];
 
-        public int ItemId
+        public long ItemId
         {
             get => Model.ItemId;
             set
@@ -25,7 +25,7 @@ namespace NhakhoaMyNgoc.ModelWrappers
                 if (Model.ItemId != value)
                 {
                     // Lưu lại ID cũ để biết chuyển từ đâu
-                    int oldItemId = Model.ItemId;
+                    long oldItemId = Model.ItemId;
                     Model.ItemId = value;
                     OnPropertyChanged();
 
@@ -38,13 +38,13 @@ namespace NhakhoaMyNgoc.ModelWrappers
                         if (oldProduct != null)
                         {
                             oldProduct.Quantity = oldProduct.Quantity - Quantity;
-                            oldProduct.Total = oldProduct.Total - Quantity * Price;
+                            oldProduct.Total = (int)(oldProduct.Total - Quantity * Price);
                         }
 
                         if (newProduct != null)
                         {
                             newProduct.Quantity = newProduct.Quantity + Quantity;
-                            newProduct.Total = newProduct.Total + Quantity * Price;
+                            newProduct.Total = (int)(newProduct.Total + Quantity * Price);
                         }
                     }
 
@@ -54,7 +54,7 @@ namespace NhakhoaMyNgoc.ModelWrappers
             }
         }
 
-        private void OnItemIdChanged(int itemId)
+        private void OnItemIdChanged(long itemId)
         {
             var matched = Products.FirstOrDefault(s => s.Id == itemId);
             if (matched is not null)
@@ -91,9 +91,9 @@ namespace NhakhoaMyNgoc.ModelWrappers
             }
         }
 
-        public int Total => Quantity * Price;
+        public long Total => Quantity * Price;
 
-        public int Price
+        public long Price
         {
             get => Model.Price;
             set
@@ -107,8 +107,8 @@ namespace NhakhoaMyNgoc.ModelWrappers
             }
         }
 
-        public int Id => Model.Id;
-        public int IdnId
+        public long Id => Model.Id;
+        public long IdnId
         {
             get => Model.IdnId;
             set

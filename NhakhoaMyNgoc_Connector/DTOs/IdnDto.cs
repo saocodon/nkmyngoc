@@ -6,11 +6,11 @@ namespace NhakhoaMyNgoc_Connector.DTOs
 {
     public class IdnDto
     {
-        public int Input { get; set; }
+        public bool Input { get; set; }
 
         public DateTime Date { get; set; }
 
-        public int CertificateId { get; set; }
+        public string CertificateId { get; set; }
 
         public string Correspondent { get; set; } = null;
 
@@ -18,6 +18,6 @@ namespace NhakhoaMyNgoc_Connector.DTOs
 
         public string Reason { get; set; }
 
-        public int Total { get; set; }
+        public long Total { get; set; }
     }
 }

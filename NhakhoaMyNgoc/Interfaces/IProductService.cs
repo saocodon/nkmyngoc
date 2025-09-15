@@ -9,7 +9,7 @@ namespace NhakhoaMyNgoc.Interfaces
         void SaveProduct(ProductWrapper product);
         void DeleteProduct(ProductWrapper product);
         void RestoreProduct(ProductWrapper product);
-        void UpdateInventory(int productId, int quantityDelta, int totalDelta);
+        void UpdateInventory(long productId, int quantityDelta, long totalDelta);
         ObservableCollection<ProductWrapper> GetAllProducts(bool deleted = false);
     }
 }

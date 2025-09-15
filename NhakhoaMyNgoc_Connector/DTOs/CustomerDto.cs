@@ -4,9 +4,9 @@ namespace NhakhoaMyNgoc_Connector.DTOs
 {
     public class CustomerDto
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
-        public int Deleted { get; set; }
+        public bool Deleted { get; set; }
 
         // nullable
         public string Cid { get; set; }

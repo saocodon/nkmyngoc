@@ -74,5 +74,16 @@ namespace NhakhoaMyNgoc.Properties {
                 this["FirebaseAuthEmail"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Host=ep-quiet-brook-a1l7ctt8-pooler.ap-southeast-1.aws.neon.tech;Port=5432;Databa" +
+            "se=neondb;Username=neondb_owner;Password=npg_DKtAe2O1dqRr;Ssl Mode=Require;Trust" +
+            " Server Certificate=true")]
+        public string DatabaseConnectionString {
+            get {
+                return ((string)(this["DatabaseConnectionString"]));
+            }
+        }
     }
 }

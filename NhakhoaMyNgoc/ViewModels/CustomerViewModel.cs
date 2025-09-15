@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Win32;
 using NhakhoaMyNgoc.Converters;
@@ -62,13 +63,13 @@ namespace NhakhoaMyNgoc.ViewModels
         }
 
         [RelayCommand]
-        void StartAddNew() => SelectedCustomer = new() { Birthdate = DateTime.Now };
+        void StartAddNew() => SelectedCustomer = new() { Birthdate = DateOnly.FromDateTime(DateTime.Now) };
         #endregion
 
         [RelayCommand]
         void Delete()
         {
-            SelectedCustomer.Deleted = 1;
+            SelectedCustomer.Deleted = true;
             _db.SaveChanges();
 
             // xóa trong RAM
@@ -96,7 +97,7 @@ namespace NhakhoaMyNgoc.ViewModels
             string? cid = SelectedCustomer.Cid;
 
             var query = _db.Customers.AsEnumerable()
-                                     .Where(i => i.Deleted == 0);
+                                     .Where(i => i.Deleted == false);
 
             // kiểm tra từng thông tin trống -> bỏ khỏi SQL query
             if (!string.IsNullOrWhiteSpace(name))
@@ -123,7 +124,7 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void Restore()
         {
-            SelectedCustomer.Deleted = 0;
+            SelectedCustomer.Deleted = false;
             _db.SaveChanges();
 
             // cho TableEditor
@@ -148,6 +149,8 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void Print()
         {
+            DateOnly birthdate = SelectedCustomer.Birthdate ?? DateOnly.MaxValue;
+
             // Data Transfer Objects (DTO)
             var customer = new CustomerDto
             {
@@ -155,7 +158,7 @@ namespace NhakhoaMyNgoc.ViewModels
                 Deleted = SelectedCustomer.Deleted,
                 Cid = SelectedCustomer.Cid,
                 Name = SelectedCustomer.Name,
-                Birthdate = SelectedCustomer.Birthdate ?? DateTime.UnixEpoch,
+                Birthdate = birthdate.ToDateTime(TimeOnly.MinValue),
                 Address = SelectedCustomer.Address,
                 Phone = SelectedCustomer.Phone,
                 Sex = SelectedCustomer.Sex switch
@@ -179,7 +182,7 @@ namespace NhakhoaMyNgoc.ViewModels
                     var line = new SummaryServiceDto()
                     {
                         Date = invoice.Date,
-                        ServiceName = item.Service.Name
+                        ServiceName = item.Service!.Name
                     };
                     history.Add(line);
                 }

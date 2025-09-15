@@ -62,8 +62,8 @@ namespace NhakhoaMyNgoc.ModelWrappers
             // Leaving this blank to avoid getting even more errors.
         }
 
-        public int Id => Model.Id;
-        public int Deleted { get => Model.Deleted; set => Model.Deleted = value; }
+        public long Id => Model.Id;
+        public bool Deleted { get => Model.Deleted; set => Model.Deleted = value; }
 
         public string Name
         {
@@ -91,7 +91,7 @@ namespace NhakhoaMyNgoc.ModelWrappers
             }
         }
 
-        public int Price { get => Model.Price; set => Model.Price = value; }
+        public long Price { get => Model.Price; set => Model.Price = value; }
 
         public int Quantity
         {
@@ -106,7 +106,7 @@ namespace NhakhoaMyNgoc.ModelWrappers
             }
         }
 
-        public int Total
+        public long Total
         {
             get => Model.Total;
             set

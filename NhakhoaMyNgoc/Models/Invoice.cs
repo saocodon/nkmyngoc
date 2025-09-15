@@ -5,17 +5,17 @@ namespace NhakhoaMyNgoc.Models;
 
 public partial class Invoice
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
-    public int Deleted { get; set; }
+    public bool Deleted { get; set; }
 
-    public int CustomerId { get; set; }
+    public long CustomerId { get; set; }
 
     public DateTime Date { get; set; }
 
-    public int Remaining { get; set; }
+    public long Remaining { get; set; }
 
-    public DateTime? Revisit { get; set; }
+    public DateOnly? Revisit { get; set; }
 
     public string? Note { get; set; }
 

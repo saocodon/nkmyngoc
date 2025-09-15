@@ -31,7 +31,7 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             _db = db;
             Services = new ObservableCollection<Service>(
-                _db.Services.Where(s => s.Deleted == (loadDeleted ? 1 : 0))
+                _db.Services.Where(s => s.Deleted == loadDeleted)
             );
         }
 
@@ -42,7 +42,7 @@ namespace NhakhoaMyNgoc.ViewModels
             {
                 Name = "Dịch vụ mới",
                 Price = 0,
-                Deleted = 0,
+                Deleted = false,
             };
             Services.Add(SelectedService);
         }
@@ -62,7 +62,7 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             if (SelectedService != null)
             {
-                SelectedService.Deleted = 1;
+                SelectedService.Deleted = true;
                 _db.Services.Update(SelectedService);
                 _db.SaveChanges();
                 Services.Remove(SelectedService);
@@ -74,7 +74,7 @@ namespace NhakhoaMyNgoc.ViewModels
         {
             if (SelectedService != null)
             {
-                SelectedService.Deleted = 0;
+                SelectedService.Deleted = false;
                 _db.Services.Update(SelectedService);
                 _db.SaveChanges();
                 Services.Remove(SelectedService); // xóa khỏi danh sách deleted

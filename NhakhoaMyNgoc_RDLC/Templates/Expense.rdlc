@@ -390,7 +390,7 @@
             <Value>logo</Value>
             <Sizing>FitProportional</Sizing>
             <Top>0.17639cm</Top>
-            <Left>3.44778cm</Left>
+            <Left>2.49528cm</Left>
             <Height>2.16146cm</Height>
             <Width>2.24083cm</Width>
             <ZIndex>9</ZIndex>
@@ -400,68 +400,6 @@
               </Border>
             </Style>
           </Image>
-          <Textbox Name="Textbox1">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>NHA KHOA MỸ NGỌC</Value>
-                    <Style>
-                      <FontFamily>times New Roman</FontFamily>
-                      <FontSize>18pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>268 Lý Thường Kiệt, P. 14, Q. 10, TP.HCM</Value>
-                    <Style>
-                      <FontStyle>Italic</FontStyle>
-                      <FontFamily>times New Roman</FontFamily>
-                      <FontSize>12pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Điện thoại: 0775 162 982</Value>
-                    <Style>
-                      <FontStyle>Normal</FontStyle>
-                      <FontFamily>times New Roman</FontFamily>
-                      <FontSize>12pt</FontSize>
-                      <FontWeight>Normal</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox1</rd:DefaultName>
-            <Top>0.17639cm</Top>
-            <Left>5.865cm</Left>
-            <Height>2.16146cm</Height>
-            <Width>7.76521cm</Width>
-            <ZIndex>10</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Textbox Name="Textbox3">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -487,7 +425,7 @@
             <Left>0.26868cm</Left>
             <Height>0.79375cm</Height>
             <Width>15.60639cm</Width>
-            <ZIndex>11</ZIndex>
+            <ZIndex>10</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -523,7 +461,7 @@
             <Left>0.26868cm</Left>
             <Height>0.68792cm</Height>
             <Width>2.37722cm</Width>
-            <ZIndex>12</ZIndex>
+            <ZIndex>11</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -560,7 +498,7 @@
             <Left>2.95459cm</Left>
             <Height>0.6cm</Height>
             <Width>2.73402cm</Width>
-            <ZIndex>13</ZIndex>
+            <ZIndex>12</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -606,7 +544,7 @@
             <Left>0.72445cm</Left>
             <Height>1.21709cm</Height>
             <Width>3.0916cm</Width>
-            <ZIndex>14</ZIndex>
+            <ZIndex>13</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -652,7 +590,7 @@
             <Left>3.99244cm</Left>
             <Height>1.21709cm</Height>
             <Width>3.45734cm</Width>
-            <ZIndex>15</ZIndex>
+            <ZIndex>14</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -698,7 +636,7 @@
             <Left>7.62617cm</Left>
             <Height>1.21709cm</Height>
             <Width>2.21848cm</Width>
-            <ZIndex>16</ZIndex>
+            <ZIndex>15</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -744,7 +682,7 @@
             <Left>10.02103cm</Left>
             <Height>1.21709cm</Height>
             <Width>3.0916cm</Width>
-            <ZIndex>17</ZIndex>
+            <ZIndex>16</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -790,7 +728,7 @@
             <Left>13.28902cm</Left>
             <Height>1.21709cm</Height>
             <Width>2.21848cm</Width>
-            <ZIndex>18</ZIndex>
+            <ZIndex>17</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -828,6 +766,68 @@
             <Left>6.42063cm</Left>
             <Height>0.6cm</Height>
             <Width>9.45444cm</Width>
+            <ZIndex>18</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>NHA KHOA MỸ NGỌC</Value>
+                    <Style>
+                      <FontFamily>times New Roman</FontFamily>
+                      <FontSize>18pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Khu vực Tràng Thọ 1, P. Thốt Nốt, TP. Cần Thơ</Value>
+                    <Style>
+                      <FontStyle>Italic</FontStyle>
+                      <FontFamily>times New Roman</FontFamily>
+                      <FontSize>12pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Điện thoại: 0919 933 335</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>times New Roman</FontFamily>
+                      <FontSize>12pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox1</rd:DefaultName>
+            <Top>0.17639cm</Top>
+            <Left>4.9125cm</Left>
+            <Height>2.16146cm</Height>
+            <Width>8.66479cm</Width>
             <ZIndex>19</ZIndex>
             <Style>
               <Border>

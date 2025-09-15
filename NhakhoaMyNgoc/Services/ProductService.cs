@@ -18,7 +18,7 @@ namespace NhakhoaMyNgoc.Services
         public ObservableCollection<ProductWrapper> GetAllProducts()
         {
             var productsList = _db.Products
-                                  .Where(p => p.Deleted == 0)
+                                  .Where(p => p.Deleted == false)
                                   .ToList();
 
             return new ObservableCollection<ProductWrapper>(
@@ -38,17 +38,17 @@ namespace NhakhoaMyNgoc.Services
 
         public void DeleteProduct(ProductWrapper product)
         {
-            product.Deleted = 1;
+            product.Deleted = true;
             _db.SaveChanges();
         }
 
         public void RestoreProduct(ProductWrapper product)
         {
-            product.Deleted = 0;
+            product.Deleted = false;
             _db.SaveChanges();
         }
 
-        public void UpdateInventory(int productId, int quantityDelta, int totalDelta)
+        public void UpdateInventory(long productId, int quantityDelta, long totalDelta)
         {
             var product = _db.Products.FirstOrDefault(p => p.Id == productId);
             if (product == null) return;
@@ -61,7 +61,7 @@ namespace NhakhoaMyNgoc.Services
         public ObservableCollection<ProductWrapper> GetAllProducts(bool deleted = false)
         {
             var productsList = _db.Products
-                                  .Where(p => p.Deleted == (deleted ? 1 : 0))
+                                  .Where(p => p.Deleted == deleted)
                                   .ToList();
 
             return new ObservableCollection<ProductWrapper>(
