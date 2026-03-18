@@ -10,6 +10,7 @@
 # keys
 */App.config
 NhakhoaMyNgoc/Properties/Settings.Designer.cs
+NhakhoaMyNgoc/Properties/Settings.settings
 
 # nuget
 packages/*
