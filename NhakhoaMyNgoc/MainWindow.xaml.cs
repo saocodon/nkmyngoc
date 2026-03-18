@@ -32,6 +32,12 @@ namespace NhakhoaMyNgoc
                 stn.Services = vm.InvoiceVM.Services;
             if (Resources["ProductsToNameConverter"] is ProductsToNameConverter ptn)
                 ptn.Products = vm.ProductVM.Products!; // không null được vì đã load từ lúc bật app
+
+            Loaded += async (_, __) =>
+            {
+                var result = await vm.StartSyncAsync();
+                Title += result ? " (Trực tuyến)" : " (Ngoại tuyến)";
+            };
         }
 
         #region Giả label mô tả hình
@@ -55,6 +61,14 @@ namespace NhakhoaMyNgoc
                 tb.BorderThickness = new Thickness(0);
                 tb.IsReadOnly = true;
                 tb.Cursor = Cursors.Arrow;
+            }
+        }
+
+        private void ListViewItem_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListViewItem item)
+            {
+                item.IsSelected = true;
             }
         }
         #endregion
@@ -95,7 +109,6 @@ namespace NhakhoaMyNgoc
             if (e.NewItem is IdnItemWrapper wrapper)
             {
                 // inject Products từ VM vào
-                var stupid = ((MainViewModel)DataContext).ProductSvc.GetAllProducts();
                 wrapper.Products = ((MainViewModel)DataContext).ProductSvc.GetAllProducts();
             }
         }

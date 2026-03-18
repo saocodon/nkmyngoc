@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -17,16 +18,53 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Interop;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
     public partial class CustomerViewModel : ObservableObject
     {
         private readonly DataContext _db;
+        private readonly HubConnection _syncConn;
+        private CustomerDto? selectedCustomerDto;
 
-        public CustomerViewModel(DataContext db)
+        Customer FromDto(CustomerDto msg)
+        {
+            return new Customer
+            {
+                Id = msg.Id,
+                Deleted = msg.Deleted,
+                Cid = msg.Cid,
+                Name = msg.Name,
+                Sex = msg.Sex switch { "Nam" => 0, "Nữ" => 1, _ => 2 },
+                Birthdate = DateOnly.FromDateTime(msg.Birthdate),
+                Address = msg.Address,
+                Phone = msg.Phone
+            };
+        }
+
+        public CustomerViewModel(DataContext db, HubConnection syncConn = null!)
         {
             _db = db;
+            _syncConn = syncConn;
+
+            _syncConn.On<CustomerDto>("OnSaveCustomer", msg =>
+            {
+                Application.Current.Dispatcher.Invoke(async () =>
+                {
+                    SelectedCustomer = FromDto(msg);
+                    await Save();
+                });
+            });
+
+            _syncConn.On<CustomerDto>("OnDeleteCustomer", msg =>
+            {
+                Application.Current.Dispatcher.Invoke(async () =>
+                {
+                    SelectedCustomer = FromDto(msg);
+                    await Delete();
+                });
+            });
         }
 
         #region Global
@@ -43,13 +81,12 @@ namespace NhakhoaMyNgoc.ViewModels
 
         #region Add & edit
         [RelayCommand]
-        void Save()
+        async Task Save()
         {
             if (SelectedCustomer.Id == 0) // khách mới
             {
                 _db.Customers.Add(SelectedCustomer);
                 Customers.Add(SelectedCustomer);
-
                 _db.SaveChanges();
             }
             else // khách cũ
@@ -58,17 +95,27 @@ namespace NhakhoaMyNgoc.ViewModels
                 _db.SaveChanges();
             }
 
+            OnSelectedCustomerChanged(SelectedCustomer);
+
             // để lưu ảnh
             WeakReferenceMessenger.Default.Send(new SaveCustomerMessage(SelectedCustomer));
+            if (_syncConn != null)
+                await _syncConn.InvokeAsync<bool>("SaveCustomer", selectedCustomerDto);
         }
 
         [RelayCommand]
-        void StartAddNew() => SelectedCustomer = new() { Birthdate = DateOnly.FromDateTime(DateTime.Now) };
+        void StartAddNew()
+        {
+            SelectedCustomer = new() { Birthdate = DateOnly.FromDateTime(DateTime.Now) };
+        }
         #endregion
 
         [RelayCommand]
-        void Delete()
+        async Task Delete()
         {
+            if (_syncConn != null)
+                await _syncConn.InvokeAsync<bool>("DeleteCustomer", selectedCustomerDto);
+
             SelectedCustomer.Deleted = true;
             _db.SaveChanges();
 
@@ -149,30 +196,12 @@ namespace NhakhoaMyNgoc.ViewModels
         [RelayCommand]
         void Print()
         {
-            DateOnly birthdate = SelectedCustomer.Birthdate ?? DateOnly.MaxValue;
-
-            // Data Transfer Objects (DTO)
-            var customer = new CustomerDto
-            {
-                Id = SelectedCustomer.Id,
-                Deleted = SelectedCustomer.Deleted,
-                Cid = SelectedCustomer.Cid,
-                Name = SelectedCustomer.Name,
-                Birthdate = birthdate.ToDateTime(TimeOnly.MinValue),
-                Address = SelectedCustomer.Address,
-                Phone = SelectedCustomer.Phone,
-                Sex = SelectedCustomer.Sex switch
-                {
-                    0 => "Nam",
-                    1 => "Nữ",
-                    _ => "Khác",
-                }
-            };
+            if (selectedCustomerDto == null) return;
 
             // Tìm lịch sử
             var invoices = _db.Invoices.Include(i => i.InvoiceItems)
                                        .ThenInclude(ii => ii.Service)
-                                       .Where(i => i.CustomerId == customer.Id).ToList();
+                                       .Where(i => i.CustomerId == selectedCustomerDto.Id).ToList();
             List<SummaryServiceDto> history = [];
             foreach (var invoice in invoices)
             {
@@ -188,7 +217,7 @@ namespace NhakhoaMyNgoc.ViewModels
                 }
             }
 
-            var customerFilePath = IOUtil.WriteJsonToTempFile(customer, $"{Guid.NewGuid()}.json");
+            var customerFilePath = IOUtil.WriteJsonToTempFile(selectedCustomerDto, $"{Guid.NewGuid()}.json");
             var historyFilePath = IOUtil.WriteJsonToTempFile(history, $"{Guid.NewGuid()}.json");
 
             // TODO: cái này phải thay đổi khi đóng gói
@@ -202,6 +231,19 @@ namespace NhakhoaMyNgoc.ViewModels
         partial void OnSelectedCustomerChanged(Customer value)
         {
             WeakReferenceMessenger.Default.Send(new SelectedCustomerChangedMessage(value));
+            if (selectedCustomer is null) return;
+
+            DateOnly birthdate = SelectedCustomer.Birthdate ?? DateOnly.MaxValue;
+            selectedCustomerDto = new CustomerDto(
+                SelectedCustomer.Id,
+                SelectedCustomer.Deleted,
+                SelectedCustomer.Cid,
+                SelectedCustomer.Name,
+                SelectedCustomer.Sex switch { 0 => "Nam", 1 => "Nữ", _ => "Khác" },
+                birthdate.ToDateTime(TimeOnly.MinValue),
+                SelectedCustomer.Address,
+                SelectedCustomer.Phone
+            );
         }
     }
 }

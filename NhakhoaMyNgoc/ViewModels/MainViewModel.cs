@@ -1,10 +1,12 @@
-﻿using NhakhoaMyNgoc.Models;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
@@ -20,22 +22,43 @@ namespace NhakhoaMyNgoc.ViewModels
         public ProductViewModel ProductVM { get; }
         public ExpenseViewModel ExpenseVM { get; }
 
+        HubConnection syncConn;
+
         public MainViewModel(DataContext db)
         {
-            CustomerVM = new(db);
-            ServiceVM = new(db, loadDeleted: false);
-            InvoiceVM = new(db, ServiceVM.Services);
-            ImageVM = new(db);
+            // TODO: đổi
+            syncConn = new HubConnectionBuilder()
+                .WithUrl("http://localhost:5081/sync")
+                .WithAutomaticReconnect()
+                .Build();
 
-            ProductSvc = new ProductService(db);
-            AppVM = new(db, ProductSvc);
+            CustomerVM = new(db, syncConn);
+            ServiceVM = new(db, syncConn, loadDeleted: false);
+            InvoiceVM = new(db, ServiceVM.Services, syncConn);
+            ImageVM = new(db, syncConn);
 
-            IdnVM = new(db, ProductSvc);
-            ProductVM = new(ProductSvc, loadDeleted: false)
+            ProductSvc = new ProductService(db, syncConn);
+            AppVM = new(db, syncConn, ProductSvc);
+
+            IdnVM = new(db, ProductSvc, syncConn);
+            ProductVM = new(ProductSvc, syncConn, loadDeleted: false)
                 { IsReadOnly = true };
 
-            ExpenseVM = new(db);
+            ExpenseVM = new(db, syncConn);
+        }
+
+        // gọi sau khi tạo VM
+        public async Task<bool> StartSyncAsync()
+        {
+            try
+            {
+                await syncConn.StartAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
-
 }

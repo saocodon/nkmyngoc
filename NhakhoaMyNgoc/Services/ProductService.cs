@@ -1,4 +1,5 @@
-﻿using NhakhoaMyNgoc.Interfaces;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using NhakhoaMyNgoc.Interfaces;
 using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.ModelWrappers;
 using System.Collections.ObjectModel;
@@ -10,7 +11,7 @@ namespace NhakhoaMyNgoc.Services
     {
         private readonly DataContext _db;
 
-        public ProductService(DataContext db)
+        public ProductService(DataContext db, HubConnection syncConn)
         {
             _db = db;
         }

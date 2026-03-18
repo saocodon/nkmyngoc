@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using NhakhoaMyNgoc.Interfaces;
 using NhakhoaMyNgoc.Models;
@@ -49,7 +50,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
         public bool IsReadOnly { get; set; } = false;
 
-        public IDNViewModel(DataContext db, IProductService productService)
+        public IDNViewModel(DataContext db, IProductService productService, HubConnection syncConn = null!)
         {
             _db = db;
             _productService = productService;

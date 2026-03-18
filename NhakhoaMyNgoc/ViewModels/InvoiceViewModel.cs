@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using NhakhoaMyNgoc.Converters;
@@ -21,8 +22,9 @@ namespace NhakhoaMyNgoc.ViewModels
         private readonly DataContext _db;
 
         private Customer SelectedCustomer = new();
+        private CustomerDto? selectedCustomerDto;
 
-        public InvoiceViewModel(DataContext db, IEnumerable<Service> services)
+        public InvoiceViewModel(DataContext db, IEnumerable<Service> services, HubConnection syncConn = null!)
         {
             _db = db;
 
@@ -33,6 +35,19 @@ namespace NhakhoaMyNgoc.ViewModels
             WeakReferenceMessenger.Default.Register<SelectedCustomerChangedMessage>(this, (r, m) =>
             {
                 SelectedCustomer = m.Value;
+                if (SelectedCustomer is null) return;
+
+                DateOnly birthdate = SelectedCustomer.Birthdate ?? DateOnly.MaxValue;
+                selectedCustomerDto = new CustomerDto(
+                    SelectedCustomer.Id,
+                    SelectedCustomer.Deleted,
+                    SelectedCustomer.Cid,
+                    SelectedCustomer.Name,
+                    SelectedCustomer.Sex switch { 0 => "Nam", 1 => "Nữ", _ => "Khác" },
+                    birthdate.ToDateTime(TimeOnly.MinValue),
+                    SelectedCustomer.Address,
+                    SelectedCustomer.Phone
+                );
                 FindCustomersInvoices(m.Value);
             });
 
@@ -216,24 +231,6 @@ namespace NhakhoaMyNgoc.ViewModels
             DateOnly birthdate = SelectedCustomer.Birthdate ?? DateOnly.MaxValue;
             DateOnly revisit = SelectedInvoice.Revisit ?? DateOnly.MaxValue;
 
-            // Data Transfer Objects (DTO)
-            var customer = new CustomerDto
-            {
-                Id = SelectedCustomer.Id,
-                Deleted = SelectedCustomer.Deleted,
-                Cid = SelectedCustomer.Cid,
-                Name = SelectedCustomer.Name,
-                Birthdate = birthdate.ToDateTime(TimeOnly.MinValue),
-                Address = SelectedCustomer.Address,
-                Phone = SelectedCustomer.Phone,
-                Sex = SelectedCustomer.Sex switch
-                {
-                    0 => "Nam",
-                    1 => "Nữ",
-                    _ => "Khác",
-                }
-            };
-
             var invoice = new InvoiceDto
             {
                 Date = SelectedInvoice.Date,
@@ -264,7 +261,7 @@ namespace NhakhoaMyNgoc.ViewModels
                 services.Add(line);
             }
 
-            var customerFilePath = IOUtil.WriteJsonToTempFile(customer, $"{Guid.NewGuid()}.json");
+            var customerFilePath = IOUtil.WriteJsonToTempFile(selectedCustomerDto, $"{Guid.NewGuid()}.json");
             var invoiceFilePath = IOUtil.WriteJsonToTempFile(invoice, $"{Guid.NewGuid()}.json");
             var servicesFilePath = IOUtil.WriteJsonToTempFile(services, $"{Guid.NewGuid()}.json");
 

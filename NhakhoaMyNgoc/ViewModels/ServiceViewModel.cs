@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using NhakhoaMyNgoc.ModelWrappers;
 using static NhakhoaMyNgoc.ViewModels.AppViewModel;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
@@ -27,7 +28,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
         public static string Title => "Bảng dịch vụ";
 
-        public ServiceViewModel(DataContext db, bool loadDeleted = false)
+        public ServiceViewModel(DataContext db, HubConnection syncConn = null!, bool loadDeleted = false)
         {
             _db = db;
             Services = new ObservableCollection<Service>(

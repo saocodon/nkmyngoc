@@ -129,15 +129,20 @@
                                             <!-- Listview ảnh -->
                                             <ListView ItemsSource="{Binding ImageVM.Images}" Grid.Row="6" 
                                                       Grid.Column="1" Height="150" 
-                                                      SelectedItem="{Binding ImageVM.SelectedImage}"
+                                                      SelectedItem="{Binding ImageVM.SelectedImage, Mode=TwoWay}"
                                                       HorizontalContentAlignment="Stretch">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="MouseDoubleClick">
                                                         <i:InvokeCommandAction 
                                                                 Command="{Binding DataContext.ImageVM.OpenImageCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                                                CommandParameter="{Binding DataContext.ImageVM.SelectedImage, RelativeSource={RelativeSource AncestorType=ListView}}" />
+                                                                CommandParameter="{Binding}" />
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
+                                                <ListView.ItemContainerStyle>
+                                                    <Style TargetType="ListViewItem">
+                                                        <EventSetter Event="PreviewMouseDown" Handler="ListViewItem_PreviewMouseDown"/>
+                                                    </Style>
+                                                </ListView.ItemContainerStyle>
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate>
                                                         <DockPanel HorizontalAlignment="Stretch" LastChildFill="False">
@@ -153,11 +158,14 @@
                                                             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                                                                 <Image Source="{Binding Image}" Width="64" Height="64" Stretch="Uniform"/>
                                                                 <TextBox BorderThickness="0"
-                                                                         Background="Transparent" Text="{Binding Note, Mode=TwoWay}" VerticalAlignment="Center"
+                                                                         Background="Transparent"
+                                                                         Text="{Binding Record.Note, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                                         VerticalAlignment="Center"
                                                                          IsReadOnly="True"
                                                                          Cursor="Arrow"
                                                                          GotFocus="TextBox_GotFocus"
-                                                                         LostFocus="TextBox_LostFocus"/>
+                                                                         LostFocus="TextBox_LostFocus"
+                                                                         />
                                                             </StackPanel>
                                                         </DockPanel>
                                                     </DataTemplate>

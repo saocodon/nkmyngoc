@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Win32;
 using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.Utilities;
@@ -21,10 +22,13 @@ namespace NhakhoaMyNgoc.ViewModels
 {
     public partial class ImageItem : ObservableObject
     {
-        public BitmapImage Image { get; set; } = new();
-        public long CustomerId { get; set; }
-        public string Path { get; set; } = string.Empty;
-        public string Note { get; set; } = string.Empty;
+        public BitmapImage? Image { get; set; }
+        //public long CustomerId { get; set; }
+        //public string Path { get; set; } = string.Empty;
+
+        //[ObservableProperty]
+        //private string note = string.Empty;
+        public Image? Record { get; set; }
 
         public ICommand? DeleteCommand { get; set; }
     }
@@ -40,46 +44,59 @@ namespace NhakhoaMyNgoc.ViewModels
         private ObservableCollection<ImageItem> images = [];
 
         [ObservableProperty]
-        private Image selectedRecord = new();
-
-        [ObservableProperty]
         private ImageItem selectedImage = new();
 
         public static string Title => "Hình ảnh";
 
-        public ImageViewModel(DataContext db)
+        public S3 storage;
+
+        public ImageViewModel(DataContext db, HubConnection syncConn)
         {
             _db = db;
+            storage = new S3(
+                "http://localhost:9000",
+                "minioadmin",
+                "minioadmin",
+                "images"
+            );
 
-            WeakReferenceMessenger.Default.Register<SelectedCustomerChangedMessage>(this, (r, m) =>
+            WeakReferenceMessenger.Default.Register<SelectedCustomerChangedMessage>(this, async (r, m) =>
             {
-                FindCustomerImages(m.Value);
+                await FindCustomerImages(m.Value);
             });
 
-            WeakReferenceMessenger.Default.Register<AddCustomerImageMessage>(this, (r, m) =>
+            WeakReferenceMessenger.Default.Register<AddCustomerImageMessage>(this, async (r, m) =>
             {
                 var (customer, fileNames) = m.Value;
-                AddCustomerImage(customer, fileNames);
+                await AddCustomerImage(customer, fileNames);
             });
 
             WeakReferenceMessenger.Default.Register<SaveCustomerMessage>(this, (r, m) =>
             {
-                for (int i = 0; i < Images.Count; i++)
-                    records[i].Note = Images[i].Note;
+                foreach (var item in Images)
+                {
+                    var record = Records.FirstOrDefault(r => r.Path == item.Record!.Path);
+                    if (record != null)
+                        record.Note = item.Record!.Note;
+                }
 
                 _db.SaveChanges();
             });
         }
 
         [RelayCommand]
-        void OpenImage() => Process.Start(new ProcessStartInfo() {
-            FileName = Path.Combine(
-                         Config.full_path,
-                         "Images",
-                         SelectedImage.CustomerId.ToString(),
-                         SelectedImage.Path),
-            UseShellExecute = true
-        });
+        void OpenImage()
+        {
+            MessageBox.Show(SelectedImage.Record!.Note);
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = Path.Combine(
+             Path.GetTempPath(),
+             "NhakhoaMyNgoc",
+             SelectedImage.Record.Path),
+                UseShellExecute = true
+            });
+        }
 
         void CreateListViewItem(Image record, BitmapImage image)
         {
@@ -87,13 +104,10 @@ namespace NhakhoaMyNgoc.ViewModels
             item = new ImageItem
             {
                 Image = image,
-                CustomerId = record.CustomerId,
-                Path = record.Path,
-                Note = record.Note ?? string.Empty,
-                DeleteCommand = new RelayCommand(() =>
+                Record = record,
+                DeleteCommand = new RelayCommand(async () =>
                 {
-                    File.Delete(Path.Combine(Config.full_path,
-                        "Images", record.CustomerId.ToString(), record.Path));
+                    await storage.DeleteAsync(record.Path);
                     _db.Images.Remove(record);
                     Images.Remove(item!);
                     _db.SaveChanges();
@@ -102,21 +116,17 @@ namespace NhakhoaMyNgoc.ViewModels
             Images.Add(item);
         }
 
-        void AddCustomerImage(Customer customer, string[] paths)
+        async Task AddCustomerImage(Customer customer, string[] paths)
         {
             foreach (string path in paths)
             {
-                string destFolder = Path.Combine(Config.full_path, "Images", customer.Id.ToString());
                 string tempDesc = Path.GetFileNameWithoutExtension(path);
-                string filename = Guid.NewGuid().ToString();
-                string extension = Path.GetExtension(path);
-
-                // Kiểm tra nếu khách hàng chưa có thư mục ảnh
-                Directory.CreateDirectory(destFolder);
+                string filename = Guid.NewGuid().ToString() + Path.GetExtension(path);
 
                 // Cất vào data
-                string destination = Path.Combine(destFolder, filename + extension);
-                File.Copy(path, destination);
+                string imageUrl = "";
+                using (var imgStream = File.OpenRead(path))
+                    imageUrl = await storage.UploadAsync(imgStream, filename, "image/jpeg");
 
                 // Lưu vào database
                 Image img = new()
@@ -124,18 +134,18 @@ namespace NhakhoaMyNgoc.ViewModels
                     CustomerId = customer.Id,
                     Deleted = false,
                     Note = tempDesc,
-                    Path = filename + extension
+                    Path = filename
                 };
                 Records.Add(img);
                 _db.Images.Add(img);
 
                 // Load lên UI
-                CreateListViewItem(img, IOUtil.LoadImage(destination));
+                CreateListViewItem(img, await IOUtil.LoadOnlineImageAsync(storage, filename));
             }
             _db.SaveChanges();
         }
 
-        void FindCustomerImages(Customer customer)
+        async Task FindCustomerImages(Customer customer)
         {
             if (customer != null)
             {
@@ -143,12 +153,17 @@ namespace NhakhoaMyNgoc.ViewModels
                               where i.CustomerId == customer.Id && i.Deleted == false
                               select i).ToList();
                 Records = new ObservableCollection<Image>(result);
-                Images.Clear();
-                foreach (Image image in Records)
+                var tasks = Records.Select(async image =>
                 {
-                    string partialPath = Path.Combine("Images", customer.Id.ToString(), image.Path);
-                    string fullPath = Path.Combine(Config.full_path, partialPath);
-                    BitmapImage img = IOUtil.LoadImage(fullPath);
+                    var img = await IOUtil.LoadOnlineImageAsync(storage, image.Path);
+                    return (image, img);
+                });
+
+                var results = await Task.WhenAll(tasks);
+
+                Images.Clear();
+                foreach (var (image, img) in results)
+                {
                     CreateListViewItem(image, img);
                 }
             }

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AspNetCore.SignalR.Client;
 using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.Utilities;
 using NhakhoaMyNgoc_Connector.DTOs;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace NhakhoaMyNgoc.ViewModels
 {
-    public partial class ExpenseViewModel(DataContext db) : ObservableObject
+    public partial class ExpenseViewModel(DataContext db, HubConnection syncConn) : ObservableObject
     {
         private readonly DataContext _db = db;
 

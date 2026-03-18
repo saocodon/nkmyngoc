@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using NhakhoaMyNgoc.Interfaces;
 using NhakhoaMyNgoc.Models;
@@ -24,7 +25,7 @@ namespace NhakhoaMyNgoc.ViewModels
         private IProductService productService;
 
         // bỏ phần revision trong version
-        public AppViewModel(DataContext db, IProductService ps)
+        public AppViewModel(DataContext db, HubConnection syncConn, IProductService ps)
         {
             _db = db;
             productService = ps;

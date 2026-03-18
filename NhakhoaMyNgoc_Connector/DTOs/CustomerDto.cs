@@ -23,5 +23,17 @@ namespace NhakhoaMyNgoc_Connector.DTOs
 
         // nullable
         public string Phone { get; set; }
+
+        public CustomerDto(long id, bool deleted, string cid, string name, string sex, DateTime birthdate, string address, string phone)
+        {
+            Id = id;
+            Deleted = deleted;
+            Cid = cid;
+            Name = name;
+            Sex = sex;
+            Birthdate = birthdate;
+            Address = address;
+            Phone = phone;
+        }
     }
 }

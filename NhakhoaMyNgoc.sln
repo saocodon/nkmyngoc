@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhakhoaMyNgoc_Connector", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhakhoaMyNgoc_RDLC", "NhakhoaMyNgoc_RDLC\NhakhoaMyNgoc_RDLC.csproj", "{67CFEC06-4E3F-4790-A8F9-FD1914EA80F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalR", "SignalR\SignalR.csproj", "{C4B7E411-89EE-493F-B21C-887D57C8E789}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{67CFEC06-4E3F-4790-A8F9-FD1914EA80F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67CFEC06-4E3F-4790-A8F9-FD1914EA80F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67CFEC06-4E3F-4790-A8F9-FD1914EA80F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4B7E411-89EE-493F-B21C-887D57C8E789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4B7E411-89EE-493F-B21C-887D57C8E789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4B7E411-89EE-493F-B21C-887D57C8E789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4B7E411-89EE-493F-B21C-887D57C8E789}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

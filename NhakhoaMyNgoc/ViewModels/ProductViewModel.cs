@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AspNetCore.SignalR.Client;
 using NhakhoaMyNgoc.Interfaces;
 using NhakhoaMyNgoc.Models;
 using NhakhoaMyNgoc.ModelWrappers;
@@ -26,7 +27,7 @@ namespace NhakhoaMyNgoc.ViewModels
 
         public bool IsReadOnly { get; set; }
 
-        public ProductViewModel(IProductService productService, bool loadDeleted = false)
+        public ProductViewModel(IProductService productService, HubConnection syncConn = null!, bool loadDeleted = false)
         {
             _productService = productService;
             Products = _productService.GetAllProducts(deleted: loadDeleted);

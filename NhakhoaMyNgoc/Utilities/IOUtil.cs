@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Management;
+using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace NhakhoaMyNgoc.Utilities
@@ -69,7 +71,7 @@ namespace NhakhoaMyNgoc.Utilities
             return null!;
         }
 
-        public static BitmapImage LoadImage(string path)
+        public static BitmapImage LoadLocalImage(string path)
         {
             var bitmap = new BitmapImage();
             using var stream = File.OpenRead(path);
@@ -80,6 +82,34 @@ namespace NhakhoaMyNgoc.Utilities
             bitmap.EndInit();
             bitmap.Freeze(); // an toàn thread, không bị lock
             return bitmap;
+        }
+
+        public static async Task<BitmapImage> LoadOnlineImageAsync(S3 storage, string key)
+        {
+            var fileName = key.Replace("/", "_");
+            var localPath = Path.Combine(Path.GetTempPath(), "NhakhoaMyNgoc", fileName);
+
+            if (File.Exists(localPath))
+            {
+                var fileInfo = new FileInfo(localPath);
+                var age = DateTime.Now - fileInfo.LastWriteTime;
+
+                if (age < TimeSpan.FromHours(1))
+                {
+                    return LoadLocalImage(localPath);
+                }
+                else
+                {
+                    File.Delete(localPath); // expired
+                    await storage.Cache(key, localPath);
+                    return LoadLocalImage(localPath);
+                }
+            }
+            else
+            {
+                await storage.Cache(key, localPath);
+                return LoadLocalImage(localPath);
+            }
         }
 
         public static string WriteJsonToTempFile<T>(T obj, string fileName)
